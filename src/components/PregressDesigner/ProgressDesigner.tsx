@@ -26,35 +26,20 @@ function ProgressDesigner() {
 
   let bpmnModeler: any = null;
 
-  const xmlstr = '<?xml version="1.0" encoding="UTF-8"?>\n' +
-    '<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="sid-38422fae-e03e-43a3-bef4-bd33b32041b2" targetNamespace="http://bpmn.io/bpmn" exporter="bpmn-js (https://demo.bpmn.io)" exporterVersion="5.1.2">\n' +
-    '<process id="Process_1" isExecutable="false">\n' +
-    '    <startEvent id="StartEvent_1y45yut" name="开始">\n' +
-    '    <outgoing>SequenceFlow_0h21x7r</outgoing>\n' +
-    '    </startEvent>\n' +
-    '    <task id="Task_1hcentk">\n' +
-    '    <incoming>SequenceFlow_0h21x7r</incoming>\n' +
-    '    </task>\n' +
-    '    <sequenceFlow id="SequenceFlow_0h21x7r" sourceRef="StartEvent_1y45yut" targetRef="Task_1hcentk" />\n' +
-    '</process>\n' +
-    '<bpmndi:BPMNDiagram id="BpmnDiagram_1">\n' +
-    '    <bpmndi:BPMNPlane id="BpmnPlane_1" bpmnElement="Process_1">\n' +
-    '    <bpmndi:BPMNShape id="StartEvent_1y45yut_di" bpmnElement="StartEvent_1y45yut">\n' +
-    '        <omgdc:Bounds x="152" y="102" width="36" height="36" />\n' +
-    '        <bpmndi:BPMNLabel>\n' +
-    '        <omgdc:Bounds x="160" y="145" width="22" height="14" />\n' +
-    '        </bpmndi:BPMNLabel>\n' +
-    '    </bpmndi:BPMNShape>\n' +
-    '    <bpmndi:BPMNShape id="Task_1hcentk_di" bpmnElement="Task_1hcentk">\n' +
-    '        <omgdc:Bounds x="240" y="80" width="100" height="80" />\n' +
-    '    </bpmndi:BPMNShape>\n' +
-    '    <bpmndi:BPMNEdge id="SequenceFlow_0h21x7r_di" bpmnElement="SequenceFlow_0h21x7r">\n' +
-    '        <omgdi:waypoint x="188" y="120" />\n' +
-    '        <omgdi:waypoint x="240" y="120" />\n' +
-    '    </bpmndi:BPMNEdge>\n' +
+  const xmlstr = '' +
+    '<?xml version="1.0" encoding="UTF-8"?>\n' +
+    '<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd" id="sample-diagram" targetNamespace="http://bpmn.io/schema/bpmn">\n' +
+    '  <bpmn2:process id="Process_1" isExecutable="false">\n' +
+    '    <bpmn2:startEvent id="StartEvent_1"/>\n' +
+    '  </bpmn2:process>\n' +
+    '  <bpmndi:BPMNDiagram id="BPMNDiagram_1">\n' +
+    '    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_1">\n' +
+    '      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">\n' +
+    '        <dc:Bounds height="36.0" width="36.0" x="412.0" y="240.0"/>\n' +
+    '      </bpmndi:BPMNShape>\n' +
     '    </bpmndi:BPMNPlane>\n' +
-    '</bpmndi:BPMNDiagram>\n' +
-    '</definitions>';
+    '  </bpmndi:BPMNDiagram>\n' +
+    '</bpmn2:definitions>';
 
   useEffect(() => {
     initBpmn();
@@ -66,15 +51,15 @@ function ProgressDesigner() {
       container: '#canvas', // 这里为数组的第一个元素
       height: '100vh',
       propertiesPanel: {
-        parent: '#properties'
+        parent: '#properties-panel'
       },
       additionalModules: [
         BpmnPropertiesPanelModule,
         BpmnPropertiesProviderModule,
-        camundaExtensionModule
+        camundaExtensionModule,
       ],
       moddleExtensions: {
-        camunda: camundaModdle
+        camunda: camundaModdle,
       }
     });
 
@@ -95,7 +80,7 @@ function ProgressDesigner() {
     <div className="App">
       {/* bpmn容器 */}
       <div id="canvas" className="container"/>
-      <div id="properties" className="properties-panel"/>
+      <div id="properties-panel" className="properties-panel"/>
     </div>
   );
 }
