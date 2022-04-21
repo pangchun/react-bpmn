@@ -1,0 +1,15 @@
+.App {
+  /* background-color: #282c34 */
+  min-height: 100vh;
+}
+.container{
+  width: 100%;
+  height: 100%;
+}
+
+.properties-panel{
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 300px;
+}
