@@ -16,6 +16,20 @@ $ yarn start
 
 ## 集成过程
 
+### 版本说明
+
+由于1.0后的和1.0之前的属性面板有较大的改变，且相关的api名称或位置可能也有改变，因此，在这里说明一下当前项目集成的版本。
+
+**属性面板的变化：**
+
+> 参考：https://github.com/bpmn-io/bpmn-js-examples/tree/master/properties-panel-extension
+>
+> Extending the properties panel changed significantly with `bpmn-js-properties-panel>=1`. For the `0.x` version of the library, check out [the old version of this example](https://github.com/bpmn-io/bpmn-js-examples/tree/b20919ac2231abf3df45b9dc9a2561010009b4a2/properties-panel-extension). （ps 翻译：1 以后版本的属性面板与之前的有显著变化）
+
+**当前我使用的是官方最新版本。版本不同的同学仅作参考。**
+
+![image-20220424211024464](assets/image-20220424211024464.png)
+
 ### 依赖安装
 
 ```bash
@@ -26,7 +40,9 @@ npm install bpmn-js-properties-panel
 npm install camunda-bpmn-moddle
 ```
 
-### ts中的js报错解决
+## 报错汇总
+
+### ts 中不能直接引入js 
 
 ![image-20220420230435136](assets/image-20220420230435136-16505400906921.png)
 
@@ -34,27 +50,15 @@ npm install camunda-bpmn-moddle
 declare module '*';
 ```
 
-### 属性面板的变化
-
-https://github.com/bpmn-io/bpmn-js-examples/tree/master/properties-panel-extension
-
-> Extending the properties panel changed significantly with `bpmn-js-properties-panel>=1`. For the `0.x` version of the library, check out [the old version of this example](https://github.com/bpmn-io/bpmn-js-examples/tree/b20919ac2231abf3df45b9dc9a2561010009b4a2/properties-panel-extension).
-
-1 以后版本的属性面板与之前的有显著变化
-
-### 启动报错
+### 依赖找不到
 
 ![image-20220421151013097](assets/image-20220421151013097.png)
 
-解决：
-
-重现安装依赖即可。
+解决：重新安装依赖即可。
 
 ```bash
 npm install bpmn-js-properties-panel
 ```
-
-再次启动成功。
 
 
 

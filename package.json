@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "@ant-design/pro-layout": "^6.5.0",
+    "@bpmn-io/properties-panel": "^0.13.2",
     "bpmn-js": "^9.0.3",
     "bpmn-js-properties-panel": "^1.0.0",
     "camunda-bpmn-moddle": "^6.1.2",
