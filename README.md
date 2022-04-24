@@ -60,9 +60,37 @@ declare module '*';
 npm install bpmn-js-properties-panel
 ```
 
+### 属性面板扩展，官方示例报错
 
+>官方示例：[bpmn-js-examples/properties-panel-extension at master · bpmn-io/bpmn-js-examples · GitHub](https://github.com/bpmn-io/bpmn-js-examples/tree/master/properties-panel-extension)
 
+SpellProps.js 文件中，返回值使用标签的形式，会报错。
 
+```js
+  return <TextFieldEntry
+    id={ id }
+    element={ element }
+    description={ translate('Apply a black magic spell') }
+    label={ translate('Spell') }
+    getValue={ getValue }
+    setValue={ setValue }
+    debounce={ debounce }
+  />
+```
+
+解决：不使用标签的形式即可
+
+```js
+  return TextFieldEntry({
+    id: id,
+    label: translate ? 'Spell' : '魔法值',
+    element,
+    description: translate ? 'Apply a black magic spell' : '施展一个黑魔法',
+    getValue,
+    setValue,
+    debounce,
+  });
+```
 
 
 
