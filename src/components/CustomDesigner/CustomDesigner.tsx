@@ -3,17 +3,6 @@ import React, { useEffect, useState } from 'react';
 // 引入bpmn建模器
 import BpmnModeler from 'bpmn-js/lib/Modeler';
 
-// 引入属性面板
-import {
-  BpmnPropertiesPanelModule,
-  BpmnPropertiesProviderModule,
-  CamundaPlatformPropertiesProviderModule,
-} from 'bpmn-js-properties-panel';
-
-// 引入camunda流程引擎，也是官方默认的
-import camundaExtensionModule from 'camunda-bpmn-moddle/lib';
-import camundaDescriptor from 'camunda-bpmn-moddle/resources/camunda.json';
-
 // 引入bpmn工作流绘图工具(bpmn-js)样式
 import 'bpmn-js/dist/assets/bpmn-js.css';
 import 'bpmn-js/dist/assets/diagram-js.css';
@@ -31,7 +20,7 @@ import newDiagram from '@/bpmn/resources/newDiagram';
 // 引入当前组件样式
 import './CustomDesigner.less';
 import CustomPanel from '@/components/CustomDesigner/components/CustomPanel/CustomPanel';
-import { Button, Col, Row, Space } from 'antd';
+import { Button, Col, Row } from 'antd';
 import XmlPreview from '@/components/CustomDesigner/components/XmlPreview/XmlPreview';
 
 /**
@@ -115,8 +104,16 @@ export default function CustomDesigner(props: IProps) {
             console.log(xmlStr);
           }}
         >
-          {' '}
-          {'打印XML'}{' '}
+          {'从文件打开'}
+        </Button>
+        <Button
+          type="primary"
+          style={{ marginLeft: 10 }}
+          onClick={() => {
+            console.log(xmlStr);
+          }}
+        >
+          {'打印XML'}
         </Button>
         <XmlPreview xml={xmlStr} />
         <Button
@@ -126,8 +123,7 @@ export default function CustomDesigner(props: IProps) {
             console.log(xmlStr);
           }}
         >
-          {' '}
-          {'下载SVG'}{' '}
+          {'下载SVG'}
         </Button>
         <Button
           type="primary"
@@ -136,8 +132,7 @@ export default function CustomDesigner(props: IProps) {
             console.log(xmlStr);
           }}
         >
-          {' '}
-          {'下载XML'}{' '}
+          {'下载XML'}
         </Button>
       </div>
       <Row gutter={0}>
