@@ -15,7 +15,7 @@ import 'bpmn-js-properties-panel/dist/assets/element-templates.css';
 import 'bpmn-js-properties-panel/dist/assets/properties-panel.css';
 
 // 引入流程图文件
-import newDiagram from '@/bpmn/resources/newDiagram';
+import newDiagram from '@/bpmn/resource/newDiagram';
 
 // 引入当前组件样式
 import './CustomDesigner.less';

@@ -9,9 +9,7 @@
   "types": [
     {
       "name": "BewitchedStartEvent",
-      "extends": [
-        "bpmn:StartEvent"
-      ],
+      "extends": ["bpmn:StartEvent"],
       "properties": [
         {
           "name": "spell",
