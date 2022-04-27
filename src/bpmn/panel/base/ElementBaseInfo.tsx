@@ -25,6 +25,30 @@ export default function ElementBaseInfo(props: IProps) {
     console.log('element in base \n', element);
   }, [element]);
 
+  /**
+   * 更新id
+   */
+  function updateId(value: any) {
+    return modeling.updateProperties(element, {
+      id: value,
+      name: '这是我的自定义name',
+      customAttr: '这是我的自定义属性',
+    });
+  }
+
+  /**
+   * 更新组件值
+   * @param value
+   */
+  function setValue(value: any) {
+    // modeling = modeler.get('modeling', true);
+    return modeling.updateProperties(element, {
+      id: value,
+      name: '这是我的自定义name',
+      customAttr: '这是我的自定义属性',
+    });
+  }
+
   return (
     <>
       <Collapse bordered={false}>
@@ -34,8 +58,12 @@ export default function ElementBaseInfo(props: IProps) {
             placeholder="编号"
             key={businessObject?.id}
             defaultValue={businessObject?.id}
-            onChange={(event) => {
-              console.log(event.target.value);
+            // onChange={(event) => {
+            //   updateId(event.target.value)
+            // }}
+            onCompositionEnd={(event) => {
+              console.log(event.currentTarget.value);
+              updateId(event.currentTarget.value);
             }}
           />
           <Input
