@@ -92,7 +92,7 @@ export default function CustomPanel(props: IProps) {
     <>
       <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
         <Title level={1}>{element?.type || '属性面板'}</Title>
-        <ElementBaseInfo element={element} />
+        <ElementBaseInfo element={element} modeling={modeling} />
         <Input
           size="large"
           placeholder="请输入id"

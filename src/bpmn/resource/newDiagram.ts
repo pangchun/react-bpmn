@@ -2,7 +2,7 @@ const xml: string =
   '' +
   '<?xml version="1.0" encoding="UTF-8"?>\n' +
   '<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="sample-diagram" targetNamespace="http://bpmn.io/schema/bpmn" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd">\n' +
-  '  <bpmn2:process id="Process_1" isExecutable="false">\n' +
+  '  <bpmn2:process id="Process_1" isExecutable="true">\n' +
   '    <bpmn2:startEvent id="Event_0cvwr8a" name="开始请假流程">\n' +
   '      <bpmn2:outgoing>Flow_04cue2l</bpmn2:outgoing>\n' +
   '    </bpmn2:startEvent>\n' +
