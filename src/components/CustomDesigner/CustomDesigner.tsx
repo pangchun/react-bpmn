@@ -22,6 +22,7 @@ import './CustomDesigner.less';
 import CustomPanel from '@/components/CustomDesigner/components/CustomPanel/CustomPanel';
 import { Button, Col, Row } from 'antd';
 import XmlPreview from '@/components/CustomDesigner/components/XmlPreview/XmlPreview';
+import ButtonGroup from 'antd/lib/button/button-group';
 
 /**
  * 接口检查
@@ -96,53 +97,54 @@ export default function CustomDesigner(props: IProps) {
 
   return (
     <>
-      <div>
-        <Button
-          type="primary"
-          style={{ marginLeft: '10%', marginTop: 10 }}
-          onClick={() => {
-            console.log(xmlStr);
-          }}
-        >
-          {'从文件打开'}
-        </Button>
-        <Button
-          type="primary"
-          style={{ marginLeft: 10 }}
-          onClick={() => {
-            console.log(xmlStr);
-          }}
-        >
-          {'打印XML'}
-        </Button>
-        <XmlPreview xml={xmlStr} />
-        <Button
-          type="primary"
-          style={{ marginLeft: 10 }}
-          onClick={() => {
-            console.log(xmlStr);
-          }}
-        >
-          {'下载SVG'}
-        </Button>
-        <Button
-          type="primary"
-          style={{ marginLeft: 10 }}
-          onClick={() => {
-            console.log(xmlStr);
-          }}
-        >
-          {'下载XML'}
-        </Button>
-      </div>
       <Row gutter={0}>
-        <Col className="gutter-row" span={20}>
+        <Col className="gutter-row" span={19}>
+          <div>
+            <Button
+              type="primary"
+              style={{ marginLeft: '10%', marginTop: 10 }}
+              onClick={() => {
+                console.log(xmlStr);
+              }}
+            >
+              {'从文件打开'}
+            </Button>
+            <Button
+              type="primary"
+              style={{ marginLeft: 10 }}
+              onClick={() => {
+                console.log(xmlStr);
+              }}
+            >
+              {'打印XML'}
+            </Button>
+            <XmlPreview xml={xmlStr} />
+            <Button
+              type="primary"
+              style={{ marginLeft: 10 }}
+              onClick={() => {
+                console.log(xmlStr);
+              }}
+            >
+              {'下载SVG'}
+            </Button>
+            <Button
+              type="primary"
+              style={{ marginLeft: 10 }}
+              onClick={() => {
+                console.log(xmlStr);
+              }}
+            >
+              {'下载XML'}
+            </Button>
+          </div>
+
           <div id="canvas" />
         </Col>
         <Col
           className="gutter-row"
           style={{ backgroundColor: '#FFF' }}
-          span={4}
+          span={5}
         >
           <CustomPanel modeler={bpmnModeler} />
         </Col>
