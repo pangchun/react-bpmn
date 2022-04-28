@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Input, Space } from 'antd';
+import { Button, Divider, Input, Space, Typography } from 'antd';
 import Title from 'antd/lib/typography/Title';
 import ElementBaseInfo from '@/bpmn/panel/base/ElementBaseInfo';
+
+import { Collapse } from 'antd';
+
+const { Panel } = Collapse;
 
 /**
  * 接口检查
@@ -79,28 +83,23 @@ export default function CustomPanel(props: IProps) {
     setElement(element);
   }
 
-  function setValue(value: any) {
-    // modeling = modeler.get('modeling', true);
-    return modeling.updateProperties(element, {
-      id: value,
-      name: '这是我的自定义name',
-      customAttr: '这是我的自定义属性',
-    });
-  }
-
   return (
     <>
-      <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
-        <Title level={1}>{element?.type || '属性面板'}</Title>
+      <Space direction="vertical" size={0} style={{ display: 'flex' }}>
+        {/*<Title level={1}>{element?.type || '属性面板'}</Title>*/}
         <ElementBaseInfo element={element} modeling={modeling} />
-        <Input
-          size="large"
-          placeholder="请输入id"
-          onChange={() => {
-            setValue('自定义的id');
-          }}
-        />
-        <Button>{'打印当前节点信息'}</Button>
+        <Divider type={'horizontal'} style={{ margin: 0 }} />
+        <Collapse bordered={false} expandIconPosition={'right'}>
+          <Panel
+            header={<Typography style={{ color: '#B31818' }}>测试</Typography>}
+            key="2"
+            style={{ backgroundColor: '#FFF' }}
+            showArrow={true}
+          >
+            <p>测试数据</p>
+          </Panel>
+        </Collapse>
+        {/*<Divider type={"horizontal"} style={{margin: 0}}/>*/}
       </Space>
     </>
   );

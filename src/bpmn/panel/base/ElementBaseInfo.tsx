@@ -97,8 +97,13 @@ export default function ElementBaseInfo(props: IProps) {
 
   return (
     <>
-      <Collapse bordered={false}>
-        <Panel header="常规" key="1">
+      <Collapse bordered={false} expandIconPosition={'right'}>
+        <Panel
+          header="常规"
+          key="1"
+          style={{ backgroundColor: '#FFF' }}
+          showArrow={true}
+        >
           <Input
             size="small"
             placeholder="编号"
@@ -121,9 +126,6 @@ export default function ElementBaseInfo(props: IProps) {
           />
           {renderProcessElement()}
         </Panel>
-        {/*<Panel header="测试" key="2">*/}
-        {/*  <p>测试数据</p>*/}
-        {/*</Panel>*/}
       </Collapse>
     </>
   );

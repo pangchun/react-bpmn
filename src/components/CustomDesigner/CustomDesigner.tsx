@@ -26,7 +26,6 @@ import './CustomDesigner.less';
 import CustomPanel from '@/components/CustomDesigner/components/CustomPanel/CustomPanel';
 import { Button, Col, Row } from 'antd';
 import XmlPreview from '@/components/CustomDesigner/components/XmlPreview/XmlPreview';
-import ButtonGroup from 'antd/lib/button/button-group';
 
 /**
  * 接口检查
