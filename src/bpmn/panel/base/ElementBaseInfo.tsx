@@ -28,25 +28,71 @@ export default function ElementBaseInfo(props: IProps) {
   /**
    * 更新id
    */
-  function updateId(value: any) {
+  function updateId(value: string) {
     return modeling.updateProperties(element, {
       id: value,
-      name: '这是我的自定义name',
-      customAttr: '这是我的自定义属性',
     });
   }
 
   /**
-   * 更新组件值
-   * @param value
+   * 更新name
    */
-  function setValue(value: any) {
-    // modeling = modeler.get('modeling', true);
+  function updateName(value: string) {
     return modeling.updateProperties(element, {
-      id: value,
-      name: '这是我的自定义name',
-      customAttr: '这是我的自定义属性',
+      name: value,
     });
+  }
+
+  /**
+   * 更新versionTag
+   */
+  function updateVersionTag(value: string) {
+    return modeling.updateProperties(element, {
+      versionTag: value,
+    });
+  }
+
+  /**
+   * 更新isExecutable
+   */
+  function updateIsExecutable(value: boolean) {
+    return modeling.updateProperties(element, {
+      isExecutable: value,
+    });
+  }
+
+  /**
+   * 渲染process独有元素
+   */
+  function renderProcessElement() {
+    if (element?.type === 'bpmn:Process') {
+      return (
+        <>
+          <Input
+            size="small"
+            placeholder="版本标签"
+            style={{ marginTop: 4 }}
+            key={businessObject?.versionTag}
+            defaultValue={businessObject?.versionTag}
+            onCompositionEnd={(event) => {
+              updateVersionTag(event.currentTarget.value);
+            }}
+          />
+          <Typography style={{ marginTop: 10 }}>
+            可执行&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <Switch
+              checkedChildren="开启"
+              unCheckedChildren="关闭"
+              key={businessObject?.isExecutable}
+              defaultChecked={businessObject?.isExecutable}
+              onChange={(checked) => {
+                updateIsExecutable(checked);
+              }}
+            />
+          </Typography>
+        </>
+      );
+    }
   }
 
   return (
@@ -58,11 +104,8 @@ export default function ElementBaseInfo(props: IProps) {
             placeholder="编号"
             key={businessObject?.id}
             defaultValue={businessObject?.id}
-            // onChange={(event) => {
-            //   updateId(event.target.value)
-            // }}
+            readOnly={businessObject?.$type === 'bpmn:Process'}
             onCompositionEnd={(event) => {
-              console.log(event.currentTarget.value);
               updateId(event.currentTarget.value);
             }}
           />
@@ -72,28 +115,15 @@ export default function ElementBaseInfo(props: IProps) {
             style={{ marginTop: 4 }}
             key={businessObject?.name}
             defaultValue={businessObject?.name}
+            onCompositionEnd={(event) => {
+              updateName(event.currentTarget.value);
+            }}
           />
-          <Input
-            size="small"
-            placeholder="版本标签"
-            style={{ marginTop: 4 }}
-            key={businessObject?.versionTag}
-            defaultValue={businessObject?.versionTag}
-          />
-          <Typography style={{ marginTop: 10 }}>
-            可执行&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <Switch
-              checkedChildren="开启"
-              unCheckedChildren="关闭"
-              key={businessObject?.isExecutable}
-              defaultChecked={businessObject?.isExecutable}
-              onChange={() => {}}
-            />
-          </Typography>
+          {renderProcessElement()}
         </Panel>
-        <Panel header="测试" key="2">
-          <p>测试数据</p>
-        </Panel>
+        {/*<Panel header="测试" key="2">*/}
+        {/*  <p>测试数据</p>*/}
+        {/*</Panel>*/}
       </Collapse>
     </>
   );
