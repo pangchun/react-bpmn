@@ -3,6 +3,10 @@ import React, { useEffect, useState } from 'react';
 // 引入bpmn建模器
 import BpmnModeler from 'bpmn-js/lib/Modeler';
 
+// 引入属性解析文件和对应的解析器
+import flowableDescriptor from '@/bpmn/descriptor/flowable-descriptor.json';
+import { flowableExtension } from '@/bpmn/moddle/flowable';
+
 // 引入bpmn工作流绘图工具(bpmn-js)样式
 import 'bpmn-js/dist/assets/bpmn-js.css';
 import 'bpmn-js/dist/assets/diagram-js.css';
@@ -66,6 +70,10 @@ export default function CustomDesigner(props: IProps) {
       new BpmnModeler({
         container: '#canvas',
         height: '100vh',
+        additionalModules: [flowableExtension],
+        moddleExtensions: {
+          flowable: flowableDescriptor,
+        },
       }),
     );
   }

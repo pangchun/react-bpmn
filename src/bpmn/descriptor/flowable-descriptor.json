@@ -1,7 +1,7 @@
 {
-  "name": "Camunda",
-  "uri": "http://camunda.org/schema/1.0/bpmn",
-  "prefix": "camunda",
+  "name": "Flowable",
+  "uri": "http://flowable.org/bpmn",
+  "prefix": "flowable",
   "xml": {
     "tagAlias": "lowerCase"
   },
@@ -105,7 +105,7 @@
     {
       "name": "JobPriorized",
       "isAbstract": true,
-      "extends": ["bpmn:Process", "camunda:AsyncCapable"],
+      "extends": ["bpmn:Process", "flowable:AsyncCapable"],
       "properties": [
         {
           "name": "jobPriority",
@@ -115,7 +115,7 @@
       ]
     },
     {
-      "name": "SignalEventDefinition",
+      "name": "SignalEventDefinitionExtension",
       "isAbstract": true,
       "extends": ["bpmn:SignalEventDefinition"],
       "properties": [
@@ -128,7 +128,7 @@
       ]
     },
     {
-      "name": "ErrorEventDefinition",
+      "name": "ErrorEventDefinitionExtension",
       "isAbstract": true,
       "extends": ["bpmn:ErrorEventDefinition"],
       "properties": [
@@ -145,12 +145,26 @@
       ]
     },
     {
+      "name": "ErrorEventDefinition",
+      "superClass": ["bpmn:ErrorEventDefinition", "Element"],
+      "properties": [
+        {
+          "name": "expression",
+          "isAttr": true,
+          "type": "String"
+        }
+      ],
+      "meta": {
+        "allowedIn": ["bpmn:ServiceTask"]
+      }
+    },
+    {
       "name": "Error",
       "isAbstract": true,
       "extends": ["bpmn:Error"],
       "properties": [
         {
-          "name": "camunda:errorMessage",
+          "name": "flowable:errorMessage",
           "isAttr": true,
           "type": "String"
         }
@@ -180,13 +194,28 @@
           "name": "formKey",
           "isAttr": true,
           "type": "String"
+        },
+        {
+          "name": "formRef",
+          "isAttr": true,
+          "type": "String"
+        },
+        {
+          "name": "formRefBinding",
+          "isAttr": true,
+          "type": "String"
+        },
+        {
+          "name": "formRefVersion",
+          "isAttr": true,
+          "type": "String"
         }
       ]
     },
     {
       "name": "TemplateSupported",
       "isAbstract": true,
-      "extends": ["bpmn:Process", "bpmn:FlowElement"],
+      "extends": ["bpmn:Collaboration", "bpmn:Process", "bpmn:FlowElement"],
       "properties": [
         {
           "name": "modelerTemplate",
@@ -263,7 +292,7 @@
       ]
     },
     {
-      "name": "EscalationEventDefinition",
+      "name": "EscalationEventDefinitionExtension",
       "isAbstract": true,
       "extends": ["bpmn:EscalationEventDefinition"],
       "properties": [
@@ -446,7 +475,7 @@
     },
     {
       "name": "ExternalCapable",
-      "extends": ["camunda:ServiceTaskLike"],
+      "extends": ["flowable:ServiceTaskLike"],
       "properties": [
         {
           "name": "type",
@@ -462,7 +491,7 @@
     },
     {
       "name": "TaskPriorized",
-      "extends": ["bpmn:Process", "camunda:ExternalCapable"],
+      "extends": ["bpmn:Process", "flowable:ExternalCapable"],
       "properties": [
         {
           "name": "taskPriority",
@@ -510,7 +539,7 @@
       "name": "Connector",
       "superClass": ["Element"],
       "meta": {
-        "allowedIn": ["camunda:ServiceTaskLike"]
+        "allowedIn": ["flowable:ServiceTaskLike"]
       },
       "properties": [
         {
@@ -527,7 +556,7 @@
       "name": "InputOutput",
       "superClass": ["Element"],
       "meta": {
-        "allowedIn": ["bpmn:FlowNode", "camunda:Connector"]
+        "allowedIn": ["bpmn:FlowNode", "flowable:Connector"]
       },
       "properties": [
         {
@@ -661,9 +690,9 @@
       "superClass": ["Element"],
       "meta": {
         "allowedIn": [
-          "camunda:ServiceTaskLike",
-          "camunda:ExecutionListener",
-          "camunda:TaskListener"
+          "flowable:ServiceTaskLike",
+          "flowable:ExecutionListener",
+          "flowable:TaskListener"
         ]
       },
       "properties": [
@@ -699,7 +728,7 @@
       "name": "Collectable",
       "isAbstract": true,
       "extends": ["bpmn:MultiInstanceLoopCharacteristics"],
-      "superClass": ["camunda:AsyncCapable"],
+      "superClass": ["flowable:AsyncCapable"],
       "properties": [
         {
           "name": "collection",
@@ -718,7 +747,7 @@
       "superClass": ["Element"],
       "meta": {
         "allowedIn": [
-          "camunda:AsyncCapable",
+          "flowable:AsyncCapable",
           "bpmn:MultiInstanceLoopCharacteristics"
         ]
       },
@@ -992,7 +1021,7 @@
       ]
     },
     {
-      "name": "ConditionalEventDefinition",
+      "name": "ConditionalEventDefinitionExtension",
       "isAbstract": true,
       "extends": ["bpmn:ConditionalEventDefinition"],
       "properties": [
