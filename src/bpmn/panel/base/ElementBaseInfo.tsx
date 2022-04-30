@@ -5,6 +5,7 @@ import Title from 'antd/lib/typography/Title';
 const { Text, Link } = Typography;
 
 import { Collapse } from 'antd';
+import { PushpinTwoTone, RightCircleTwoTone } from '@ant-design/icons';
 
 const { Panel } = Collapse;
 
@@ -70,11 +71,12 @@ export default function ElementBaseInfo(props: IProps) {
         <>
           <Input
             size="small"
+            addonBefore={'版本标签'}
             placeholder="版本标签"
             style={{ marginTop: 4 }}
             key={businessObject?.versionTag}
             defaultValue={businessObject?.versionTag}
-            onCompositionEnd={(event) => {
+            onPressEnter={(event) => {
               updateVersionTag(event.currentTarget.value);
             }}
           />
@@ -97,32 +99,46 @@ export default function ElementBaseInfo(props: IProps) {
 
   return (
     <>
-      <Collapse bordered={false} expandIconPosition={'right'}>
+      <Collapse
+        bordered={false}
+        expandIconPosition={'right'}
+        defaultActiveKey={['1']}
+      >
         <Panel
-          header="常规"
+          header={
+            <Typography style={{ color: '#1890ff' }}>
+              <PushpinTwoTone />
+              &nbsp;常规
+            </Typography>
+          }
           key="1"
           style={{ backgroundColor: '#FFF' }}
           showArrow={true}
         >
           <Input
             size="small"
+            addonBefore={'编号'}
             placeholder="编号"
             key={businessObject?.id}
             defaultValue={businessObject?.id}
             readOnly={businessObject?.$type === 'bpmn:Process'}
-            onCompositionEnd={(event) => {
+            onPressEnter={(event) => {
               updateId(event.currentTarget.value);
             }}
           />
           <Input
             size="small"
+            addonBefore={'名称'}
             placeholder="名称"
             style={{ marginTop: 4 }}
             key={businessObject?.name}
             defaultValue={businessObject?.name}
-            onCompositionEnd={(event) => {
+            onPressEnter={(event) => {
               updateName(event.currentTarget.value);
             }}
+            // onChange={(event) => {
+            //   updateName(event.currentTarget.value);
+            // }}
           />
           {renderProcessElement()}
         </Panel>

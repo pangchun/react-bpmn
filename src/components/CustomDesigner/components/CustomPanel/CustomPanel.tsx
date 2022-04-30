@@ -4,6 +4,7 @@ import Title from 'antd/lib/typography/Title';
 import ElementBaseInfo from '@/bpmn/panel/base/ElementBaseInfo';
 
 import { Collapse } from 'antd';
+import ElementOtherInfo from '@/bpmn/panel/other/ElementOtherInfo';
 
 const { Panel } = Collapse;
 
@@ -26,6 +27,8 @@ export default function CustomPanel(props: IProps) {
   const [modeling, setModeling] = useState<any>();
   const [elementRegistry, setElementRegistry] = useState<any>();
   const [processElement, setProcessElement] = useState<any>();
+  const [bpmnFactory, setBpmnFactory] = useState<any>();
+  const [moddle, setModdel] = useState<any>();
 
   useEffect(() => {
     // 避免初始化，流程图未加载完导致出错
@@ -43,6 +46,12 @@ export default function CustomPanel(props: IProps) {
     // 获取modeling
     setModeling(modeler.get('modeling', true));
     console.log('modeling \n', modeler.get('modeling', true));
+    // 获取bpmnFactory
+    setBpmnFactory(modeler.get('bpmnFactory', true));
+    console.log('bpmnFactory \n', modeler.get('bpmnFactory', true));
+    // 获取moddle
+    setModdel(modeler.get('moddle', true));
+    console.log('moddle \n', modeler.get('moddle', true));
     console.log('===============初始化 end=====================');
 
     // 设置监听器，监听所有工作就绪后，要做的事
@@ -88,6 +97,12 @@ export default function CustomPanel(props: IProps) {
       <Space direction="vertical" size={0} style={{ display: 'flex' }}>
         {/*<Title level={1}>{element?.type || '属性面板'}</Title>*/}
         <ElementBaseInfo element={element} modeling={modeling} />
+        <Divider type={'horizontal'} style={{ margin: 0 }} />
+        <ElementOtherInfo
+          element={element}
+          modeling={modeling}
+          bpmnFactory={bpmnFactory}
+        />
         <Divider type={'horizontal'} style={{ margin: 0 }} />
         <Collapse bordered={false} expandIconPosition={'right'}>
           <Panel
