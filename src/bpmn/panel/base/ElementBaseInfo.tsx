@@ -128,7 +128,7 @@ export default function ElementBaseInfo(props: IProps) {
       >
         <Panel
           header={
-            <Typography style={{ color: '#1890ff' }}>
+            <Typography style={{ color: '#1890ff', fontWeight: 'bold' }}>
               <PushpinTwoTone />
               &nbsp;常规
             </Typography>

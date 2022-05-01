@@ -8,6 +8,7 @@ import { Collapse } from 'antd';
 import {
   PaperClipOutlined,
   PushpinTwoTone,
+  QuestionCircleTwoTone,
   RightCircleTwoTone,
 } from '@ant-design/icons';
 
@@ -57,8 +58,8 @@ export default function ElementOtherInfo(props: IProps) {
       <Collapse bordered={false} expandIconPosition={'right'}>
         <Panel
           header={
-            <Typography style={{ color: '#1890ff' }}>
-              <PaperClipOutlined />
+            <Typography style={{ color: '#1890ff', fontWeight: 'bold' }}>
+              <QuestionCircleTwoTone />
               &nbsp;其它
             </Typography>
           }

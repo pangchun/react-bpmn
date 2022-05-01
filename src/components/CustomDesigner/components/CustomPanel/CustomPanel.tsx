@@ -5,6 +5,7 @@ import ElementBaseInfo from '@/bpmn/panel/base/ElementBaseInfo';
 
 import { Collapse } from 'antd';
 import ElementOtherInfo from '@/bpmn/panel/other/ElementOtherInfo';
+import ExtensionProperties from '@/bpmn/panel/extension-properties/ExtensionProperties';
 
 const { Panel } = Collapse;
 
@@ -97,6 +98,12 @@ export default function CustomPanel(props: IProps) {
       <Space direction="vertical" size={0} style={{ display: 'flex' }}>
         {/*<Title level={1}>{element?.type || '属性面板'}</Title>*/}
         <ElementBaseInfo element={element} modeling={modeling} />
+        <Divider type={'horizontal'} style={{ margin: 0 }} />
+        <ExtensionProperties
+          element={element}
+          modeling={modeling}
+          bpmnFactory={bpmnFactory}
+        />
         <Divider type={'horizontal'} style={{ margin: 0 }} />
         <ElementOtherInfo
           element={element}
