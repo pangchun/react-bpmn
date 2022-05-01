@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Input, Space, Switch, Typography } from 'antd';
+import { Button, Input, message, Space, Switch, Typography } from 'antd';
 import Title from 'antd/lib/typography/Title';
 
 const { Text, Link } = Typography;
@@ -34,16 +34,22 @@ export default function ElementOtherInfo(props: IProps) {
   }, [element]);
 
   /**
-   * 更新 元素文档 todo 如果更新的信息与原信息一样，则不需要进行更新
+   * 更新 元素文档
    */
   function updateDocumentation(value: string) {
+    // 如果新值与旧值相同，则不更新
+    const oldValue: string = businessObject?.documentation?.at(0).text || '';
+    if (oldValue === value) {
+      return;
+    }
     // 创建一个元素文档
     const documentation = bpmnFactory?.create('bpmn:Documentation', {
       text: value,
     });
-    return modeling.updateProperties(element, {
+    modeling.updateProperties(element, {
       documentation: [documentation],
     });
+    message.success('【元素文档】已修改').then((r) => {});
   }
 
   return (

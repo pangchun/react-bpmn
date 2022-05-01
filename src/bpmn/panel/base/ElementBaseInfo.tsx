@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Input, Space, Switch, Typography } from 'antd';
+import { Button, Input, message, Space, Switch, Typography } from 'antd';
 import Title from 'antd/lib/typography/Title';
 
 const { Text, Link } = Typography;
@@ -30,36 +30,55 @@ export default function ElementBaseInfo(props: IProps) {
    * 更新id
    */
   function updateId(value: string) {
-    return modeling.updateProperties(element, {
+    // 如果新值与旧值相同，则不更新
+    const oldValue: string = businessObject?.id || '';
+    if (oldValue === value) {
+      return;
+    }
+    modeling.updateProperties(element, {
       id: value,
     });
+    message.success('【编号】已修改').then((r) => {});
   }
 
   /**
    * 更新name
    */
   function updateName(value: string) {
-    return modeling.updateProperties(element, {
+    // 如果新值与旧值相同，则不更新
+    const oldValue: string = businessObject?.name || '';
+    if (oldValue === value) {
+      return;
+    }
+    modeling.updateProperties(element, {
       name: value,
     });
+    message.success('【名称】已修改').then((r) => {});
   }
 
   /**
    * 更新versionTag
    */
   function updateVersionTag(value: string) {
-    return modeling.updateProperties(element, {
+    // 如果新值与旧值相同，则不更新
+    const oldValue: string = businessObject?.versionTag || '';
+    if (oldValue === value) {
+      return;
+    }
+    modeling.updateProperties(element, {
       versionTag: value,
     });
+    message.success('【版本标签】已修改').then((r) => {});
   }
 
   /**
    * 更新isExecutable
    */
   function updateIsExecutable(value: boolean) {
-    return modeling.updateProperties(element, {
+    modeling.updateProperties(element, {
       isExecutable: value,
     });
+    message.success('【可执行状态】已切换').then((r) => {});
   }
 
   /**
