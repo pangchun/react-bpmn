@@ -104,17 +104,6 @@ export default function CustomPanel(props: IProps) {
           bpmnFactory={bpmnFactory}
         />
         <Divider type={'horizontal'} style={{ margin: 0 }} />
-        <Collapse bordered={false} expandIconPosition={'right'}>
-          <Panel
-            header={<Typography style={{ color: '#B31818' }}>测试</Typography>}
-            key="2"
-            style={{ backgroundColor: '#FFF' }}
-            showArrow={true}
-          >
-            <p>测试数据</p>
-          </Panel>
-        </Collapse>
-        {/*<Divider type={"horizontal"} style={{margin: 0}}/>*/}
       </Space>
     </>
   );

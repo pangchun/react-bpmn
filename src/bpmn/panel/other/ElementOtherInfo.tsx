@@ -5,7 +5,11 @@ import Title from 'antd/lib/typography/Title';
 const { Text, Link } = Typography;
 
 import { Collapse } from 'antd';
-import { PushpinTwoTone, RightCircleTwoTone } from '@ant-design/icons';
+import {
+  PaperClipOutlined,
+  PushpinTwoTone,
+  RightCircleTwoTone,
+} from '@ant-design/icons';
 
 const { Panel } = Collapse;
 
@@ -30,7 +34,7 @@ export default function ElementOtherInfo(props: IProps) {
   }, [element]);
 
   /**
-   * 更新id
+   * 更新 元素文档 todo 如果更新的信息与原信息一样，则不需要进行更新
    */
   function updateDocumentation(value: string) {
     // 创建一个元素文档
@@ -48,7 +52,7 @@ export default function ElementOtherInfo(props: IProps) {
         <Panel
           header={
             <Typography style={{ color: '#1890ff' }}>
-              <PushpinTwoTone />
+              <PaperClipOutlined />
               &nbsp;其它
             </Typography>
           }
@@ -63,16 +67,11 @@ export default function ElementOtherInfo(props: IProps) {
             key={businessObject?.documentation?.at(0).text}
             defaultValue={businessObject?.documentation?.at(0).text || ''}
             onPressEnter={(event) => {
-              console.log(
-                'onPressEnter \n',
-                businessObject?.documentation?.at(0).text,
-              );
               updateDocumentation(event.currentTarget.value);
             }}
-            // onBlur={event => {
-            //   console.log("onPressEnter \n", event)
-            //   updateDocumentation(event.currentTarget.value);
-            // }}
+            onBlur={(event) => {
+              updateDocumentation(event.currentTarget.value);
+            }}
           />
         </Panel>
       </Collapse>

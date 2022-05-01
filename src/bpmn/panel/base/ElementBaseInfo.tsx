@@ -79,6 +79,9 @@ export default function ElementBaseInfo(props: IProps) {
             onPressEnter={(event) => {
               updateVersionTag(event.currentTarget.value);
             }}
+            onBlur={(event) => {
+              updateVersionTag(event.currentTarget.value);
+            }}
           />
           <Typography style={{ marginTop: 10 }}>
             可执行&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -125,6 +128,9 @@ export default function ElementBaseInfo(props: IProps) {
             onPressEnter={(event) => {
               updateId(event.currentTarget.value);
             }}
+            onBlur={(event) => {
+              updateId(event.currentTarget.value);
+            }}
           />
           <Input
             size="small"
@@ -136,9 +142,9 @@ export default function ElementBaseInfo(props: IProps) {
             onPressEnter={(event) => {
               updateName(event.currentTarget.value);
             }}
-            // onChange={(event) => {
-            //   updateName(event.currentTarget.value);
-            // }}
+            onBlur={(event) => {
+              updateName(event.currentTarget.value);
+            }}
           />
           {renderProcessElement()}
         </Panel>
