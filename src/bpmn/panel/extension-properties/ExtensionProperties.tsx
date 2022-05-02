@@ -28,40 +28,46 @@ const { Panel } = Collapse;
 
 const { TextArea } = Input;
 
+const initialRows = [
+  // 此处的key不能省略，否则控制台报错
+  {
+    key: '1',
+    name: '属性名A',
+    value: '属性值A',
+  },
+  {
+    key: '2',
+    name: '属性名B',
+    value: '属性值B',
+  },
+];
+
 interface IProps {
   element: any;
   modeling: any;
   bpmnFactory: any;
+  moddle: any;
 }
 
 export default function ExtensionProperties(props: IProps) {
   // props属性
-  const { element, modeling, bpmnFactory } = props;
+  const { element, modeling, bpmnFactory, moddle } = props;
 
   // setState属性
   const [businessObject, setBusinessObject] = useState<any>();
+  const [rows, setRows] = useState<Array<any>>(initialRows);
+  const [currentRow, setCurrentRow] = useState<any>();
 
   // ref
   const editRef = useRef<any>();
 
   useEffect(() => {
+    // 初始化业务对象
     setBusinessObject(element?.businessObject);
+    // todo 初始化扩展元素列表
+    //
     console.log('element in other \n', element);
   }, [element]);
-
-  const data = [
-    // 此处的key不能省略，否则控制台报错
-    {
-      key: '1',
-      name: '属性名A',
-      value: '属性值A',
-    },
-    {
-      key: '2',
-      name: '属性名B',
-      value: '属性值B',
-    },
-  ];
 
   const columns = [
     {
@@ -96,6 +102,7 @@ export default function ExtensionProperties(props: IProps) {
             size={'small'}
             style={{ color: '#1890ff' }}
             onClick={() => {
+              setCurrentRow(record);
               editRef.current.showEditModal();
             }}
           >
@@ -106,7 +113,7 @@ export default function ExtensionProperties(props: IProps) {
             type="text"
             size={'small'}
             onClick={() => {
-              console.log('');
+              console.log(record);
             }}
           >
             {'删除'}
@@ -132,7 +139,7 @@ export default function ExtensionProperties(props: IProps) {
         >
           <Table
             columns={columns}
-            dataSource={data}
+            dataSource={rows}
             pagination={false}
             bordered
             size={'small'}
@@ -145,6 +152,8 @@ export default function ExtensionProperties(props: IProps) {
               marginTop: 8,
             }}
             onClick={() => {
+              // 新增时，设置当前行对象为空
+              setCurrentRow(null);
               editRef.current.showEditModal();
             }}
           >
@@ -155,7 +164,14 @@ export default function ExtensionProperties(props: IProps) {
       </Collapse>
 
       {/* 弹窗组件 */}
-      <EditProperty onRef={editRef} />
+      <EditProperty
+        onRef={editRef}
+        currentRow={currentRow}
+        rowsData={rows}
+        moddle={moddle}
+        modeling={modeling}
+        element={element}
+      />
     </>
   );
 }
