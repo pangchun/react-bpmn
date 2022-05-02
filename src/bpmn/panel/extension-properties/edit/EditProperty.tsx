@@ -5,7 +5,8 @@ import React, {
   useImperativeHandle,
   useState,
 } from 'react';
-import { Modal, Button, message, Input } from 'antd';
+import { Modal, Button, message, Input, Typography } from 'antd';
+import { EditOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 
 // todo 设置默认前缀，后面设置多moddle时可从配置获取
 const prefix: string = 'flowable';
@@ -115,7 +116,19 @@ export default function EditProperty(props: IProps) {
       <Modal
         width={500}
         style={{ maxHeight: '50vh' }}
-        title="编辑属性"
+        title={
+          currentRow ? (
+            <Typography style={{ color: '#1890ff' }}>
+              <EditOutlined />
+              &nbsp;编辑属性
+            </Typography>
+          ) : (
+            <Typography style={{ color: '#1890ff' }}>
+              <EditOutlined />
+              &nbsp;新增属性
+            </Typography>
+          )
+        }
         visible={isModalVisible}
         okText={'确认'}
         cancelText={'取消'}

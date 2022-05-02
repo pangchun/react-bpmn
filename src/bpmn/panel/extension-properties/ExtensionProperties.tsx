@@ -23,6 +23,7 @@ import {
   RightCircleTwoTone,
 } from '@ant-design/icons';
 import EditProperty from '@/bpmn/panel/extension-properties/edit/EditProperty';
+import DeleteProperty from '@/bpmn/panel/extension-properties/delete/DeleteProperty';
 
 const { Panel } = Collapse;
 
@@ -60,6 +61,7 @@ export default function ExtensionProperties(props: IProps) {
 
   // ref
   const editRef = useRef<any>();
+  const deleteRef = useRef<any>();
 
   useEffect(() => {
     // 初始化业务对象
@@ -113,7 +115,8 @@ export default function ExtensionProperties(props: IProps) {
             type="text"
             size={'small'}
             onClick={() => {
-              console.log(record);
+              setCurrentRow(record);
+              deleteRef.current.showDeleteModal();
             }}
           >
             {'删除'}
@@ -166,6 +169,14 @@ export default function ExtensionProperties(props: IProps) {
       {/* 弹窗组件 */}
       <EditProperty
         onRef={editRef}
+        currentRow={currentRow}
+        rowsData={rows}
+        moddle={moddle}
+        modeling={modeling}
+        element={element}
+      />
+      <DeleteProperty
+        onRef={deleteRef}
         currentRow={currentRow}
         rowsData={rows}
         moddle={moddle}
