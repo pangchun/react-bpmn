@@ -30,7 +30,9 @@ export default function EditProperty(props: IProps) {
   const [propertyValue, setPropertyValue] = useState<string>();
 
   useEffect(() => {
-    console.log(currentRow);
+    // 初始化默认值
+    setPropertyName(currentRow?.name);
+    setPropertyValue(currentRow?.value);
   }, [currentRow]);
 
   /**
