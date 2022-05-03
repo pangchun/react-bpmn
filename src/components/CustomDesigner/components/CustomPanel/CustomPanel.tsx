@@ -6,6 +6,7 @@ import ElementBaseInfo from '@/bpmn/panel/base/ElementBaseInfo';
 import { Collapse } from 'antd';
 import ElementOtherInfo from '@/bpmn/panel/other/ElementOtherInfo';
 import ExtensionProperties from '@/bpmn/panel/extension-properties/ExtensionProperties';
+import ButtonGroup from 'antd/es/button/button-group';
 
 const { Panel } = Collapse;
 
@@ -69,14 +70,15 @@ export default function CustomPanel(props: IProps) {
     // 设置监听器，监听选中节点变化
     modeler?.on('selection.changed', (e: any) => {
       setSelectedElements(e.newSelection);
-      setElement(e.newSelection[0]);
       confirmCurrentElement(e.newSelection[0] || null);
       console.log('selection.changed \n', e);
     });
 
-    // 设置监听器，监听当前节点属性变化
+    // 设置监听器，监听当前节点属性变化 todo 监听到element的属性变化后要做一些事，使得每个子组件获取到最新的element
     modeler?.on('element.changed', (e: any) => {
       console.log('element.changed \n', e);
+      // setState 这一步是成功的，但是这个state没有被子组件响应，原因可能是对象的hash地址相同，react认为state没改变，所以未刷新
+      confirmCurrentElement(e.element);
     });
   }
 
@@ -96,7 +98,9 @@ export default function CustomPanel(props: IProps) {
   return (
     <>
       <Space direction="vertical" size={0} style={{ display: 'flex' }}>
-        {/*<Title level={1}>{element?.type || '属性面板'}</Title>*/}
+        <Title level={1}>
+          {element?.businessObject.isExecutable?.toString() || '属性面板'}
+        </Title>
         <ElementBaseInfo element={element} modeling={modeling} />
         <Divider type={'horizontal'} style={{ margin: 0 }} />
         <ExtensionProperties

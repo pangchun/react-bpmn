@@ -105,7 +105,7 @@ export default function CustomDesigner(props: IProps) {
   return (
     <>
       <Row gutter={0}>
-        <Col className="gutter-row" span={16}>
+        <Col className="gutter-row" span={18}>
           <div>
             <Button
               type="primary"
@@ -151,7 +151,7 @@ export default function CustomDesigner(props: IProps) {
         <Col
           className="gutter-row"
           style={{ backgroundColor: '#FFF' }}
-          span={8}
+          span={6}
         >
           <CustomPanel modeler={bpmnModeler} />
         </Col>

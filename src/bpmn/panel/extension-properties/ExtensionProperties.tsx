@@ -29,7 +29,7 @@ const { Panel } = Collapse;
 
 const { TextArea } = Input;
 
-const initialRows = [
+const initialRows: any[] = [
   // 此处的key不能省略，否则控制台报错
   {
     key: '1',
@@ -54,9 +54,19 @@ export default function ExtensionProperties(props: IProps) {
   // props属性
   const { element, modeling, bpmnFactory, moddle } = props;
 
+  // var equal = require('fast-deep-equal');
+  //
+  // const elementRef = useRef(element)
+  //
+  // if (!equal(elementRef.current, element)) {
+  //   console.log('elementRef.current \n', elementRef.current)
+  //   console.log('element.current \n', element)
+  //   elementRef.current = element
+  // }
+
   // setState属性
   const [businessObject, setBusinessObject] = useState<any>();
-  const [rows, setRows] = useState<Array<any>>(initialRows);
+  const [rows, setRows] = useState(initialRows);
   const [currentRow, setCurrentRow] = useState<any>();
 
   // ref
@@ -67,9 +77,32 @@ export default function ExtensionProperties(props: IProps) {
     // 初始化业务对象
     setBusinessObject(element?.businessObject);
     // todo 初始化扩展元素列表
-    //
-    console.log('element in other \n', element);
-  }, [element]);
+    setRows(initRows());
+    console.log('element in ExtensionProperties \n', element);
+  }, [JSON.stringify(element?.businessObject)]);
+
+  /**
+   * 初始化行数据
+   */
+  function initRows() {
+    if (!element) {
+      return [];
+    }
+
+    let initialRows: any[] = [];
+
+    let properties: any[] =
+      element.businessObject?.extensionElements?.values?.at(0)?.values;
+    properties?.map((e, i) => {
+      initialRows.push({
+        key: i,
+        name: e.name,
+        value: e.value,
+      });
+    });
+
+    return initialRows;
+  }
 
   const columns = [
     {
@@ -157,7 +190,7 @@ export default function ExtensionProperties(props: IProps) {
             onClick={() => {
               // 新增时，设置当前行对象为空
               setCurrentRow(null);
-              editRef.current.showEditModal();
+              editRef.current.showEditModal(123);
             }}
           >
             <PlusOutlined />

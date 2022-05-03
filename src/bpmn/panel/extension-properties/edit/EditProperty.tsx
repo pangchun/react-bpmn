@@ -40,10 +40,10 @@ export default function EditProperty(props: IProps) {
    * 暴露给父组件的方法或变量
    */
   useImperativeHandle(onRef, () => ({
-    showEditModal: () => showModal(),
+    showEditModal: (param: any) => showModal(param),
   }));
 
-  function showModal() {
+  function showModal(param: any) {
     setIsModalVisible(true);
   }
 
@@ -65,6 +65,7 @@ export default function EditProperty(props: IProps) {
       extensionElements: extensionElements,
     });
     message.success('【扩展属性】已更新').then((r) => {});
+    setIsModalVisible(false);
   }
 
   /**
