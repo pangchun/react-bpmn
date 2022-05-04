@@ -54,16 +54,6 @@ export default function ExtensionProperties(props: IProps) {
   // props属性
   const { element, modeling, bpmnFactory, moddle } = props;
 
-  // var equal = require('fast-deep-equal');
-  //
-  // const elementRef = useRef(element)
-  //
-  // if (!equal(elementRef.current, element)) {
-  //   console.log('elementRef.current \n', elementRef.current)
-  //   console.log('element.current \n', element)
-  //   elementRef.current = element
-  // }
-
   // setState属性
   const [businessObject, setBusinessObject] = useState<any>();
   const [rows, setRows] = useState(initialRows);

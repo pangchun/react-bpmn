@@ -31,7 +31,7 @@ export default function ElementBaseInfo(props: IProps) {
    */
   function updateId(value: string) {
     // 如果新值与旧值相同，则不更新
-    const oldValue: string = businessObject?.id || '';
+    const oldValue: string = element?.businessObject?.id || '';
     if (oldValue === value) {
       return;
     }
@@ -46,7 +46,7 @@ export default function ElementBaseInfo(props: IProps) {
    */
   function updateName(value: string) {
     // 如果新值与旧值相同，则不更新
-    const oldValue: string = businessObject?.name || '';
+    const oldValue: string = element?.businessObject?.name || '';
     if (oldValue === value) {
       return;
     }
@@ -61,7 +61,7 @@ export default function ElementBaseInfo(props: IProps) {
    */
   function updateVersionTag(value: string) {
     // 如果新值与旧值相同，则不更新
-    const oldValue: string = businessObject?.versionTag || '';
+    const oldValue: string = element?.businessObject?.versionTag || '';
     if (oldValue === value) {
       return;
     }
@@ -93,13 +93,18 @@ export default function ElementBaseInfo(props: IProps) {
             addonBefore={'版本标签'}
             placeholder="版本标签"
             style={{ marginTop: 4 }}
-            key={businessObject?.versionTag}
-            defaultValue={businessObject?.versionTag}
+            value={businessObject?.versionTag}
             onPressEnter={(event) => {
               updateVersionTag(event.currentTarget.value);
             }}
             onBlur={(event) => {
               updateVersionTag(event.currentTarget.value);
+            }}
+            onChange={(event) => {
+              setBusinessObject({
+                ...businessObject,
+                versionTag: event.target.value,
+              });
             }}
           />
           <Typography style={{ marginTop: 10 }}>
@@ -107,9 +112,9 @@ export default function ElementBaseInfo(props: IProps) {
             <Switch
               checkedChildren="开启"
               unCheckedChildren="关闭"
-              key={businessObject?.isExecutable}
-              defaultChecked={businessObject?.isExecutable}
+              checked={businessObject?.isExecutable}
               onChange={(checked) => {
+                setBusinessObject({ ...businessObject, isExecutable: checked });
                 updateIsExecutable(checked);
               }}
             />
@@ -141,8 +146,7 @@ export default function ElementBaseInfo(props: IProps) {
             size="small"
             addonBefore={'编号'}
             placeholder="编号"
-            key={businessObject?.id}
-            defaultValue={businessObject?.id}
+            value={businessObject?.id}
             readOnly={businessObject?.$type === 'bpmn:Process'}
             onPressEnter={(event) => {
               updateId(event.currentTarget.value);
@@ -150,19 +154,27 @@ export default function ElementBaseInfo(props: IProps) {
             onBlur={(event) => {
               updateId(event.currentTarget.value);
             }}
+            onChange={(event) => {
+              setBusinessObject({ ...businessObject, id: event.target.value });
+            }}
           />
           <Input
             size="small"
             addonBefore={'名称'}
             placeholder="名称"
             style={{ marginTop: 4 }}
-            key={businessObject?.name}
-            defaultValue={businessObject?.name}
+            value={businessObject?.name}
             onPressEnter={(event) => {
               updateName(event.currentTarget.value);
             }}
             onBlur={(event) => {
               updateName(event.currentTarget.value);
+            }}
+            onChange={(event) => {
+              setBusinessObject({
+                ...businessObject,
+                name: event.target.value,
+              });
             }}
           />
           {renderProcessElement()}

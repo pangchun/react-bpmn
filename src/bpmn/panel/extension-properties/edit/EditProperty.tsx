@@ -5,7 +5,15 @@ import React, {
   useImperativeHandle,
   useState,
 } from 'react';
-import { Modal, Button, message, Input, Typography } from 'antd';
+import {
+  Modal,
+  Button,
+  message,
+  Input,
+  Typography,
+  Form,
+  Checkbox,
+} from 'antd';
 import { EditOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 
 // todo 设置默认前缀，后面设置多moddle时可从配置获取
@@ -31,10 +39,11 @@ export default function EditProperty(props: IProps) {
   const [propertyValue, setPropertyValue] = useState<string>();
 
   useEffect(() => {
-    // 初始化默认值
+    // 初始化默认值 这里之所以依赖rowsData，因为currentRow可以为null
     setPropertyName(currentRow?.name);
     setPropertyValue(currentRow?.value);
-  }, [currentRow]);
+    console.log(currentRow);
+  }, [currentRow, rowsData]);
 
   /**
    * 暴露给父组件的方法或变量
@@ -139,9 +148,8 @@ export default function EditProperty(props: IProps) {
         <Input
           size="middle"
           addonBefore={'属性名'}
-          placeholder="属性名"
-          key={currentRow?.name}
-          defaultValue={currentRow?.name}
+          placeholder={'属性名'}
+          value={propertyName}
           onChange={(event) => {
             updateName(event.currentTarget.value);
           }}
@@ -149,10 +157,9 @@ export default function EditProperty(props: IProps) {
         <Input
           size="middle"
           addonBefore={'属性值'}
-          placeholder="属性值"
+          placeholder={'属性值'}
           style={{ marginTop: 4 }}
-          key={currentRow?.value}
-          defaultValue={currentRow?.value}
+          value={propertyValue}
           onChange={(event) => {
             updateValue(event.currentTarget.value);
           }}

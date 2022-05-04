@@ -98,9 +98,9 @@ export default function CustomPanel(props: IProps) {
   return (
     <>
       <Space direction="vertical" size={0} style={{ display: 'flex' }}>
-        <Title level={1}>
-          {element?.businessObject.isExecutable?.toString() || '属性面板'}
-        </Title>
+        {/*<Title level={1}>*/}
+        {/*  {element?.businessObject.isExecutable?.toString() || '属性面板'}*/}
+        {/*</Title>*/}
         <ElementBaseInfo element={element} modeling={modeling} />
         <Divider type={'horizontal'} style={{ margin: 0 }} />
         <ExtensionProperties

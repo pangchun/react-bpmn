@@ -39,7 +39,8 @@ export default function ElementOtherInfo(props: IProps) {
    */
   function updateDocumentation(value: string) {
     // 如果新值与旧值相同，则不更新
-    const oldValue: string = businessObject?.documentation?.at(0).text || '';
+    const oldValue: string =
+      element?.businessObject?.documentation?.at(0).text || '';
     if (oldValue === value) {
       return;
     }
@@ -71,13 +72,22 @@ export default function ElementOtherInfo(props: IProps) {
           <TextArea
             rows={4}
             placeholder={'请输入元素文档信息'}
-            key={businessObject?.documentation?.at(0).text}
-            defaultValue={businessObject?.documentation?.at(0).text || ''}
-            onPressEnter={(event) => {
-              updateDocumentation(event.currentTarget.value);
-            }}
+            value={businessObject?.documentation?.at(0).text || ''}
+            // onPressEnter={(event) => {
+            //   updateDocumentation(event.currentTarget.value);
+            // }}
             onBlur={(event) => {
               updateDocumentation(event.currentTarget.value);
+            }}
+            onChange={(event) => {
+              setBusinessObject({
+                ...businessObject,
+                documentation: [
+                  {
+                    text: event.target.value,
+                  },
+                ],
+              });
             }}
           />
         </Panel>
