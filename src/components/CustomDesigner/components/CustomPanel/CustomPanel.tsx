@@ -109,14 +109,16 @@ export default function CustomPanel(props: IProps) {
         <ElementBaseInfo element={element} modeling={modeling} />
         <Divider type={'horizontal'} style={{ margin: 0 }} />
         {element?.type === 'bpmn:Process' && (
-          <SignalMessage
-            element={element}
-            modeling={modeling}
-            moddle={moddle}
-            rootElements={rootElements}
-          />
+          <>
+            <SignalMessage
+              element={element}
+              modeling={modeling}
+              moddle={moddle}
+              rootElements={rootElements}
+            />
+            <Divider type={'horizontal'} style={{ margin: 0 }} />
+          </>
         )}
-        <Divider type={'horizontal'} style={{ margin: 0 }} />
         <ExtensionProperties
           element={element}
           modeling={modeling}
