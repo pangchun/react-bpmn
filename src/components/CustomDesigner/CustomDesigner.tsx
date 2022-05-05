@@ -139,7 +139,7 @@ export default function CustomDesigner(props: IProps) {
               type="primary"
               style={{ marginLeft: 10 }}
               onClick={() => {
-                console.log(xmlStr);
+                console.log(bpmnModeler.getDefinitions().rootElements);
               }}
             >
               {'下载XML'}

@@ -7,6 +7,7 @@ import { Collapse } from 'antd';
 import ElementOtherInfo from '@/bpmn/panel/other/ElementOtherInfo';
 import ExtensionProperties from '@/bpmn/panel/extension-properties/ExtensionProperties';
 import ButtonGroup from 'antd/es/button/button-group';
+import SignalMessage from '@/bpmn/panel/signal-message/SignalMessage';
 
 const { Panel } = Collapse;
 
@@ -31,6 +32,7 @@ export default function CustomPanel(props: IProps) {
   const [processElement, setProcessElement] = useState<any>();
   const [bpmnFactory, setBpmnFactory] = useState<any>();
   const [moddle, setModdel] = useState<any>();
+  const [rootElements, setRootElements] = useState([]);
 
   useEffect(() => {
     // 避免初始化，流程图未加载完导致出错
@@ -65,6 +67,9 @@ export default function CustomPanel(props: IProps) {
         'import.done \n',
         modeler.get('elementRegistry').get('Process_1'),
       );
+      // 获取rootElements
+      setRootElements(modeler.getDefinitions().rootElements);
+      console.log('getDefinitions\n', modeler.getDefinitions().rootElements);
     });
 
     // 设置监听器，监听选中节点变化
@@ -74,7 +79,7 @@ export default function CustomPanel(props: IProps) {
       console.log('selection.changed \n', e);
     });
 
-    // 设置监听器，监听当前节点属性变化 todo 监听到element的属性变化后要做一些事，使得每个子组件获取到最新的element
+    // 设置监听器，监听当前节点属性变化
     modeler?.on('element.changed', (e: any) => {
       console.log('element.changed \n', e);
       // setState 这一步是成功的，但是这个state没有被子组件响应，原因可能是对象的hash地址相同，react认为state没改变，所以未刷新
@@ -102,6 +107,13 @@ export default function CustomPanel(props: IProps) {
         {/*  {element?.businessObject.isExecutable?.toString() || '属性面板'}*/}
         {/*</Title>*/}
         <ElementBaseInfo element={element} modeling={modeling} />
+        <Divider type={'horizontal'} style={{ margin: 0 }} />
+        <SignalMessage
+          element={element}
+          modeling={modeling}
+          moddle={moddle}
+          rootElements={rootElements}
+        />
         <Divider type={'horizontal'} style={{ margin: 0 }} />
         <ExtensionProperties
           element={element}
