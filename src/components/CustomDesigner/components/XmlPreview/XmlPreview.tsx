@@ -2,15 +2,20 @@ import React, { useState } from 'react';
 import { Modal, Button, message } from 'antd';
 
 interface IProps {
-  xml: string;
+  modeler: any;
 }
 export default function XmlPreview(props: IProps) {
-  const { xml } = props;
+  const { modeler } = props;
 
+  const [xml, setXml] = useState<string>('');
   const [isModalVisible, setIsModalVisible] = useState(false);
 
-  const showModal = () => {
+  const showModal = async () => {
     setIsModalVisible(true);
+
+    let result = await modeler.saveXML({ format: true });
+    const { xml } = result;
+    setXml(xml);
   };
 
   const handleCancel = () => {

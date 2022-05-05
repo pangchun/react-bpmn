@@ -125,7 +125,7 @@ export default function CustomDesigner(props: IProps) {
             >
               {'打印XML'}
             </Button>
-            <XmlPreview xml={xmlStr} />
+            <XmlPreview modeler={bpmnModeler} />
             <Button
               type="primary"
               style={{ marginLeft: 10 }}
