@@ -13,6 +13,7 @@ const prefix: string = 'flowable';
 
 interface IProps {
   onRef: Ref<any>;
+  otherExtensionList: any[];
   rowsData: Array<any>;
   // 必传
   currentRow: any;
@@ -23,7 +24,15 @@ interface IProps {
 
 export default function DeleteProperty(props: IProps) {
   // props属性
-  const { rowsData, currentRow, onRef, moddle, modeling, element } = props;
+  const {
+    rowsData,
+    currentRow,
+    onRef,
+    moddle,
+    modeling,
+    element,
+    otherExtensionList,
+  } = props;
 
   // setState属性
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -52,7 +61,7 @@ export default function DeleteProperty(props: IProps) {
     });
     // 新建扩展属性字段
     const extensionElements = moddle?.create(`bpmn:ExtensionElements`, {
-      values: [properties],
+      values: otherExtensionList.concat(properties),
     });
     // 执行更新
     modeling?.updateProperties(element, {

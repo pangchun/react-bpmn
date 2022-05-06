@@ -1,34 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
-import {
-  Button,
-  Form,
-  Input,
-  message,
-  Space,
-  Switch,
-  Typography,
-  Table,
-  Tag,
-} from 'antd';
-import Title from 'antd/lib/typography/Title';
-
-const { Text, Link } = Typography;
-
+import { Button, Space, Typography, Table } from 'antd';
 import { Collapse } from 'antd';
-import {
-  PaperClipOutlined,
-  PlusOutlined,
-  PlusSquareTwoTone,
-  PushpinTwoTone,
-  RightCircleTwoTone,
-} from '@ant-design/icons';
+import { PlusOutlined, PlusSquareTwoTone } from '@ant-design/icons';
 import EditProperty from '@/bpmn/panel/extension-properties/edit/EditProperty';
 import DeleteProperty from '@/bpmn/panel/extension-properties/delete/DeleteProperty';
+import { FLOWABLE_PREFIX } from '@/bpmn/constant/moddle-constant';
 
 const { Panel } = Collapse;
-
-const { TextArea } = Input;
-
 const initialRows: any[] = [
   // 此处的key不能省略，否则控制台报错
   {
@@ -58,6 +36,7 @@ export default function ExtensionProperties(props: IProps) {
   const [businessObject, setBusinessObject] = useState<any>();
   const [rows, setRows] = useState(initialRows);
   const [currentRow, setCurrentRow] = useState<any>();
+  const [otherExtensionList, setOtherExtensionList] = useState<Array<any>>([]);
 
   // ref
   const editRef = useRef<any>();
@@ -66,8 +45,8 @@ export default function ExtensionProperties(props: IProps) {
   useEffect(() => {
     // 初始化业务对象
     setBusinessObject(element?.businessObject);
-    // todo 初始化扩展元素列表
     setRows(initRows());
+    initOtherExtensionList();
     console.log('element in ExtensionProperties \n', element);
   }, [JSON.stringify(element?.businessObject)]);
 
@@ -82,7 +61,10 @@ export default function ExtensionProperties(props: IProps) {
     let initialRows: any[] = [];
 
     let properties: any[] =
-      element.businessObject?.extensionElements?.values?.at(0)?.values;
+      // element.businessObject?.extensionElements?.values?.at(0)?.values;
+      element.businessObject?.extensionElements?.values?.find(
+        (e: any) => e.$type === `${FLOWABLE_PREFIX}:Properties`,
+      )?.values;
     properties?.map((e, i) => {
       initialRows.push({
         key: i,
@@ -92,6 +74,19 @@ export default function ExtensionProperties(props: IProps) {
     });
 
     return initialRows;
+  }
+
+  /**
+   * 初始化其他非扩展属性元素
+   */
+  function initOtherExtensionList() {
+    let otherExtensionList: any[] = [];
+    element?.businessObject?.extensionElements?.values?.filter((e: any) => {
+      if (e.$type !== `${FLOWABLE_PREFIX}:Properties`) {
+        otherExtensionList.push(e);
+      }
+    });
+    setOtherExtensionList(otherExtensionList);
   }
 
   const columns = [
@@ -192,6 +187,7 @@ export default function ExtensionProperties(props: IProps) {
       {/* 弹窗组件 */}
       <EditProperty
         onRef={editRef}
+        otherExtensionList={otherExtensionList}
         currentRow={currentRow}
         rowsData={rows}
         moddle={moddle}
@@ -200,6 +196,7 @@ export default function ExtensionProperties(props: IProps) {
       />
       <DeleteProperty
         onRef={deleteRef}
+        otherExtensionList={otherExtensionList}
         currentRow={currentRow}
         rowsData={rows}
         moddle={moddle}
