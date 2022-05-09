@@ -8,6 +8,7 @@ import ElementOtherInfo from '@/bpmn/panel/other/ElementOtherInfo';
 import ExtensionProperties from '@/bpmn/panel/extension-properties/ExtensionProperties';
 import ButtonGroup from 'antd/es/button/button-group';
 import SignalMessage from '@/bpmn/panel/signal-message/SignalMessage';
+import ExecuteListener from '@/bpmn/panel/element-listener/execute-listener/ExecuteListener';
 
 const { Panel } = Collapse;
 
@@ -119,6 +120,13 @@ export default function CustomPanel(props: IProps) {
             <Divider type={'horizontal'} style={{ margin: 0 }} />
           </>
         )}
+        <ExecuteListener
+          element={element}
+          modeling={modeling}
+          bpmnFactory={bpmnFactory}
+          moddle={moddle}
+        />
+        <Divider type={'horizontal'} style={{ margin: 0 }} />
         <ExtensionProperties
           element={element}
           modeling={modeling}
