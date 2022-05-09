@@ -38,6 +38,7 @@ interface IProps {}
  * @constructor
  */
 export default function CustomDesigner(props: IProps) {
+  // setState属性
   const [bpmnModeler, setBpmnModeler] = useState<any>();
   const [xmlStr, setXmlStr] = useState<string>(newDiagram.xml);
 
@@ -45,9 +46,7 @@ export default function CustomDesigner(props: IProps) {
    * 初始化建模器
    */
   useEffect(() => {
-    (async () => {
-      await initBpmnModeler();
-    })();
+    initBpmnModeler();
   }, []);
 
   /**
@@ -91,14 +90,11 @@ export default function CustomDesigner(props: IProps) {
   }
 
   /**
-   * 监听面板属性变化，实时更新到 xml 字符串中
-   * 1、当属性面板值改变时，将改变后的值写入 xml 字符串中；
+   * 监听面板属性变化
    */
   function addPropertiesListener() {
     bpmnModeler?.on('commandStack.changed', async () => {
-      let result = await bpmnModeler.saveXML({ format: true });
-      const { xml } = result;
-      setXmlStr(xml);
+      // 你可以尝试在这里执行一些操作
     });
   }
 
