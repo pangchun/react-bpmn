@@ -2,8 +2,8 @@
 
 // 执行监听器 事件类型
 export const EXECUTE_EVENT_TYPE = {
-  start: 'start',
-  end: 'end',
+  start: '开始',
+  end: '结束',
 };
 
 export const EXECUTE_EVENT_TYPE_OPTIONS = [
@@ -14,6 +14,70 @@ export const EXECUTE_EVENT_TYPE_OPTIONS = [
   {
     name: 'end',
     value: EXECUTE_EVENT_TYPE.end,
+  },
+];
+
+// 任务监听器 事件类型
+export const TASK_EVENT_TYPE = {
+  create: '创建',
+  assignment: '指派',
+  complete: '完成',
+  delete: '删除',
+  update: '更新',
+  timeout: '超时',
+};
+
+export const TASK_EVENT_TYPE_OPTIONS = [
+  {
+    name: 'create',
+    value: TASK_EVENT_TYPE.create,
+  },
+  {
+    name: 'assignment',
+    value: TASK_EVENT_TYPE.assignment,
+  },
+  {
+    name: 'complete',
+    value: TASK_EVENT_TYPE.complete,
+  },
+  {
+    name: 'delete',
+    value: TASK_EVENT_TYPE.delete,
+  },
+  {
+    name: 'update',
+    value: TASK_EVENT_TYPE.update,
+  },
+  {
+    name: 'timeout',
+    value: TASK_EVENT_TYPE.timeout,
+  },
+];
+
+// 任务监听器 定时器类型
+export const TIMER_TYPE = {
+  timeDate: 'timeDate',
+  timeCycle: 'timeCycle',
+  timeDuration: 'timeDuration',
+  none: '',
+};
+
+export const TIMER_TYPE_OPTIONS = [
+  {
+    name: '日期',
+    value: TIMER_TYPE.timeDate,
+  },
+  {
+    name: '循环',
+    value: TIMER_TYPE.timeCycle,
+  },
+  {
+    name: '持续时间',
+    value: TIMER_TYPE.timeDuration,
+  },
+  {
+    name: '无',
+    value: TIMER_TYPE.none,
   },
 ];
 
@@ -66,7 +130,7 @@ export function encapsulateListener(listener: any) {
   return {
     ...JSON.parse(JSON.stringify(listener)),
     ...(listener.script ?? {}),
-    listenerType: listenerType,
+    listenerType,
   };
 }
 
@@ -103,3 +167,18 @@ export const FIELD_TYPE_OPTIONS = [
     value: FIELD_TYPE.expression,
   },
 ];
+
+export function encapsulateField(field: any) {
+  let fieldType: any;
+  if (field.string) {
+    fieldType = FIELD_TYPE_OPTIONS.find((e) => e.value === FIELD_TYPE.string);
+  } else if (field.expression) {
+    fieldType = LISTENER_EVENT_TYPE_OPTIONS.find(
+      (e) => e.value === FIELD_TYPE.expression,
+    );
+  }
+  return {
+    ...JSON.parse(JSON.stringify(field)),
+    fieldType,
+  };
+}
