@@ -1,5 +1,6 @@
 import React, { Ref, useImperativeHandle, useState } from 'react';
-import { Drawer, Button } from 'antd';
+import { Drawer, Button, Select, Space } from 'antd';
+const { Option } = Select;
 
 interface IProps {
   onRef: Ref<any>;
@@ -42,17 +43,51 @@ export default function EditListener(props: IProps) {
     setVisible(false);
   };
 
+  function handleChange(value: string) {
+    console.log(`selected ${value}`);
+  }
+
   return (
     <>
       <Drawer
-        title="Basic Drawer"
+        width={495}
+        title="属性配置"
         placement="right"
         onClose={onClose}
         visible={visible}
       >
-        <p>Some contents...</p>
-        <p>Some contents...</p>
-        <p>Some contents...</p>
+        <Space direction={'vertical'}>
+          <Space style={{ display: 'flex', justifyContent: 'end' }}>
+            事件类型
+            <Select
+              defaultValue="lucy"
+              style={{ width: 350 }}
+              onChange={handleChange}
+            >
+              <Option value="1">Jack</Option>
+              <Option value="2">Lucy</Option>
+              <Option value="disabled" disabled>
+                Disabled
+              </Option>
+              <Option value="3">yiminghe</Option>
+            </Select>
+          </Space>
+          <Space>
+            监听器类型
+            <Select
+              defaultValue="lucy"
+              style={{ width: 350 }}
+              onChange={handleChange}
+            >
+              <Option value="1">Jack</Option>
+              <Option value="2">Lucy</Option>
+              <Option value="disabled" disabled>
+                Disabled
+              </Option>
+              <Option value="3">yiminghe</Option>
+            </Select>
+          </Space>
+        </Space>
       </Drawer>
     </>
   );

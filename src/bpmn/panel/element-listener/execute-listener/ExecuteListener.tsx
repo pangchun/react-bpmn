@@ -10,6 +10,7 @@ import EditProperty from '@/bpmn/panel/extension-properties/edit/EditProperty';
 import DeleteProperty from '@/bpmn/panel/extension-properties/delete/DeleteProperty';
 import { FLOWABLE_PREFIX } from '@/bpmn/constant/moddle-constant';
 import { encapsulateListener } from '@/bpmn/panel/element-listener/data-self';
+import EditListener from '@/bpmn/panel/element-listener/execute-listener/edit/EditListener';
 
 const { Panel } = Collapse;
 
@@ -29,6 +30,9 @@ export default function ExecuteListener(props: IProps) {
   const [rows, setRows] = useState<Array<any>>([]);
   const [currentRow, setCurrentRow] = useState<any>();
   const [otherExtensionList, setOtherExtensionList] = useState<Array<any>>([]);
+  const [listenerExtensionList, setListenerExtensionList] = useState<
+    Array<any>
+  >([]);
 
   // ref
   const editRef = useRef<any>();
@@ -37,7 +41,7 @@ export default function ExecuteListener(props: IProps) {
   useEffect(() => {
     // 初始化业务对象
     setBusinessObject(element?.businessObject);
-    setRows(initRows());
+    initRows();
     initOtherExtensionList();
     console.log('element in ExtensionProperties \n', element);
   }, [JSON.stringify(element?.businessObject)]);
@@ -50,12 +54,15 @@ export default function ExecuteListener(props: IProps) {
       return [];
     }
 
-    let initialRows: any[] = [];
+    let initialRows: any[];
 
     let listeners: any[] =
       element.businessObject?.extensionElements?.values?.filter(
         (e: any) => e.$type === `${FLOWABLE_PREFIX}:ExecutionListener`,
       ) ?? [];
+
+    setListenerExtensionList(listeners);
+
     initialRows = listeners?.map((e, i) => {
       let listener = encapsulateListener(e);
       return {
@@ -65,8 +72,7 @@ export default function ExecuteListener(props: IProps) {
         protoListener: listener,
       };
     });
-
-    return initialRows;
+    setRows(initialRows);
   }
 
   /**
@@ -116,7 +122,7 @@ export default function ExecuteListener(props: IProps) {
             style={{ color: '#1890ff' }}
             onClick={() => {
               setCurrentRow(record);
-              editRef.current.showEditModal();
+              editRef.current.showEditDrawer();
             }}
           >
             {'编辑'}
@@ -168,7 +174,7 @@ export default function ExecuteListener(props: IProps) {
             onClick={() => {
               // 新增时，设置当前行对象为空
               setCurrentRow(null);
-              editRef.current.showEditModal(123);
+              editRef.current.showEditDrawer();
             }}
           >
             <PlusOutlined />
@@ -178,7 +184,7 @@ export default function ExecuteListener(props: IProps) {
       </Collapse>
 
       {/* 弹窗组件 */}
-      <EditProperty
+      <EditListener
         onRef={editRef}
         otherExtensionList={otherExtensionList}
         currentRow={currentRow}
