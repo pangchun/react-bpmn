@@ -28,6 +28,7 @@ interface IProps {
   moddle: any;
   modeling: any;
   element: any;
+  reFreshParent: () => any;
 }
 
 export default function EditProperty(props: IProps) {
@@ -40,6 +41,7 @@ export default function EditProperty(props: IProps) {
     modeling,
     element,
     otherExtensionList,
+    reFreshParent,
   } = props;
 
   // setState属性
@@ -83,6 +85,7 @@ export default function EditProperty(props: IProps) {
       extensionElements: extensionElements,
     });
     message.success('【扩展属性】已更新').then((r) => {});
+    reFreshParent();
     setIsModalVisible(false);
   }
 

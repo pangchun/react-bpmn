@@ -45,7 +45,7 @@ export default function ExtensionProperties(props: IProps) {
   useEffect(() => {
     // 初始化业务对象
     setBusinessObject(element?.businessObject);
-    setRows(initRows());
+    initRows();
     initOtherExtensionList();
     console.log('element in ExtensionProperties \n', element);
   }, [JSON.stringify(element?.businessObject)]);
@@ -72,8 +72,7 @@ export default function ExtensionProperties(props: IProps) {
         value: e.value,
       });
     });
-
-    return initialRows;
+    setRows(initialRows);
   }
 
   /**
@@ -193,6 +192,7 @@ export default function ExtensionProperties(props: IProps) {
         moddle={moddle}
         modeling={modeling}
         element={element}
+        reFreshParent={() => initRows()}
       />
       <DeleteProperty
         onRef={deleteRef}
@@ -202,6 +202,7 @@ export default function ExtensionProperties(props: IProps) {
         moddle={moddle}
         modeling={modeling}
         element={element}
+        reFreshParent={() => initRows()}
       />
     </>
   );

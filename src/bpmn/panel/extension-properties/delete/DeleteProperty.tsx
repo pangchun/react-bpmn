@@ -20,6 +20,7 @@ interface IProps {
   moddle: any;
   modeling: any;
   element: any;
+  reFreshParent: () => any;
 }
 
 export default function DeleteProperty(props: IProps) {
@@ -32,6 +33,7 @@ export default function DeleteProperty(props: IProps) {
     modeling,
     element,
     otherExtensionList,
+    reFreshParent,
   } = props;
 
   // setState属性
@@ -68,6 +70,8 @@ export default function DeleteProperty(props: IProps) {
       extensionElements: extensionElements,
     });
     message.success('【扩展属性】已删除').then((r) => {});
+    reFreshParent();
+    handleCancel();
   }
 
   /**
