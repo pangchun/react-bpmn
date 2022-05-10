@@ -1,5 +1,11 @@
 import React, { Ref, useImperativeHandle, useState } from 'react';
-import { Drawer, Button, Select, Space } from 'antd';
+import { Drawer, Button, Select, Space, Input } from 'antd';
+import {
+  EXECUTE_EVENT_TYPE,
+  EXECUTE_EVENT_TYPE_OPTIONS,
+  LISTENER_EVENT_TYPE,
+  LISTENER_EVENT_TYPE_OPTIONS,
+} from '@/bpmn/panel/element-listener/data-self';
 const { Option } = Select;
 
 interface IProps {
@@ -27,6 +33,8 @@ export default function EditListener(props: IProps) {
 
   // setState属性
   const [visible, setVisible] = useState(false);
+  const [eventType, setEventType] = useState<string>('');
+  const [listenerType, setListenerType] = useState<string>('');
 
   /**
    * 暴露给父组件的方法或变量
@@ -43,9 +51,112 @@ export default function EditListener(props: IProps) {
     setVisible(false);
   };
 
-  function handleChange(value: string) {
-    console.log(`selected ${value}`);
+  function updateEventType(value: string) {
+    setEventType(value);
   }
+
+  function updateListenerType(value: string) {
+    setListenerType(value);
+  }
+
+  function renderListenerForm() {
+    switch (listenerType) {
+      case LISTENER_EVENT_TYPE.class:
+        return (
+          <>
+            <Space style={{ display: 'flex', justifyContent: 'end' }}>
+              Java类
+              <Input
+                placeholder="请输入"
+                style={{ width: 350 }}
+                // value={businessObject?.id}
+                // readOnly={businessObject?.$type === 'bpmn:Process'}
+                // onPressEnter={(event) => {
+                //   updateId(event.currentTarget.value);
+                // }}
+                // onBlur={(event) => {
+                //   updateId(event.currentTarget.value);
+                // }}
+                // onChange={(event) => {
+                //   setBusinessObject({ ...businessObject, id: event.target.value });
+                // }}
+              />
+            </Space>
+          </>
+        );
+      case LISTENER_EVENT_TYPE.expression:
+        return (
+          <>
+            <Space style={{ display: 'flex', justifyContent: 'end' }}>
+              表达式
+              <Input
+                placeholder="请输入"
+                style={{ width: 350 }}
+                // value={businessObject?.id}
+                // readOnly={businessObject?.$type === 'bpmn:Process'}
+                // onPressEnter={(event) => {
+                //   updateId(event.currentTarget.value);
+                // }}
+                // onBlur={(event) => {
+                //   updateId(event.currentTarget.value);
+                // }}
+                // onChange={(event) => {
+                //   setBusinessObject({ ...businessObject, id: event.target.value });
+                // }}
+              />
+            </Space>
+          </>
+        );
+      case LISTENER_EVENT_TYPE.delegateExpression:
+        return (
+          <>
+            <Space style={{ display: 'flex', justifyContent: 'end' }}>
+              代理表达式
+              <Input
+                placeholder="请输入"
+                style={{ width: 350 }}
+                // value={businessObject?.id}
+                // readOnly={businessObject?.$type === 'bpmn:Process'}
+                // onPressEnter={(event) => {
+                //   updateId(event.currentTarget.value);
+                // }}
+                // onBlur={(event) => {
+                //   updateId(event.currentTarget.value);
+                // }}
+                // onChange={(event) => {
+                //   setBusinessObject({ ...businessObject, id: event.target.value });
+                // }}
+              />
+            </Space>
+          </>
+        );
+      case LISTENER_EVENT_TYPE.script:
+        return (
+          <>
+            <Space style={{ display: 'flex', justifyContent: 'end' }}>
+              脚本
+              <Input
+                placeholder="请输入"
+                style={{ width: 350 }}
+                // value={businessObject?.id}
+                // readOnly={businessObject?.$type === 'bpmn:Process'}
+                // onPressEnter={(event) => {
+                //   updateId(event.currentTarget.value);
+                // }}
+                // onBlur={(event) => {
+                //   updateId(event.currentTarget.value);
+                // }}
+                // onChange={(event) => {
+                //   setBusinessObject({ ...businessObject, id: event.target.value });
+                // }}
+              />
+            </Space>
+          </>
+        );
+    }
+  }
+
+  function renderScriptForm() {}
 
   return (
     <>
@@ -60,33 +171,29 @@ export default function EditListener(props: IProps) {
           <Space style={{ display: 'flex', justifyContent: 'end' }}>
             事件类型
             <Select
-              defaultValue="lucy"
+              // defaultValue="lucy"
+              value={eventType}
               style={{ width: 350 }}
-              onChange={handleChange}
+              onChange={updateEventType}
             >
-              <Option value="1">Jack</Option>
-              <Option value="2">Lucy</Option>
-              <Option value="disabled" disabled>
-                Disabled
-              </Option>
-              <Option value="3">yiminghe</Option>
+              {EXECUTE_EVENT_TYPE_OPTIONS.map((e) => {
+                return <Option value={e.value}>{e.name}</Option>;
+              })}
             </Select>
           </Space>
           <Space>
             监听器类型
             <Select
-              defaultValue="lucy"
+              value={listenerType}
               style={{ width: 350 }}
-              onChange={handleChange}
+              onChange={updateListenerType}
             >
-              <Option value="1">Jack</Option>
-              <Option value="2">Lucy</Option>
-              <Option value="disabled" disabled>
-                Disabled
-              </Option>
-              <Option value="3">yiminghe</Option>
+              {LISTENER_EVENT_TYPE_OPTIONS.map((e) => {
+                return <Option value={e.value}>{e.name}</Option>;
+              })}
             </Select>
           </Space>
+          {renderListenerForm()}
         </Space>
       </Drawer>
     </>

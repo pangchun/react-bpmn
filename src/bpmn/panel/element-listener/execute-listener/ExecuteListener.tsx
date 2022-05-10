@@ -193,15 +193,15 @@ export default function ExecuteListener(props: IProps) {
         modeling={modeling}
         element={element}
       />
-      <DeleteProperty
-        onRef={deleteRef}
-        otherExtensionList={otherExtensionList}
-        currentRow={currentRow}
-        rowsData={rows}
-        moddle={moddle}
-        modeling={modeling}
-        element={element}
-      />
+      {/*<DeleteProperty*/}
+      {/*  onRef={deleteRef}*/}
+      {/*  otherExtensionList={otherExtensionList}*/}
+      {/*  currentRow={currentRow}*/}
+      {/*  rowsData={rows}*/}
+      {/*  moddle={moddle}*/}
+      {/*  modeling={modeling}*/}
+      {/*  element={element}*/}
+      {/*/>*/}
     </>
   );
 }

@@ -2,17 +2,17 @@
 
 // 执行监听器 事件类型
 export const EXECUTE_EVENT_TYPE = {
-  start: '开始',
-  end: '结束',
+  start: 'start',
+  end: 'end',
 };
 
 export const EXECUTE_EVENT_TYPE_OPTIONS = [
   {
-    name: 'start',
+    name: '开始',
     value: EXECUTE_EVENT_TYPE.start,
   },
   {
-    name: 'end',
+    name: '结束',
     value: EXECUTE_EVENT_TYPE.end,
   },
 ];
