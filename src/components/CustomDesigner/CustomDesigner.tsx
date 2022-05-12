@@ -106,18 +106,14 @@ export default function CustomDesigner(props: IProps) {
             <Button
               type="primary"
               style={{ marginLeft: '10%', marginTop: 10 }}
-              onClick={() => {
-                console.log(xmlStr);
-              }}
+              onClick={() => {}}
             >
               {'从文件打开'}
             </Button>
             <Button
               type="primary"
               style={{ marginLeft: 10 }}
-              onClick={() => {
-                console.log(xmlStr);
-              }}
+              onClick={() => {}}
             >
               {'打印XML'}
             </Button>
@@ -125,18 +121,14 @@ export default function CustomDesigner(props: IProps) {
             <Button
               type="primary"
               style={{ marginLeft: 10 }}
-              onClick={() => {
-                console.log(xmlStr);
-              }}
+              onClick={() => {}}
             >
               {'下载SVG'}
             </Button>
             <Button
               type="primary"
               style={{ marginLeft: 10 }}
-              onClick={() => {
-                console.log(bpmnModeler.getDefinitions().rootElements);
-              }}
+              onClick={() => {}}
             >
               {'下载XML'}
             </Button>

@@ -44,45 +44,32 @@ export default function CustomPanel(props: IProps) {
   }, [modeler]);
 
   function init() {
-    console.log('===============初始化 start=====================');
     // 获取所有节点
     setElementRegistry(modeler.get('elementRegistry'));
-    console.log('elementRegistry \n', modeler.get('elementRegistry'));
     // 获取modeling
     setModeling(modeler.get('modeling', true));
-    console.log('modeling \n', modeler.get('modeling', true));
     // 获取bpmnFactory
     setBpmnFactory(modeler.get('bpmnFactory', true));
-    console.log('bpmnFactory \n', modeler.get('bpmnFactory', true));
     // 获取moddle
     setModdel(modeler.get('moddle', true));
-    console.log('moddle \n', modeler.get('moddle', true));
-    console.log('===============初始化 end=====================');
 
     // 设置监听器，监听所有工作就绪后，要做的事
     modeler?.on('import.done', (e: any) => {
       // 获取当前流程信息 todo 目前是通过流程id获取，但是这个id固定不好，后面要修改
       setProcessElement(modeler.get('elementRegistry').get('Process_1'));
       confirmCurrentElement(null);
-      console.log(
-        'import.done \n',
-        modeler.get('elementRegistry').get('Process_1'),
-      );
       // 获取rootElements
       setRootElements(modeler.getDefinitions().rootElements);
-      console.log('getDefinitions\n', modeler.getDefinitions().rootElements);
     });
 
     // 设置监听器，监听选中节点变化
     modeler?.on('selection.changed', (e: any) => {
       setSelectedElements(e.newSelection);
       confirmCurrentElement(e.newSelection[0] || null);
-      console.log('selection.changed \n', e);
     });
 
     // 设置监听器，监听当前节点属性变化
     modeler?.on('element.changed', (e: any) => {
-      console.log('element.changed \n', e);
       // setState 这一步是成功的，但是这个state没有被子组件响应，原因可能是对象的hash地址相同，react认为state没改变，所以未刷新
       confirmCurrentElement(e.element);
     });

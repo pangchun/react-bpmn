@@ -1,11 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Input, message, Space, Switch, Typography } from 'antd';
-import Title from 'antd/lib/typography/Title';
-
-const { Text, Link } = Typography;
-
+import { Input, message, Switch, Typography } from 'antd';
 import { Collapse } from 'antd';
-import { PushpinTwoTone, RightCircleTwoTone } from '@ant-design/icons';
+import { PushpinTwoTone } from '@ant-design/icons';
 
 const { Panel } = Collapse;
 
@@ -23,7 +19,6 @@ export default function ElementBaseInfo(props: IProps) {
 
   useEffect(() => {
     setBusinessObject(element?.businessObject);
-    console.log('element in base \n', element);
   }, [element]);
 
   /**
