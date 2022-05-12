@@ -22,6 +22,11 @@ interface IProps {
   element: any;
 }
 
+const layout = {
+  labelCol: { span: 8 },
+  wrapperCol: { span: 16 },
+};
+
 export default function EditListener(props: IProps) {
   const [form] = Form.useForm();
 
@@ -42,8 +47,10 @@ export default function EditListener(props: IProps) {
   const [listenerType, setListenerType] = useState<string>('');
   const [javaClassName, setJavaClassName] = useState<string>('');
   const [expressionValue, setExpressionValue] = useState<string>('');
-  const [delegateExpressionValue, setDelegateExpressionValue] =
-    useState<string>('');
+  const [
+    delegateExpressionValue,
+    setDelegateExpressionValue,
+  ] = useState<string>('');
   const [scriptType, setScriptType] = useState<string>('');
 
   /**
@@ -240,7 +247,7 @@ export default function EditListener(props: IProps) {
         onClose={onClose}
         visible={visible}
       >
-        <Form form={form} style={{ display: 'flex', justifyContent: 'end' }}>
+        <Form labelCol={{ span: 5 }} wrapperCol={{ span: 14 }} form={form}>
           <Form.Item name="note" label="测试" rules={[{ required: true }]}>
             <Input
               placeholder="请输入"
@@ -257,6 +264,26 @@ export default function EditListener(props: IProps) {
               //   setBusinessObject({ ...businessObject, id: event.target.value });
               // }}
             />
+          </Form.Item>
+          <Form.Item
+            name="eventType"
+            label="事件类型"
+            rules={[{ required: true }]}
+          >
+            <Select
+              // defaultValue="lucy"
+              value={eventType}
+              style={{ width: 350 }}
+              onChange={updateEventType}
+            >
+              {EXECUTE_EVENT_TYPE_OPTIONS.map((e) => {
+                return (
+                  <Option key={e.value} value={e.value}>
+                    {e.name}
+                  </Option>
+                );
+              })}
+            </Select>
           </Form.Item>
         </Form>
         <Space direction={'vertical'}>
