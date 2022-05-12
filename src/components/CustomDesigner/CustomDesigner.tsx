@@ -67,7 +67,7 @@ export default function CustomDesigner(props: IProps) {
     setBpmnModeler(
       new BpmnModeler({
         container: '#canvas',
-        height: '100vh',
+        height: '90vh',
         additionalModules: [flowableExtension],
         moddleExtensions: {
           flowable: flowableDescriptor,
@@ -146,7 +146,10 @@ export default function CustomDesigner(props: IProps) {
         </Col>
         <Col
           className="gutter-row"
-          style={{ backgroundColor: '#FFF' }}
+          style={{
+            backgroundColor: '#fff',
+            boxShadow: '-1px 0px 0px 0px #B4B4B4',
+          }}
           span={6}
         >
           <CustomPanel modeler={bpmnModeler} />
