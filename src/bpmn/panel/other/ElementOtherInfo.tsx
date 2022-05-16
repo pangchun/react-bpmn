@@ -31,7 +31,6 @@ export default function ElementOtherInfo(props: IProps) {
 
   useEffect(() => {
     setBusinessObject(element?.businessObject);
-    console.log('element in other \n', element);
   }, [element]);
 
   /**

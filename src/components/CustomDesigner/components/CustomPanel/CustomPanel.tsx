@@ -74,8 +74,13 @@ export default function CustomPanel(props: IProps) {
     // 如果element为空，则设置流程节点为当前节点，否则设置选中节点为当前节点 (点击canvas空白处默认指流程节点)
     if (!element) {
       setElement(modeler.get('elementRegistry').get('Process_1'));
+      console.log(
+        '当前选中的元素为: \n',
+        modeler.get('elementRegistry').get('Process_1')?.businessObject,
+      );
       return;
     }
+    console.log('当前选中的元素为: \n', element?.businessObject);
     setElement(element);
   }
 

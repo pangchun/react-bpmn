@@ -53,7 +53,6 @@ export default function EditProperty(props: IProps) {
     // 初始化默认值 这里之所以依赖rowsData，因为currentRow可以为null
     setPropertyName(currentRow?.name);
     setPropertyValue(currentRow?.value);
-    console.log(currentRow);
   }, [currentRow, rowsData]);
 
   /**

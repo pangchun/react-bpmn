@@ -47,7 +47,6 @@ export default function ExtensionProperties(props: IProps) {
     setBusinessObject(element?.businessObject);
     initRows();
     initOtherExtensionList();
-    console.log('element in ExtensionProperties \n', element);
   }, [JSON.stringify(element?.businessObject)]);
 
   /**

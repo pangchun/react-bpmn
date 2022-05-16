@@ -26,7 +26,6 @@ export default function SignalMessage(props: IProps) {
   useEffect(() => {
     // 初始化业务对象
     setBusinessObject(element?.businessObject);
-    console.log('element in ExtensionProperties \n', element);
   }, [JSON.stringify(element?.businessObject)]);
 
   useEffect(() => {
