@@ -1,28 +1,19 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Divider, Input, Space, Typography } from 'antd';
-import Title from 'antd/lib/typography/Title';
+import { Divider, Space } from 'antd';
 import ElementBaseInfo from '@/bpmn/panel/base/ElementBaseInfo';
 
-import { Collapse } from 'antd';
 import ElementOtherInfo from '@/bpmn/panel/other/ElementOtherInfo';
 import ExtensionProperties from '@/bpmn/panel/extension-properties/ExtensionProperties';
-import ButtonGroup from 'antd/es/button/button-group';
 import SignalMessage from '@/bpmn/panel/signal-message/SignalMessage';
 import ExecuteListener from '@/bpmn/panel/element-listener/execute-listener/ExecuteListener';
 
-const { Panel } = Collapse;
-
-/**
- * 接口检查
- */
 interface IProps {
-  name?: 'CustomPanel';
   modeler: any;
 }
 
 export default function CustomPanel(props: IProps) {
   // props属性
-  const { name, modeler } = props;
+  const { modeler } = props;
 
   // setState属性
   const [element, setElement] = useState<any>();

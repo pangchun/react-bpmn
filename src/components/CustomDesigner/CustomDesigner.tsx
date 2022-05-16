@@ -22,22 +22,11 @@ import 'bpmn-js-properties-panel/dist/assets/properties-panel.css';
 import newDiagram from '@/bpmn/resource/newDiagram';
 
 // 引入当前组件样式
-import './CustomDesigner.less';
 import CustomPanel from '@/components/CustomDesigner/components/CustomPanel/CustomPanel';
 import { Button, Col, Row } from 'antd';
 import XmlPreview from '@/components/CustomDesigner/components/XmlPreview/XmlPreview';
 
-/**
- * 接口检查
- */
-interface IProps {}
-
-/**
- * 导出 自定义流程设计组件
- * @param props
- * @constructor
- */
-export default function CustomDesigner(props: IProps) {
+export default function CustomDesigner() {
   // setState属性
   const [bpmnModeler, setBpmnModeler] = useState<any>();
   const [xmlStr, setXmlStr] = useState<string>(newDiagram.xml);
@@ -98,52 +87,40 @@ export default function CustomDesigner(props: IProps) {
     });
   }
 
+  function renderToolBar() {
+    return (
+      <>
+        <div>
+          <Button
+            type="primary"
+            style={{ marginLeft: '10%', marginTop: 10 }}
+            onClick={() => {}}
+          >
+            {'从文件打开'}
+          </Button>
+          <Button type="primary" style={{ marginLeft: 10 }} onClick={() => {}}>
+            {'打印XML'}
+          </Button>
+          <XmlPreview modeler={bpmnModeler} />
+          <Button type="primary" style={{ marginLeft: 10 }} onClick={() => {}}>
+            {'下载SVG'}
+          </Button>
+          <Button type="primary" style={{ marginLeft: 10 }} onClick={() => {}}>
+            {'下载XML'}
+          </Button>
+        </div>
+      </>
+    );
+  }
+
   return (
     <>
       <Row gutter={0}>
-        <Col className="gutter-row" span={18}>
-          <div>
-            <Button
-              type="primary"
-              style={{ marginLeft: '10%', marginTop: 10 }}
-              onClick={() => {}}
-            >
-              {'从文件打开'}
-            </Button>
-            <Button
-              type="primary"
-              style={{ marginLeft: 10 }}
-              onClick={() => {}}
-            >
-              {'打印XML'}
-            </Button>
-            <XmlPreview modeler={bpmnModeler} />
-            <Button
-              type="primary"
-              style={{ marginLeft: 10 }}
-              onClick={() => {}}
-            >
-              {'下载SVG'}
-            </Button>
-            <Button
-              type="primary"
-              style={{ marginLeft: 10 }}
-              onClick={() => {}}
-            >
-              {'下载XML'}
-            </Button>
-          </div>
-
+        <Col span={18}>
+          {renderToolBar()}
           <div id="canvas" />
         </Col>
-        <Col
-          className="gutter-row"
-          style={{
-            backgroundColor: '#fff',
-            boxShadow: '-1px 0px 0px 0px #B4B4B4',
-          }}
-          span={6}
-        >
+        <Col span={6}>
           <CustomPanel modeler={bpmnModeler} />
         </Col>
       </Row>
