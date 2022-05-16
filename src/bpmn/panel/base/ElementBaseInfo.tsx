@@ -1,5 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { Input, message, Switch, Typography } from 'antd';
+import {
+  Button,
+  Checkbox,
+  Form,
+  Input,
+  message,
+  Switch,
+  Typography,
+} from 'antd';
 import { Collapse } from 'antd';
 import { PushpinTwoTone } from '@ant-design/icons';
 
@@ -21,9 +29,6 @@ export default function ElementBaseInfo(props: IProps) {
     setBusinessObject(element?.businessObject);
   }, [element]);
 
-  /**
-   * 更新id
-   */
   function updateId(value: string) {
     // 如果新值与旧值相同，则不更新
     const oldValue: string = element?.businessObject?.id || '';
@@ -36,9 +41,6 @@ export default function ElementBaseInfo(props: IProps) {
     message.success('【编号】已修改').then((r) => {});
   }
 
-  /**
-   * 更新name
-   */
   function updateName(value: string) {
     // 如果新值与旧值相同，则不更新
     const oldValue: string = element?.businessObject?.name || '';
@@ -51,9 +53,6 @@ export default function ElementBaseInfo(props: IProps) {
     message.success('【名称】已修改').then((r) => {});
   }
 
-  /**
-   * 更新versionTag
-   */
   function updateVersionTag(value: string) {
     // 如果新值与旧值相同，则不更新
     const oldValue: string = element?.businessObject?.versionTag || '';
@@ -66,9 +65,6 @@ export default function ElementBaseInfo(props: IProps) {
     message.success('【版本标签】已修改').then((r) => {});
   }
 
-  /**
-   * 更新isExecutable
-   */
   function updateIsExecutable(value: boolean) {
     modeling.updateProperties(element, {
       isExecutable: value,
@@ -119,6 +115,17 @@ export default function ElementBaseInfo(props: IProps) {
     }
   }
 
+  const [form] = Form.useForm<{ name: string; age: number }>();
+  const nameValue = Form.useWatch('name', form);
+
+  const onFinish = (values: any) => {
+    console.log('Success:', values);
+  };
+
+  const onFinishFailed = (errorInfo: any) => {
+    console.log('Failed:', errorInfo);
+  };
+
   return (
     <>
       <Collapse
@@ -137,6 +144,51 @@ export default function ElementBaseInfo(props: IProps) {
           style={{ backgroundColor: '#FFF' }}
           showArrow={true}
         >
+          <Form
+            form={form}
+            name="basic"
+            labelCol={{ span: 5 }}
+            wrapperCol={{ span: 17 }}
+            // initialValues={{ remember: businessObject?.isExecutable }}
+            onFinish={onFinish}
+            onFinishFailed={onFinishFailed}
+            autoComplete="off"
+          >
+            <Form.Item
+              label="名称"
+              name="name"
+              rules={[
+                { required: true, message: 'Please input your username!' },
+              ]}
+            >
+              <Input
+                onPressEnter={(event) => {
+                  updateName(event.currentTarget.value);
+                }}
+                onChange={(event) => {
+                  updateName(event.currentTarget.value);
+                }}
+              />
+            </Form.Item>
+
+            {/*<Form.Item*/}
+            {/*  label="Password"*/}
+            {/*  name="password"*/}
+            {/*  rules={[{ required: true, message: 'Please input your password!' }]}*/}
+            {/*>*/}
+            {/*  <Input.Password />*/}
+            {/*</Form.Item>*/}
+
+            {/*<Form.Item name="remember" valuePropName="checked" wrapperCol={{ offset: 8, span: 16 }}>*/}
+            {/*  <Checkbox>Remember me</Checkbox>*/}
+            {/*</Form.Item>*/}
+
+            {/*<Form.Item wrapperCol={{ offset: 8, span: 16 }}>*/}
+            {/*  <Button type="primary" htmlType="submit">*/}
+            {/*    Submit*/}
+            {/*  </Button>*/}
+            {/*</Form.Item>*/}
+          </Form>
           <Input
             size="small"
             addonBefore={'编号'}
