@@ -1,16 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { Button, Input, message, Space, Switch, Typography } from 'antd';
-import Title from 'antd/lib/typography/Title';
-
-const { Text, Link } = Typography;
-
+import React, { useEffect } from 'react';
+import { Form, Input, Typography } from 'antd';
 import { Collapse } from 'antd';
-import {
-  PaperClipOutlined,
-  PushpinTwoTone,
-  QuestionCircleTwoTone,
-  RightCircleTwoTone,
-} from '@ant-design/icons';
+import { QuestionCircleTwoTone } from '@ant-design/icons';
 
 const { Panel } = Collapse;
 
@@ -26,31 +17,28 @@ export default function ElementOtherInfo(props: IProps) {
   // props属性
   const { element, modeling, bpmnFactory } = props;
 
-  // setState属性
-  const [businessObject, setBusinessObject] = useState<any>();
+  // 其它属性
+  const [form] = Form.useForm<{
+    documentation: string;
+  }>();
 
   useEffect(() => {
-    setBusinessObject(element?.businessObject);
+    initPageData();
   }, [element]);
 
-  /**
-   * 更新 元素文档
-   */
+  function initPageData() {
+    form.setFieldsValue({
+      documentation: element?.businessObject?.documentation?.at(0).text || '',
+    });
+  }
+
   function updateDocumentation(value: string) {
-    // 如果新值与旧值相同，则不更新
-    const oldValue: string =
-      element?.businessObject?.documentation?.at(0).text || '';
-    if (oldValue === value) {
-      return;
-    }
-    // 创建一个元素文档
     const documentation = bpmnFactory?.create('bpmn:Documentation', {
       text: value,
     });
     modeling.updateProperties(element, {
-      documentation: [documentation],
+      documentation: value ? [documentation] : undefined,
     });
-    message.success('【元素文档】已修改').then((r) => {});
   }
 
   return (
@@ -67,28 +55,17 @@ export default function ElementOtherInfo(props: IProps) {
           style={{ backgroundColor: '#FFF' }}
           showArrow={true}
         >
-          <Typography>元素文档:</Typography>
-          <TextArea
-            rows={4}
-            placeholder={'请输入元素文档信息'}
-            value={businessObject?.documentation?.at(0).text || ''}
-            // onPressEnter={(event) => {
-            //   updateDocumentation(event.currentTarget.value);
-            // }}
-            onBlur={(event) => {
-              updateDocumentation(event.currentTarget.value);
-            }}
-            onChange={(event) => {
-              setBusinessObject({
-                ...businessObject,
-                documentation: [
-                  {
-                    text: event.target.value,
-                  },
-                ],
-              });
-            }}
-          />
+          <Form form={form} labelCol={{ span: 4 }} wrapperCol={{ span: 19 }}>
+            <Form.Item label="元素文档" name="documentation">
+              <TextArea
+                rows={4}
+                placeholder={'请输入'}
+                onChange={(event) => {
+                  updateDocumentation(event.currentTarget.value);
+                }}
+              />
+            </Form.Item>
+          </Form>
         </Panel>
       </Collapse>
     </>
