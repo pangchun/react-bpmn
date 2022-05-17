@@ -25,9 +25,36 @@ export default function ElementBaseInfo(props: IProps) {
   // setState属性
   const [businessObject, setBusinessObject] = useState<any>();
 
+  // 其它属性
+  const [form] = Form.useForm<{
+    id: string;
+    name: string;
+    isExecutable: boolean;
+    versionTag: string;
+  }>();
+  // const nameValue = Form.useWatch('name', form);
+
   useEffect(() => {
     setBusinessObject(element?.businessObject);
+    initPageData();
   }, [element]);
+
+  function initPageData() {
+    form.setFieldsValue({
+      id: element?.businessObject?.id || '',
+      name: element?.businessObject?.name || '',
+      isExecutable: element?.businessObject?.isExecutable || '',
+      versionTag: element?.businessObject?.versionTag || '',
+    });
+  }
+
+  const onFinish = (values: any) => {
+    console.log('Success:', values);
+  };
+
+  const onFinishFailed = (errorInfo: any) => {
+    console.log('Failed:', errorInfo);
+  };
 
   function updateId(value: string) {
     // 如果新值与旧值相同，则不更新
@@ -42,9 +69,7 @@ export default function ElementBaseInfo(props: IProps) {
   }
 
   function updateName(value: string) {
-    // 如果新值与旧值相同，则不更新
-    const oldValue: string = element?.businessObject?.name || '';
-    if (oldValue === value) {
+    if (!value) {
       return;
     }
     modeling.updateProperties(element, {
@@ -115,17 +140,6 @@ export default function ElementBaseInfo(props: IProps) {
     }
   }
 
-  const [form] = Form.useForm<{ name: string; age: number }>();
-  const nameValue = Form.useWatch('name', form);
-
-  const onFinish = (values: any) => {
-    console.log('Success:', values);
-  };
-
-  const onFinishFailed = (errorInfo: any) => {
-    console.log('Failed:', errorInfo);
-  };
-
   return (
     <>
       <Collapse
@@ -153,7 +167,24 @@ export default function ElementBaseInfo(props: IProps) {
             onFinish={onFinish}
             onFinishFailed={onFinishFailed}
             autoComplete="off"
+            onValuesChange={(changedValues, allValues) => {
+              console.log(changedValues);
+              console.log(allValues);
+            }}
           >
+            <Form.Item
+              label="编号"
+              name="id"
+              rules={[
+                { required: true, message: 'Please input your username!' },
+              ]}
+            >
+              <Input
+                onChange={(event) => {
+                  updateId(event.currentTarget.value);
+                }}
+              />
+            </Form.Item>
             <Form.Item
               label="名称"
               name="name"
@@ -162,32 +193,38 @@ export default function ElementBaseInfo(props: IProps) {
               ]}
             >
               <Input
-                onPressEnter={(event) => {
-                  updateName(event.currentTarget.value);
-                }}
                 onChange={(event) => {
                   updateName(event.currentTarget.value);
                 }}
               />
             </Form.Item>
+            <Form.Item
+              label="版本标签"
+              name="versionTag"
+              rules={[
+                { required: true, message: 'Please input your username!' },
+              ]}
+            >
+              <Input
+                onChange={(event) => {
+                  updateVersionTag(event.currentTarget.value);
+                }}
+              />
+            </Form.Item>
 
-            {/*<Form.Item*/}
-            {/*  label="Password"*/}
-            {/*  name="password"*/}
-            {/*  rules={[{ required: true, message: 'Please input your password!' }]}*/}
-            {/*>*/}
-            {/*  <Input.Password />*/}
-            {/*</Form.Item>*/}
-
-            {/*<Form.Item name="remember" valuePropName="checked" wrapperCol={{ offset: 8, span: 16 }}>*/}
-            {/*  <Checkbox>Remember me</Checkbox>*/}
-            {/*</Form.Item>*/}
-
-            {/*<Form.Item wrapperCol={{ offset: 8, span: 16 }}>*/}
-            {/*  <Button type="primary" htmlType="submit">*/}
-            {/*    Submit*/}
-            {/*  </Button>*/}
-            {/*</Form.Item>*/}
+            <Form.Item
+              name="remember"
+              valuePropName="checked"
+              wrapperCol={{ offset: 10, span: 16 }}
+            >
+              <Checkbox
+                onChange={(event) => {
+                  updateIsExecutable(event.target.checked);
+                }}
+              >
+                可执行
+              </Checkbox>
+            </Form.Item>
           </Form>
           <Input
             size="small"
