@@ -20,7 +20,6 @@ export default function ExtensionProperties(props: IProps) {
 
   // setState属性
   const [rows, setRows] = useState<Array<any>>([]);
-  const [currentRow, setCurrentRow] = useState<any>();
   const [otherExtensionList, setOtherExtensionList] = useState<Array<any>>([]);
 
   // ref
@@ -52,8 +51,6 @@ export default function ExtensionProperties(props: IProps) {
       });
     });
     setRows(rows);
-    // 每次初始化列表后，都重置当前行，避免意外状况
-    setCurrentRow(null);
   }
 
   function initOtherExtensionList() {
@@ -99,7 +96,6 @@ export default function ExtensionProperties(props: IProps) {
             size={'small'}
             style={{ color: '#1890ff' }}
             onClick={() => {
-              setCurrentRow(record);
               editRef.current.showEditModal(record);
             }}
           >
@@ -110,8 +106,7 @@ export default function ExtensionProperties(props: IProps) {
             type="text"
             size={'small'}
             onClick={() => {
-              setCurrentRow(record);
-              deleteRef.current.showDeleteModal();
+              deleteRef.current.showDeleteModal(record);
             }}
           >
             {'删除'}
@@ -149,7 +144,6 @@ export default function ExtensionProperties(props: IProps) {
               marginTop: 8,
             }}
             onClick={() => {
-              setCurrentRow(null);
               editRef.current.showEditModal();
             }}
           >
@@ -173,7 +167,6 @@ export default function ExtensionProperties(props: IProps) {
       <DeleteProperty
         onRef={deleteRef}
         otherExtensionList={otherExtensionList}
-        currentRow={currentRow}
         rowsData={rows}
         moddle={moddle}
         modeling={modeling}

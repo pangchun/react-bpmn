@@ -1,11 +1,5 @@
-import React, {
-  Ref,
-  RefObject,
-  useEffect,
-  useImperativeHandle,
-  useState,
-} from 'react';
-import { Modal, Button, message, Input, Typography } from 'antd';
+import React, { Ref, useImperativeHandle, useState } from 'react';
+import { Modal, Typography } from 'antd';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 
 // todo 设置默认前缀，后面设置多moddle时可从配置获取
@@ -15,8 +9,6 @@ interface IProps {
   onRef: Ref<any>;
   otherExtensionList: any[];
   rowsData: Array<any>;
-  // 必传
-  currentRow: any;
   moddle: any;
   modeling: any;
   element: any;
@@ -27,7 +19,6 @@ export default function DeleteProperty(props: IProps) {
   // props属性
   const {
     rowsData,
-    currentRow,
     onRef,
     moddle,
     modeling,
@@ -38,17 +29,14 @@ export default function DeleteProperty(props: IProps) {
 
   // setState属性
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [currentRow, setCurrentRow] = useState<any>();
 
-  useEffect(() => {}, [currentRow]);
-
-  /**
-   * 暴露给父组件的方法或变量
-   */
   useImperativeHandle(onRef, () => ({
-    showDeleteModal: () => showModal(),
+    showDeleteModal: (rowObj: any) => showModal(rowObj),
   }));
 
-  function showModal() {
+  function showModal(rowObj: any) {
+    setCurrentRow(rowObj);
     setIsModalVisible(true);
   }
 
@@ -69,7 +57,6 @@ export default function DeleteProperty(props: IProps) {
     modeling?.updateProperties(element, {
       extensionElements: extensionElements,
     });
-    message.success('【扩展属性】已删除').then((r) => {});
     reFreshParent();
     handleCancel();
   }
@@ -79,10 +66,9 @@ export default function DeleteProperty(props: IProps) {
    */
   function getPropertiesList() {
     let propertiesList: any[] = [];
-
     // 保存原有的全部属性，当前序号的属性不保存即可
     if (rowsData) {
-      rowsData.map((e, i) => {
+      rowsData.map((e) => {
         if (e.key !== currentRow?.key) {
           const newProperty = moddle?.create(`${prefix}:Property`, {
             name: e.name,
@@ -92,8 +78,6 @@ export default function DeleteProperty(props: IProps) {
         }
       });
     }
-
-    // 返回属性列表
     return propertiesList;
   }
 
@@ -118,7 +102,7 @@ export default function DeleteProperty(props: IProps) {
         <span
           style={{
             fontWeight: 'bold',
-            // color: "#1890ff"
+            color: '#ff1818',
           }}
         >
           {currentRow?.key} - {currentRow?.name} - {currentRow?.value}
