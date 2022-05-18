@@ -100,7 +100,7 @@ export default function ExtensionProperties(props: IProps) {
             style={{ color: '#1890ff' }}
             onClick={() => {
               setCurrentRow(record);
-              editRef.current.showEditModal();
+              editRef.current.showEditModal(record);
             }}
           >
             {'编辑'}
@@ -150,7 +150,7 @@ export default function ExtensionProperties(props: IProps) {
             }}
             onClick={() => {
               setCurrentRow(null);
-              editRef.current.showEditModal(123);
+              editRef.current.showEditModal();
             }}
           >
             <PlusOutlined />
@@ -163,7 +163,7 @@ export default function ExtensionProperties(props: IProps) {
       <EditProperty
         onRef={editRef}
         otherExtensionList={otherExtensionList}
-        currentRow={currentRow}
+        // currentRow={currentRow}
         rowsData={rows}
         moddle={moddle}
         modeling={modeling}

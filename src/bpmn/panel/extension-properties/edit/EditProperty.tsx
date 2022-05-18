@@ -1,19 +1,5 @@
-import React, {
-  Ref,
-  RefObject,
-  useEffect,
-  useImperativeHandle,
-  useState,
-} from 'react';
-import {
-  Modal,
-  Button,
-  message,
-  Input,
-  Typography,
-  Form,
-  Checkbox,
-} from 'antd';
+import React, { Ref, useImperativeHandle, useState } from 'react';
+import { Modal, Input, Typography, Form } from 'antd';
 import { EditOutlined } from '@ant-design/icons';
 
 // todo 设置默认前缀，后面设置多moddle时可从配置获取
@@ -24,7 +10,7 @@ interface IProps {
   otherExtensionList: any[];
   rowsData: Array<any>;
   // 新增时传null，编辑时必传
-  currentRow: any;
+  // currentRow: any;
   moddle: any;
   modeling: any;
   element: any;
@@ -35,7 +21,7 @@ export default function EditProperty(props: IProps) {
   // props属性
   const {
     rowsData,
-    currentRow,
+    // currentRow,
     onRef,
     moddle,
     modeling,
@@ -46,6 +32,7 @@ export default function EditProperty(props: IProps) {
 
   // setState属性
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [currentRowKey, setCurrentRowKey] = useState<any>();
 
   // 其它属性
   const [form] = Form.useForm<{
@@ -53,33 +40,22 @@ export default function EditProperty(props: IProps) {
     propertyValue: string;
   }>();
 
-  useEffect(() => {
-    // 初始化默认值 这里之所以依赖rowsData，因为currentRow可以为null
-    initPageData();
-  }, [currentRow, rowsData]);
-
-  function initPageData() {
-    if (!currentRow) {
-      return;
-    }
-    form.setFieldsValue({
-      propertyName: currentRow.name || '',
-      propertyValue: currentRow.value || '',
-    });
-  }
-
   useImperativeHandle(onRef, () => ({
-    showEditModal: (param: any) => showModal(param),
+    showEditModal: (rowObj: any) => showModal(rowObj),
   }));
 
-  function showModal(param: any) {
-    if (!currentRow) {
-      form.resetFields();
-    }
+  function showModal(rowObj: any) {
+    // 通过传入的当前行对象初始化表单默认值
+    form.setFieldsValue({
+      propertyName: rowObj?.name || '',
+      propertyValue: rowObj?.value || '',
+    });
+    setCurrentRowKey(rowObj?.key || rowsData.length);
     setIsModalVisible(true);
   }
 
   function handleCancel() {
+    form.resetFields();
     setIsModalVisible(false);
   }
 
@@ -99,15 +75,12 @@ export default function EditProperty(props: IProps) {
         modeling?.updateProperties(element, {
           extensionElements: extensionElements,
         });
-        message.success('【扩展属性】已更新').then((r) => {});
         reFreshParent();
+        setIsModalVisible(false);
       })
       .catch((info) => {
-        console.log('Validate Failed:', info);
+        console.log('表单校验失败: ', info);
       });
-
-    // form.resetFields();
-    setIsModalVisible(false);
   }
 
   /**
@@ -115,28 +88,19 @@ export default function EditProperty(props: IProps) {
    */
   function getPropertiesList(propertyName: string, propertyValue: string) {
     let propertiesList: any[] = [];
-
-    // 保存原有的全部属性，如果当前为编辑模式，则当前记录对应的属性名和属性值，使用当前输入框的值
-    if (rowsData) {
-      rowsData.map((e, i) => {
-        const newProperty = moddle?.create(`${prefix}:Property`, {
-          name: e.key === currentRow?.key ? propertyName : e.name,
-          value: e.key === currentRow?.key ? propertyValue : e.value,
-        });
-        propertiesList.push(newProperty);
-      });
-    }
-
-    // 保存新增的属性到数组末尾
-    if (!currentRow) {
+    let rowObj: any = {
+      key: currentRowKey,
+      name: propertyName,
+      value: propertyValue,
+    };
+    rowsData.splice(currentRowKey, 1, rowObj);
+    rowsData.map((e) => {
       const newProperty = moddle?.create(`${prefix}:Property`, {
-        name: propertyName,
-        value: propertyValue,
+        name: e.name,
+        value: e.value,
       });
       propertiesList.push(newProperty);
-    }
-
-    // 返回属性列表
+    });
     return propertiesList;
   }
 
