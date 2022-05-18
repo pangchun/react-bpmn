@@ -7,34 +7,19 @@ import DeleteProperty from '@/bpmn/panel/extension-properties/delete/DeletePrope
 import { FLOWABLE_PREFIX } from '@/bpmn/constant/moddle-constant';
 
 const { Panel } = Collapse;
-const initialRows: any[] = [
-  // 此处的key不能省略，否则控制台报错
-  {
-    key: '1',
-    name: '属性名A',
-    value: '属性值A',
-  },
-  {
-    key: '2',
-    name: '属性名B',
-    value: '属性值B',
-  },
-];
 
 interface IProps {
   element: any;
   modeling: any;
-  bpmnFactory: any;
   moddle: any;
 }
 
 export default function ExtensionProperties(props: IProps) {
   // props属性
-  const { element, modeling, bpmnFactory, moddle } = props;
+  const { element, modeling, moddle } = props;
 
   // setState属性
-  const [businessObject, setBusinessObject] = useState<any>();
-  const [rows, setRows] = useState(initialRows);
+  const [rows, setRows] = useState<Array<any>>([]);
   const [currentRow, setCurrentRow] = useState<any>();
   const [otherExtensionList, setOtherExtensionList] = useState<Array<any>>([]);
 
@@ -43,40 +28,34 @@ export default function ExtensionProperties(props: IProps) {
   const deleteRef = useRef<any>();
 
   useEffect(() => {
-    // 初始化业务对象
-    setBusinessObject(element?.businessObject);
+    initPageData();
+  }, [element]);
+
+  function initPageData() {
     initRows();
     initOtherExtensionList();
-  }, [JSON.stringify(element?.businessObject)]);
+  }
 
-  /**
-   * 初始化行数据
-   */
   function initRows() {
     if (!element) {
-      return [];
+      return;
     }
-
-    let initialRows: any[] = [];
-
-    let properties: any[] =
-      // element.businessObject?.extensionElements?.values?.at(0)?.values;
-      element.businessObject?.extensionElements?.values?.find(
-        (e: any) => e.$type === `${FLOWABLE_PREFIX}:Properties`,
-      )?.values;
+    let rows: any[] = [];
+    let properties: any[] = element.businessObject?.extensionElements?.values?.find(
+      (e: any) => e.$type === `${FLOWABLE_PREFIX}:Properties`,
+    )?.values;
     properties?.map((e, i) => {
-      initialRows.push({
+      rows.push({
         key: i,
         name: e.name,
         value: e.value,
       });
     });
-    setRows(initialRows);
+    setRows(rows);
+    // 每次初始化列表后，都重置当前行，避免意外状况
+    setCurrentRow(null);
   }
 
-  /**
-   * 初始化其他非扩展属性元素
-   */
   function initOtherExtensionList() {
     let otherExtensionList: any[] = [];
     element?.businessObject?.extensionElements?.values?.filter((e: any) => {
@@ -114,7 +93,7 @@ export default function ExtensionProperties(props: IProps) {
       width: 80,
       key: 'action',
       render: (text: string, record: any) => (
-        <Space size="small">
+        <Space size={1}>
           <Button
             type="text"
             size={'small'}
@@ -165,13 +144,11 @@ export default function ExtensionProperties(props: IProps) {
           />
           <Button
             type="primary"
-            // size={"small"}
             style={{
               width: '100%',
               marginTop: 8,
             }}
             onClick={() => {
-              // 新增时，设置当前行对象为空
               setCurrentRow(null);
               editRef.current.showEditModal(123);
             }}
@@ -191,7 +168,7 @@ export default function ExtensionProperties(props: IProps) {
         moddle={moddle}
         modeling={modeling}
         element={element}
-        reFreshParent={() => initRows()}
+        reFreshParent={initRows}
       />
       <DeleteProperty
         onRef={deleteRef}
@@ -201,7 +178,7 @@ export default function ExtensionProperties(props: IProps) {
         moddle={moddle}
         modeling={modeling}
         element={element}
-        reFreshParent={() => initRows()}
+        reFreshParent={initRows}
       />
     </>
   );

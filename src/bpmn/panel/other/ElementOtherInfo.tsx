@@ -27,8 +27,12 @@ export default function ElementOtherInfo(props: IProps) {
   }, [element]);
 
   function initPageData() {
+    // todo 处理空时的默认值
+    if (!element?.businessObject?.documentation) {
+      return;
+    }
     form.setFieldsValue({
-      documentation: element?.businessObject?.documentation?.at(0).text || '',
+      documentation: element.businessObject.documentation.at(0).text || '',
     });
   }
 

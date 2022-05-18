@@ -110,7 +110,6 @@ export default function CustomPanel(props: IProps) {
         <ExtensionProperties
           element={element}
           modeling={modeling}
-          bpmnFactory={bpmnFactory}
           moddle={moddle}
         />
         <Divider type={'horizontal'} style={{ margin: 0 }} />
