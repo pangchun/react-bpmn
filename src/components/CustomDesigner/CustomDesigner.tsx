@@ -122,7 +122,7 @@ export default function CustomDesigner() {
           <div
             id="canvas"
             style={{
-              backgroundColor: '#eee',
+              backgroundColor: '#fff',
               backgroundImage:
                 'linear-gradient(rgba(255,187,51, .5) 1px, transparent 0), linear-gradient(90deg,rgba(255,187,51, .5) 1px, transparent 0)',
               backgroundSize: '20px 20px',
