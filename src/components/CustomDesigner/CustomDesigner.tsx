@@ -123,7 +123,15 @@ export default function CustomDesigner() {
           {renderToolBar()}
           <div id="canvas" />
         </Col>
-        <Col span={6} style={{ height: '100vh', overflowY: 'auto' }}>
+        <Col
+          span={6}
+          style={{
+            height: '100vh',
+            overflowY: 'auto',
+            borderLeft: '1px solid #eee',
+            boxShadow: '0 0 8px #ccc',
+          }}
+        >
           <CustomPanel modeler={bpmnModeler} />
         </Col>
       </Row>
