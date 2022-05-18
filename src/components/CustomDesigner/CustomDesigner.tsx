@@ -23,7 +23,7 @@ import newDiagram from '@/bpmn/resource/newDiagram';
 
 // 引入当前组件样式
 import CustomPanel from '@/components/CustomDesigner/components/CustomPanel/CustomPanel';
-import { Button, Col, Row } from 'antd';
+import { Button, Col, Row, Space } from 'antd';
 import { Layout } from 'antd';
 
 const { Header, Footer, Sider, Content } = Layout;
@@ -59,7 +59,7 @@ export default function CustomDesigner() {
     setBpmnModeler(
       new BpmnModeler({
         container: '#canvas',
-        height: '90vh',
+        height: '96.5vh',
         additionalModules: [flowableExtension],
         moddleExtensions: {
           flowable: flowableDescriptor,
@@ -93,25 +93,25 @@ export default function CustomDesigner() {
   function renderToolBar() {
     return (
       <>
-        <div>
-          <Button
-            type="primary"
-            style={{ marginLeft: '10%', marginTop: 10 }}
-            onClick={() => {}}
-          >
+        <Space
+          direction={'horizontal'}
+          size={1}
+          style={{ marginTop: 3, marginBottom: 3 }}
+        >
+          <Button type="primary" size={'small'} onClick={() => {}}>
             {'从文件打开'}
           </Button>
-          <Button type="primary" style={{ marginLeft: 10 }} onClick={() => {}}>
+          <Button type="primary" size={'small'} onClick={() => {}}>
             {'打印XML'}
           </Button>
           <XmlPreview modeler={bpmnModeler} />
-          <Button type="primary" style={{ marginLeft: 10 }} onClick={() => {}}>
+          <Button type="primary" size={'small'} onClick={() => {}}>
             {'下载SVG'}
           </Button>
-          <Button type="primary" style={{ marginLeft: 10 }} onClick={() => {}}>
+          <Button type="primary" size={'small'} onClick={() => {}}>
             {'下载XML'}
           </Button>
-        </div>
+        </Space>
       </>
     );
   }
@@ -119,9 +119,18 @@ export default function CustomDesigner() {
   return (
     <>
       <Row gutter={0}>
-        <Col span={18}>
+        <Col span={1}>{/*快捷工具栏*/}</Col>
+        <Col span={17}>
           {renderToolBar()}
-          <div id="canvas" />
+          <div
+            id="canvas"
+            style={{
+              backgroundColor: '#eee',
+              backgroundImage:
+                'linear-gradient(rgba(255,187,51, .5) 1px, transparent 0), linear-gradient(90deg,rgba(255,187,51, .5) 1px, transparent 0)',
+              backgroundSize: '20px 20px',
+            }}
+          />
         </Col>
         <Col
           span={6}

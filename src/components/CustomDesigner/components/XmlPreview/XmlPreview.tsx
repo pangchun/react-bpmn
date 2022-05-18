@@ -4,6 +4,7 @@ import { Modal, Button, message } from 'antd';
 interface IProps {
   modeler: any;
 }
+
 export default function XmlPreview(props: IProps) {
   const { modeler } = props;
 
@@ -32,7 +33,7 @@ export default function XmlPreview(props: IProps) {
 
   return (
     <>
-      <Button type="primary" style={{ marginLeft: 10 }} onClick={showModal}>
+      <Button type="primary" size={'small'} onClick={showModal}>
         预览XML
       </Button>
       <Modal
