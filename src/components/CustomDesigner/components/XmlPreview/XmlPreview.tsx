@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Modal, Button, message } from 'antd';
+import { EyeOutlined } from '@ant-design/icons';
 
 interface IProps {
   modeler: any;
@@ -33,12 +34,17 @@ export default function XmlPreview(props: IProps) {
 
   return (
     <>
-      <Button type="primary" size={'small'} onClick={showModal}>
-        预览XML
+      <Button
+        type="primary"
+        size={'small'}
+        icon={<EyeOutlined />}
+        onClick={showModal}
+      >
+        预览
       </Button>
       <Modal
-        width={800}
-        style={{ maxHeight: '50vh' }}
+        width={1200}
+        bodyStyle={{ maxHeight: '50%' }}
         title="正在预览"
         visible={isModalVisible}
         okText={'复制'}
@@ -47,7 +53,9 @@ export default function XmlPreview(props: IProps) {
         onCancel={handleCancel}
       >
         {/* todo 此处可以设置字符串过长时显示 展开、收缩 按钮，以便查看 */}
-        <pre>{xml}</pre>
+        <div style={{ maxHeight: 400, overflowY: 'scroll' }}>
+          <pre>{xml}</pre>
+        </div>
       </Modal>
     </>
   );

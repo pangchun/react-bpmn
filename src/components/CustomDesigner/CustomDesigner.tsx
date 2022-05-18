@@ -28,6 +28,7 @@ import { Layout } from 'antd';
 
 const { Header, Footer, Sider, Content } = Layout;
 import XmlPreview from '@/components/CustomDesigner/components/XmlPreview/XmlPreview';
+import { FolderOpenOutlined } from '@ant-design/icons';
 
 export default function CustomDesigner() {
   // setState属性
@@ -98,19 +99,15 @@ export default function CustomDesigner() {
           size={1}
           style={{ marginTop: 3, marginBottom: 3 }}
         >
-          <Button type="primary" size={'small'} onClick={() => {}}>
-            {'从文件打开'}
-          </Button>
-          <Button type="primary" size={'small'} onClick={() => {}}>
-            {'打印XML'}
+          <Button
+            type="primary"
+            size={'small'}
+            icon={<FolderOpenOutlined />}
+            onClick={() => {}}
+          >
+            {'打开'}
           </Button>
           <XmlPreview modeler={bpmnModeler} />
-          <Button type="primary" size={'small'} onClick={() => {}}>
-            {'下载SVG'}
-          </Button>
-          <Button type="primary" size={'small'} onClick={() => {}}>
-            {'下载XML'}
-          </Button>
         </Space>
       </>
     );
