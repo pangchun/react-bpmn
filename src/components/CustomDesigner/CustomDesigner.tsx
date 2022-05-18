@@ -24,6 +24,9 @@ import newDiagram from '@/bpmn/resource/newDiagram';
 // 引入当前组件样式
 import CustomPanel from '@/components/CustomDesigner/components/CustomPanel/CustomPanel';
 import { Button, Col, Row } from 'antd';
+import { Layout } from 'antd';
+
+const { Header, Footer, Sider, Content } = Layout;
 import XmlPreview from '@/components/CustomDesigner/components/XmlPreview/XmlPreview';
 
 export default function CustomDesigner() {
@@ -120,7 +123,7 @@ export default function CustomDesigner() {
           {renderToolBar()}
           <div id="canvas" />
         </Col>
-        <Col span={6}>
+        <Col span={6} style={{ height: '100vh', overflowY: 'auto' }}>
           <CustomPanel modeler={bpmnModeler} />
         </Col>
       </Row>
