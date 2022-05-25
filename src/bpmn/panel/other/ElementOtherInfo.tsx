@@ -8,39 +8,46 @@ const { Panel } = Collapse;
 const { TextArea } = Input;
 
 interface IProps {
-  element: any;
-  modeling: any;
-  bpmnFactory: any;
+  businessObject: any;
 }
 
 export default function ElementOtherInfo(props: IProps) {
   // props属性
-  const { element, modeling, bpmnFactory } = props;
+  const { businessObject } = props;
 
   // 其它属性
   const [form] = Form.useForm<{
     documentation: string;
   }>();
 
+  /**
+   * 只监听id的原因：
+   * 1、只有切换当前节点才重新执行初始化操作
+   * 2、当前节点属性变化时，不需要重新初始化操作
+   * 3、因为每个节点的id是必不相同的，所以可以用作依赖项
+   */
   useEffect(() => {
     initPageData();
-  }, [element]);
+  }, [businessObject?.id]);
 
   function initPageData() {
-    // todo 处理空时的默认值
-    if (!element?.businessObject?.documentation) {
+    if (!businessObject?.documentation) {
       return;
     }
     form.setFieldsValue({
-      documentation: element.businessObject.documentation.at(0).text || '',
+      documentation: businessObject.documentation.at(0).text || '',
     });
   }
 
   function updateDocumentation(value: string) {
-    const documentation = bpmnFactory?.create('bpmn:Documentation', {
-      text: value,
-    });
-    modeling.updateProperties(element, {
+    const documentation = window.bpmnInstance.bpmnFactory?.create(
+      'bpmn:Documentation',
+      {
+        text: value,
+      },
+    );
+    // todo 当修改时快速切换会导致两个节点同时修改，原因可能是更新操作为异步，有延迟导致的
+    window.bpmnInstance.modeling.updateProperties(window.bpmnInstance.element, {
       documentation: value ? [documentation] : undefined,
     });
   }

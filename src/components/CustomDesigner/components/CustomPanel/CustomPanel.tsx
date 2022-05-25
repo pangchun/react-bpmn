@@ -7,6 +7,30 @@ import ExtensionProperties from '@/bpmn/panel/extension-properties/ExtensionProp
 import SignalMessage from '@/bpmn/panel/signal-message/SignalMessage';
 import ExecuteListener from '@/bpmn/panel/element-listener/execute-listener/ExecuteListener';
 
+declare global {
+  interface Window {
+    bpmnInstance: {
+      element: any;
+      modeler: any;
+      modeling: any;
+      elementRegistry: any;
+      bpmnFactory: any;
+      moddle: any;
+    };
+  }
+}
+
+function initBpmnInstance() {
+  window.bpmnInstance = {
+    element: null,
+    modeler: null,
+    modeling: null,
+    elementRegistry: null,
+    bpmnFactory: null,
+    moddle: null,
+  };
+}
+
 interface IProps {
   modeler: any;
 }
@@ -27,6 +51,7 @@ export default function CustomPanel(props: IProps) {
   const [rootElements, setRootElements] = useState([]);
 
   useEffect(() => {
+    initBpmnInstance();
     // 避免初始化，流程图未加载完导致出错
     if (!modeler) {
       return;
@@ -35,6 +60,13 @@ export default function CustomPanel(props: IProps) {
   }, [modeler]);
 
   function init() {
+    // 设置window的bpmnInstance对象属性
+    window.bpmnInstance.modeler = modeler;
+    window.bpmnInstance.elementRegistry = modeler.get('elementRegistry');
+    window.bpmnInstance.modeling = modeler.get('modeling', true);
+    window.bpmnInstance.bpmnFactory = modeler.get('bpmnFactory', true);
+    window.bpmnInstance.moddle = modeler.get('moddle', true);
+
     // 获取所有节点
     setElementRegistry(modeler.get('elementRegistry'));
     // 获取modeling
@@ -60,9 +92,14 @@ export default function CustomPanel(props: IProps) {
     });
 
     // 设置监听器，监听当前节点属性变化
-    modeler?.on('element.changed', (e: any) => {
+    modeler?.on('element.changed', ({ element }: any) => {
       // setState 这一步是成功的，但是这个state没有被子组件响应，原因可能是对象的hash地址相同，react认为state没改变，所以未刷新
-      confirmCurrentElement(e.element);
+      if (
+        element &&
+        element.id === window.bpmnInstance.element.businessObject.id
+      ) {
+        confirmCurrentElement(element);
+      }
     });
   }
 
@@ -73,7 +110,12 @@ export default function CustomPanel(props: IProps) {
   function confirmCurrentElement(element: any) {
     // 如果element为空，则设置流程节点为当前节点，否则设置选中节点为当前节点 (点击canvas空白处默认指流程节点)
     if (!element) {
-      setElement(modeler.get('elementRegistry').get('Process_1'));
+      let processElement: any = modeler.get('elementRegistry').get('Process_1');
+      setElement(processElement);
+      window.bpmnInstance.element = processElement;
+      setBusinessObject(
+        JSON.parse(JSON.stringify(processElement?.businessObject || null)),
+      );
       console.log(
         '当前选中的元素为: \n',
         modeler.get('elementRegistry').get('Process_1')?.businessObject,
@@ -81,6 +123,8 @@ export default function CustomPanel(props: IProps) {
       return;
     }
     console.log('当前选中的元素为: \n', element?.businessObject);
+    window.bpmnInstance.element = element;
+    setBusinessObject(JSON.parse(JSON.stringify(element.businessObject)));
     setElement(element);
   }
 
@@ -113,11 +157,7 @@ export default function CustomPanel(props: IProps) {
           moddle={moddle}
         />
         <Divider type={'horizontal'} style={{ margin: 0 }} />
-        <ElementOtherInfo
-          element={element}
-          modeling={modeling}
-          bpmnFactory={bpmnFactory}
-        />
+        <ElementOtherInfo businessObject={businessObject} />
         <Divider type={'horizontal'} style={{ margin: 0 }} />
       </Space>
     </>
