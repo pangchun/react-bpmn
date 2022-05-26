@@ -23,6 +23,7 @@
     "@ant-design/icons": "^4.7.0",
     "@ant-design/pro-layout": "^6.5.0",
     "@bpmn-io/properties-panel": "^0.13.2",
+    "ahooks": "^3.4.0",
     "antd": "^4.20.0",
     "bpmn-js": "^9.0.3",
     "bpmn-js-properties-panel": "^1.0.0",

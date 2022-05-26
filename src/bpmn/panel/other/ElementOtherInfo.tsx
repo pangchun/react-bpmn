@@ -31,6 +31,8 @@ export default function ElementOtherInfo(props: IProps) {
   }, [businessObject?.id]);
 
   function initPageData() {
+    // todo 首次调用 resetFields 报错 Instance created by `useForm` is not connected to any Form element. Forget to pass `form` prop? 目前尚未找到解决办法，后面再处理
+    form.resetFields();
     if (!businessObject?.documentation) {
       return;
     }
@@ -46,7 +48,6 @@ export default function ElementOtherInfo(props: IProps) {
         text: value,
       },
     );
-    // todo 当修改时快速切换会导致两个节点同时修改，原因可能是更新操作为异步，有延迟导致的
     window.bpmnInstance.modeling.updateProperties(window.bpmnInstance.element, {
       documentation: value ? [documentation] : undefined,
     });
