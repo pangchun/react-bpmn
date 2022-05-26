@@ -7,6 +7,7 @@ import ExtensionProperties from '@/bpmn/panel/extension-properties/ExtensionProp
 import SignalMessage from '@/bpmn/panel/signal-message/SignalMessage';
 import ExecuteListener from '@/bpmn/panel/element-listener/execute-listener/ExecuteListener';
 
+// todo 这个全局声明后面可以抽取到单独的ts文件中
 declare global {
   interface Window {
     bpmnInstance: {
@@ -152,6 +153,7 @@ export default function CustomPanel(props: IProps) {
           element={element}
           modeling={modeling}
           moddle={moddle}
+          businessObject={businessObject}
         />
         <Divider type={'horizontal'} style={{ margin: 0 }} />
         <ElementOtherInfo businessObject={businessObject} />

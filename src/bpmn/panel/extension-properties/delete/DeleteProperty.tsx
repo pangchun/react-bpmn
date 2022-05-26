@@ -7,25 +7,14 @@ const prefix: string = 'flowable';
 
 interface IProps {
   onRef: Ref<any>;
-  otherExtensionList: any[];
   rowsData: Array<any>;
-  moddle: any;
-  modeling: any;
-  element: any;
-  reFreshParent: () => any;
+  otherExtensionList: any[];
+  reFreshParent: (rowsData: any[]) => any;
 }
 
 export default function DeleteProperty(props: IProps) {
   // props属性
-  const {
-    rowsData,
-    onRef,
-    moddle,
-    modeling,
-    element,
-    otherExtensionList,
-    reFreshParent,
-  } = props;
+  const { rowsData, onRef, otherExtensionList, reFreshParent } = props;
 
   // setState属性
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -46,18 +35,28 @@ export default function DeleteProperty(props: IProps) {
 
   function handleOK() {
     // 新建属性字段集合，用于保存属性字段
-    const properties = moddle?.create(`${prefix}:Properties`, {
-      values: getPropertiesList(),
-    });
+    const properties = window.bpmnInstance.moddle?.create(
+      `${prefix}:Properties`,
+      {
+        values: getPropertiesList(),
+      },
+    );
     // 新建扩展属性字段
-    const extensionElements = moddle?.create(`bpmn:ExtensionElements`, {
-      values: otherExtensionList.concat(properties),
-    });
+    const extensionElements = window.bpmnInstance.moddle?.create(
+      `bpmn:ExtensionElements`,
+      {
+        values: otherExtensionList.concat(properties),
+      },
+    );
     // 执行更新
-    modeling?.updateProperties(element, {
-      extensionElements: extensionElements,
-    });
-    reFreshParent();
+    window.bpmnInstance.modeling?.updateProperties(
+      window.bpmnInstance.element,
+      {
+        extensionElements: extensionElements,
+      },
+    );
+    rowsData.splice(currentRow.key, 1);
+    reFreshParent(rowsData);
     handleCancel();
   }
 
@@ -70,10 +69,13 @@ export default function DeleteProperty(props: IProps) {
     if (rowsData) {
       rowsData.map((e) => {
         if (e.key !== currentRow?.key) {
-          const newProperty = moddle?.create(`${prefix}:Property`, {
-            name: e.name,
-            value: e.value,
-          });
+          const newProperty = window.bpmnInstance.moddle?.create(
+            `${prefix}:Property`,
+            {
+              name: e.name,
+              value: e.value,
+            },
+          );
           propertiesList.push(newProperty);
         }
       });
