@@ -131,7 +131,7 @@ export default function CustomPanel(props: IProps) {
   return (
     <>
       <Space direction="vertical" size={0} style={{ display: 'flex' }}>
-        <ElementBaseInfo element={element} modeling={modeling} />
+        <ElementBaseInfo businessObject={businessObject} />
         <Divider type={'horizontal'} style={{ margin: 0 }} />
         {element?.type === 'bpmn:Process' && (
           <>
