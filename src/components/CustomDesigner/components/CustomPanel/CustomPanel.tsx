@@ -41,11 +41,8 @@ export default function CustomPanel(props: IProps) {
 
   // setState属性
   const [element, setElement] = useState<any>();
-  const [selectedElements, setSelectedElements] = useState([]);
   const [businessObject, setBusinessObject] = useState<any>();
   const [modeling, setModeling] = useState<any>();
-  const [elementRegistry, setElementRegistry] = useState<any>();
-  const [processElement, setProcessElement] = useState<any>();
   const [bpmnFactory, setBpmnFactory] = useState<any>();
   const [moddle, setModdel] = useState<any>();
   const [rootElements, setRootElements] = useState([]);
@@ -67,8 +64,6 @@ export default function CustomPanel(props: IProps) {
     window.bpmnInstance.bpmnFactory = modeler.get('bpmnFactory', true);
     window.bpmnInstance.moddle = modeler.get('moddle', true);
 
-    // 获取所有节点
-    setElementRegistry(modeler.get('elementRegistry'));
     // 获取modeling
     setModeling(modeler.get('modeling', true));
     // 获取bpmnFactory
@@ -78,8 +73,6 @@ export default function CustomPanel(props: IProps) {
 
     // 设置监听器，监听所有工作就绪后，要做的事
     modeler?.on('import.done', (e: any) => {
-      // 获取当前流程信息 todo 目前是通过流程id获取，但是这个id固定不好，后面要修改
-      setProcessElement(modeler.get('elementRegistry').get('Process_1'));
       confirmCurrentElement(null);
       // 获取rootElements
       setRootElements(modeler.getDefinitions().rootElements);
@@ -87,7 +80,6 @@ export default function CustomPanel(props: IProps) {
 
     // 设置监听器，监听选中节点变化
     modeler?.on('selection.changed', (e: any) => {
-      setSelectedElements(e.newSelection);
       confirmCurrentElement(e.newSelection[0] || null);
     });
 
@@ -110,6 +102,7 @@ export default function CustomPanel(props: IProps) {
   function confirmCurrentElement(element: any) {
     // 如果element为空，则设置流程节点为当前节点，否则设置选中节点为当前节点 (点击canvas空白处默认指流程节点)
     if (!element) {
+      // todo 目前是通过流程id获取，但是这个id固定不好，后面要修改
       let processElement: any = modeler.get('elementRegistry').get('Process_1');
       setElement(processElement);
       window.bpmnInstance.element = processElement;
@@ -128,22 +121,26 @@ export default function CustomPanel(props: IProps) {
     setElement(element);
   }
 
+  function renderSignalMessage() {
+    if (element?.type === 'bpmn:Process') {
+      return (
+        <SignalMessage
+          element={element}
+          modeling={modeling}
+          moddle={moddle}
+          rootElements={rootElements}
+        />
+      );
+    }
+  }
+
   return (
     <>
       <Space direction="vertical" size={0} style={{ display: 'flex' }}>
         <ElementBaseInfo businessObject={businessObject} />
         <Divider type={'horizontal'} style={{ margin: 0 }} />
-        {element?.type === 'bpmn:Process' && (
-          <>
-            <SignalMessage
-              element={element}
-              modeling={modeling}
-              moddle={moddle}
-              rootElements={rootElements}
-            />
-            <Divider type={'horizontal'} style={{ margin: 0 }} />
-          </>
-        )}
+        {renderSignalMessage()}
+        <Divider type={'horizontal'} style={{ margin: 0 }} />
         <ExecuteListener
           element={element}
           modeling={modeling}
