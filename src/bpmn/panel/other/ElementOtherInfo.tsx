@@ -31,8 +31,8 @@ export default function ElementOtherInfo(props: IProps) {
   }, [businessObject?.id]);
 
   function initPageData() {
-    // todo 首次调用 resetFields 报错 Instance created by `useForm` is not connected to any Form element. Forget to pass `form` prop? 目前尚未找到解决办法，后面再处理
-    // 原因找到：手风琴状态设置为打开则不会报错
+    // 首次调用 resetFields 报错 Instance created by `useForm` is not connected to any Form element. Forget to pass `form` prop? 目前尚未找到解决办法，后面再处理
+    // 原因找到：手风琴状态设置为打开则不会报错,当初始时，手风琴如果为关闭状态默认是不会渲染手风琴内的组件，设置 forceRender={true} 即可
     form.resetFields();
     form.setFieldsValue({
       documentation: businessObject?.documentation?.at(0).text || '',
@@ -53,11 +53,7 @@ export default function ElementOtherInfo(props: IProps) {
 
   return (
     <>
-      <Collapse
-        bordered={false}
-        expandIconPosition={'right'}
-        defaultActiveKey={['1']}
-      >
+      <Collapse bordered={false} expandIconPosition={'right'}>
         <Panel
           header={
             <Typography style={{ color: '#1890ff', fontWeight: 'bold' }}>
@@ -68,18 +64,13 @@ export default function ElementOtherInfo(props: IProps) {
           key="1"
           style={{ backgroundColor: '#FFF' }}
           showArrow={true}
+          forceRender={true}
         >
           <Form form={form} labelCol={{ span: 4 }} wrapperCol={{ span: 19 }}>
             <Form.Item label="元素文档" name="documentation">
-              {/*<TextArea*/}
-              {/*  rows={4}*/}
-              {/*  placeholder={'请输入'}*/}
-              {/*  onChange={(event) => {*/}
-              {/*    updateDocumentation(event.currentTarget.value);*/}
-              {/*  }}*/}
-              {/*/>*/}
-
-              <Input
+              <TextArea
+                rows={4}
+                placeholder={'请输入'}
                 onChange={(event) => {
                   updateDocumentation(event.currentTarget.value);
                 }}
