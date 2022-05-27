@@ -120,20 +120,20 @@ export default function EditProperty(props: IProps) {
         onOk={handleOK}
         onCancel={handleCancel}
       >
-        <Form form={form} labelCol={{ span: 4 }} wrapperCol={{ span: 19 }}>
+        <Form form={form} labelCol={{ span: 5 }} wrapperCol={{ span: 18 }}>
           <Form.Item
             label="属性名"
             name="propertyName"
             rules={[{ required: true, message: '属性名不能为空哦!' }]}
           >
-            <Input />
+            <Input placeholder={'请输入'} />
           </Form.Item>
           <Form.Item
             label="属性值"
             name="propertyValue"
             rules={[{ required: true, message: '属性值不能为空哦!' }]}
           >
-            <Input />
+            <Input placeholder={'请输入'} />
           </Form.Item>
         </Form>
       </Modal>

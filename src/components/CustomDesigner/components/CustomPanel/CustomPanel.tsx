@@ -17,6 +17,7 @@ declare global {
       elementRegistry: any;
       bpmnFactory: any;
       moddle: any;
+      rootElements: any[];
     };
   }
 }
@@ -29,6 +30,7 @@ function initBpmnInstance() {
     elementRegistry: null,
     bpmnFactory: null,
     moddle: null,
+    rootElements: [],
   };
 }
 
@@ -77,6 +79,7 @@ export default function CustomPanel(props: IProps) {
       confirmCurrentElement(null);
       // 获取rootElements
       setRootElements(modeler.getDefinitions().rootElements);
+      window.bpmnInstance.rootElements = modeler.getDefinitions().rootElements;
     });
 
     // 设置监听器，监听选中节点变化
@@ -124,14 +127,7 @@ export default function CustomPanel(props: IProps) {
 
   function renderSignalMessage() {
     if (element?.type === 'bpmn:Process') {
-      return (
-        <SignalMessage
-          element={element}
-          modeling={modeling}
-          moddle={moddle}
-          rootElements={rootElements}
-        />
-      );
+      return <SignalMessage businessObject={businessObject} />;
     }
   }
 

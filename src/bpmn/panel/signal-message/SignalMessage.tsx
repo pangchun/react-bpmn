@@ -8,29 +8,20 @@ import CreateSignalMessage from '@/bpmn/panel/signal-message/create/CreateSignal
 const { Panel } = Collapse;
 
 interface IProps {
-  element: any;
-  modeling: any;
-  moddle: any;
-  rootElements: any[];
+  businessObject: any;
 }
 
 export default function SignalMessage(props: IProps) {
   // props属性
-  const { element, modeling, moddle, rootElements } = props;
+  const { businessObject } = props;
 
   // setState属性
-  const [businessObject, setBusinessObject] = useState<any>();
   const [signalRows, setSignalRows] = useState<Array<any>>([]);
   const [messageRows, setMessageRows] = useState<Array<any>>([]);
 
   useEffect(() => {
-    // 初始化业务对象
-    setBusinessObject(element?.businessObject);
-  }, [JSON.stringify(element?.businessObject)]);
-
-  useEffect(() => {
     initRows();
-  }, [rootElements.toString()]);
+  }, [businessObject?.id]);
 
   /**
    * 初始化行数据
@@ -39,7 +30,7 @@ export default function SignalMessage(props: IProps) {
     let signalRows: any[] = [],
       messageRows: any[] = [];
 
-    rootElements?.map((e, i) => {
+    window.bpmnInstance?.rootElements?.map((e) => {
       if (e.$type === 'bpmn:Message') {
         messageRows.push({
           key: messageRows.length,
@@ -122,13 +113,7 @@ export default function SignalMessage(props: IProps) {
           showArrow={true}
         >
           <Space direction="vertical" size={4} style={{ display: 'flex' }}>
-            <CreateSignalMessage
-              createType={'message'}
-              rootElements={rootElements}
-              moddle={moddle}
-              modeling={modeling}
-              reInitRows={initRows}
-            />
+            <CreateSignalMessage createType={'message'} reInitRows={initRows} />
             <Table
               columns={messageColumns}
               dataSource={messageRows}
@@ -137,13 +122,7 @@ export default function SignalMessage(props: IProps) {
               size={'small'}
             />
 
-            <CreateSignalMessage
-              createType={'signal'}
-              rootElements={rootElements}
-              moddle={moddle}
-              modeling={modeling}
-              reInitRows={initRows}
-            />
+            <CreateSignalMessage createType={'signal'} reInitRows={initRows} />
             <Table
               columns={signalColumns}
               dataSource={signalRows}
