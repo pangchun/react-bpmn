@@ -9,15 +9,12 @@ import { FLOWABLE_PREFIX } from '@/bpmn/constant/moddle-constant';
 const { Panel } = Collapse;
 
 interface IProps {
-  element: any;
-  modeling: any;
-  moddle: any;
   businessObject: any;
 }
 
 export default function ExtensionProperties(props: IProps) {
   // props属性
-  const { element, modeling, moddle, businessObject } = props;
+  const { businessObject } = props;
 
   // setState属性
   const [rows, setRows] = useState<Array<any>>([]);

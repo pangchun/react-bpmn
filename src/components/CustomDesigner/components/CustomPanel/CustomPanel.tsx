@@ -139,26 +139,29 @@ export default function CustomPanel(props: IProps) {
     <>
       <Space direction="vertical" size={0} style={{ display: 'flex' }}>
         <ElementBaseInfo businessObject={businessObject} />
-        <Divider type={'horizontal'} style={{ margin: 0 }} />
+        <CustomDivider />
         {renderSignalMessage()}
-        <Divider type={'horizontal'} style={{ margin: 0 }} />
+        <CustomDivider />
         <ExecuteListener
           element={element}
           modeling={modeling}
           bpmnFactory={bpmnFactory}
           moddle={moddle}
         />
-        <Divider type={'horizontal'} style={{ margin: 0 }} />
-        <ExtensionProperties
-          element={element}
-          modeling={modeling}
-          moddle={moddle}
-          businessObject={businessObject}
-        />
-        <Divider type={'horizontal'} style={{ margin: 0 }} />
+        <CustomDivider />
+        <ExtensionProperties businessObject={businessObject} />
+        <CustomDivider />
         <ElementOtherInfo businessObject={businessObject} />
-        <Divider type={'horizontal'} style={{ margin: 0 }} />
+        <CustomDivider />
       </Space>
+    </>
+  );
+}
+
+function CustomDivider() {
+  return (
+    <>
+      <Divider type={'horizontal'} style={{ margin: 0 }} />
     </>
   );
 }
