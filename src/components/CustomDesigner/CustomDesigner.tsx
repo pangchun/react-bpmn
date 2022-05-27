@@ -117,17 +117,17 @@ export default function CustomDesigner() {
     <>
       <Row gutter={0}>
         <Col span={1}>{/*快捷工具栏*/}</Col>
-        <Col span={17}>
+        <Col
+          span={17}
+          style={{
+            backgroundColor: '#fff',
+            backgroundImage:
+              'linear-gradient(rgba(24,144,255, .5) 1px, transparent 0), linear-gradient(90deg,rgba(24,144,255, .5) 1px, transparent 0)',
+            backgroundSize: '20px 20px',
+          }}
+        >
           {renderToolBar()}
-          <div
-            id="canvas"
-            style={{
-              backgroundColor: '#eee',
-              backgroundImage:
-                'linear-gradient(rgba(255,187,51, .5) 1px, transparent 0), linear-gradient(90deg,rgba(255,187,51, .5) 1px, transparent 0)',
-              backgroundSize: '20px 20px',
-            }}
-          />
+          <div id="canvas" />
         </Col>
         <Col
           span={6}
