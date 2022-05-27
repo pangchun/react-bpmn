@@ -138,12 +138,7 @@ export default function CustomPanel(props: IProps) {
         <CustomDivider />
         {renderSignalMessage()}
         <CustomDivider />
-        <ExecuteListener
-          element={element}
-          modeling={modeling}
-          bpmnFactory={bpmnFactory}
-          moddle={moddle}
-        />
+        <ExecuteListener businessObject={businessObject} />
         <CustomDivider />
         <ExtensionProperties businessObject={businessObject} />
         <CustomDivider />
