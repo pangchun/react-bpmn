@@ -46,6 +46,13 @@ export default function ElementBaseInfo(props: IProps) {
       if (!value) {
         return;
       }
+      // id不能相同, todo 结合antd的自定义校验规则，显示错误提示
+      try {
+        window.bpmnInstance.elementRegistry._validateId(value);
+      } catch (e) {
+        console.log('id重复', e);
+        return;
+      }
       window.bpmnInstance.modeling.updateProperties(
         window.bpmnInstance.element,
         {
