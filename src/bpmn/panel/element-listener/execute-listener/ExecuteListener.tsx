@@ -15,18 +15,14 @@ import EditListener from '@/bpmn/panel/element-listener/execute-listener/edit/Ed
 const { Panel } = Collapse;
 
 interface IProps {
-  element: any;
-  modeling: any;
-  bpmnFactory: any;
-  moddle: any;
+  businessObject: any;
 }
 
 export default function ExecuteListener(props: IProps) {
   // props属性
-  const { element, modeling, bpmnFactory, moddle } = props;
+  const { businessObject } = props;
 
   // setState属性
-  const [businessObject, setBusinessObject] = useState<any>();
   const [rows, setRows] = useState<Array<any>>([]);
   const [currentRow, setCurrentRow] = useState<any>();
   const [otherExtensionList, setOtherExtensionList] = useState<Array<any>>([]);
@@ -39,24 +35,22 @@ export default function ExecuteListener(props: IProps) {
   const deleteRef = useRef<any>();
 
   useEffect(() => {
-    // 初始化业务对象
-    setBusinessObject(element?.businessObject);
     initRows();
     initOtherExtensionList();
-  }, [JSON.stringify(element?.businessObject)]);
+  }, [businessObject?.id]);
 
   /**
    * 初始化行数据
    */
   function initRows() {
-    if (!element) {
+    if (!businessObject) {
       return [];
     }
 
     let initialRows: any[];
 
     let listeners: any[] =
-      element.businessObject?.extensionElements?.values?.filter(
+      businessObject?.extensionElements?.values?.filter(
         (e: any) => e.$type === `${FLOWABLE_PREFIX}:ExecutionListener`,
       ) ?? [];
 
@@ -79,7 +73,7 @@ export default function ExecuteListener(props: IProps) {
    */
   function initOtherExtensionList() {
     let otherExtensionList: any[] = [];
-    element?.businessObject?.extensionElements?.values?.filter((e: any) => {
+    businessObject?.extensionElements?.values?.filter((e: any) => {
       if (e.$type !== `${FLOWABLE_PREFIX}:Properties`) {
         otherExtensionList.push(e);
       }
@@ -183,15 +177,15 @@ export default function ExecuteListener(props: IProps) {
       </Collapse>
 
       {/* 弹窗组件 */}
-      <EditListener
-        onRef={editRef}
-        otherExtensionList={otherExtensionList}
-        currentRow={currentRow}
-        rowsData={rows}
-        moddle={moddle}
-        modeling={modeling}
-        element={element}
-      />
+      {/*<EditListener*/}
+      {/*  onRef={editRef}*/}
+      {/*  otherExtensionList={otherExtensionList}*/}
+      {/*  currentRow={currentRow}*/}
+      {/*  rowsData={rows}*/}
+      {/*  moddle={moddle}*/}
+      {/*  modeling={modeling}*/}
+      {/*  element={element}*/}
+      {/*/>*/}
       {/*<DeleteProperty*/}
       {/*  onRef={deleteRef}*/}
       {/*  otherExtensionList={otherExtensionList}*/}

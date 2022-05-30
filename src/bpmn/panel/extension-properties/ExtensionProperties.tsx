@@ -9,14 +9,12 @@ import { FLOWABLE_PREFIX } from '@/bpmn/constant/moddle-constant';
 const { Panel } = Collapse;
 
 interface IProps {
-  element: any;
-  modeling: any;
-  moddle: any;
+  businessObject: any;
 }
 
 export default function ExtensionProperties(props: IProps) {
   // props属性
-  const { element, modeling, moddle } = props;
+  const { businessObject } = props;
 
   // setState属性
   const [rows, setRows] = useState<Array<any>>([]);
@@ -28,7 +26,8 @@ export default function ExtensionProperties(props: IProps) {
 
   useEffect(() => {
     initPageData();
-  }, [element]);
+    console.log('当前的业务对象\n', businessObject);
+  }, [businessObject?.id]);
 
   function initPageData() {
     initRows();
@@ -36,11 +35,11 @@ export default function ExtensionProperties(props: IProps) {
   }
 
   function initRows() {
-    if (!element) {
+    if (!businessObject) {
       return;
     }
     let rows: any[] = [];
-    let properties: any[] = element.businessObject?.extensionElements?.values?.find(
+    let properties: any[] = businessObject?.extensionElements?.values?.find(
       (e: any) => e.$type === `${FLOWABLE_PREFIX}:Properties`,
     )?.values;
     properties?.map((e, i) => {
@@ -55,12 +54,24 @@ export default function ExtensionProperties(props: IProps) {
 
   function initOtherExtensionList() {
     let otherExtensionList: any[] = [];
-    element?.businessObject?.extensionElements?.values?.filter((e: any) => {
+    businessObject?.extensionElements?.values?.filter((e: any) => {
       if (e.$type !== `${FLOWABLE_PREFIX}:Properties`) {
         otherExtensionList.push(e);
       }
     });
     setOtherExtensionList(otherExtensionList);
+  }
+
+  function refreshRows(rowsData: any[]) {
+    let rows: any[] = [];
+    rowsData?.map((e, i) => {
+      rows.push({
+        key: i,
+        name: e.name,
+        value: e.value,
+      });
+    });
+    setRows(rows);
   }
 
   const columns = [
@@ -156,22 +167,15 @@ export default function ExtensionProperties(props: IProps) {
       {/* 弹窗组件 */}
       <EditProperty
         onRef={editRef}
-        otherExtensionList={otherExtensionList}
-        // currentRow={currentRow}
         rowsData={rows}
-        moddle={moddle}
-        modeling={modeling}
-        element={element}
-        reFreshParent={initRows}
+        otherExtensionList={otherExtensionList}
+        reFreshParent={refreshRows}
       />
       <DeleteProperty
         onRef={deleteRef}
-        otherExtensionList={otherExtensionList}
         rowsData={rows}
-        moddle={moddle}
-        modeling={modeling}
-        element={element}
-        reFreshParent={initRows}
+        otherExtensionList={otherExtensionList}
+        reFreshParent={refreshRows}
       />
     </>
   );

@@ -1,31 +1,30 @@
 import React, { useState } from 'react';
-import { Modal, Button, Input, Typography } from 'antd';
+import { Modal, Button, Input, Typography, Form } from 'antd';
 import { EditOutlined, PlusOutlined } from '@ant-design/icons';
 
 const MESSAGE_CONSTANT: string = 'message';
 
 interface IProps {
   createType: 'message' | 'signal';
-  rootElements: any[];
-  moddle: any;
-  modeling: any;
   reInitRows: () => any;
 }
 
 export default function CreateSignalMessage(props: IProps) {
   // props属性
-  const { createType, rootElements, moddle, modeling, reInitRows } = props;
+  const { createType, reInitRows } = props;
 
   // setState属性
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [id, setId] = useState<string>('');
-  const [name, setName] = useState<string>('');
 
-  function showModal(param: any) {
+  // 其它属性
+  const [form] = Form.useForm<{
+    id: string;
+    name: string;
+  }>();
+
+  function showModal() {
     setIsModalVisible(true);
-    // 清除上一次输入
-    setId('');
-    setName('');
+    form.resetFields();
   }
 
   function handleCancel() {
@@ -33,32 +32,27 @@ export default function CreateSignalMessage(props: IProps) {
   }
 
   function handleOK() {
-    let prefix: string;
-
-    if (createType === MESSAGE_CONSTANT) {
-      prefix = 'bpmn:Message';
-    } else {
-      prefix = 'bpmn:Signal';
-    }
-
-    const element = moddle?.create(prefix, {
-      id: id,
-      name: name,
-    });
-    rootElements.push(element);
-
-    // push之后，更新父组件的表格行数据
-    reInitRows();
-
-    handleCancel();
-  }
-
-  function updateId(value: string) {
-    setId(value);
-  }
-
-  function updateName(value: string) {
-    setName(value);
+    form
+      .validateFields()
+      .then((values) => {
+        let prefix: string;
+        if (createType === MESSAGE_CONSTANT) {
+          prefix = 'bpmn:Message';
+        } else {
+          prefix = 'bpmn:Signal';
+        }
+        const element = window.bpmnInstance.moddle?.create(prefix, {
+          id: values.id,
+          name: values.name,
+        });
+        window.bpmnInstance.rootElements.push(element);
+        // push之后，更新父组件的表格行数据
+        reInitRows();
+        handleCancel();
+      })
+      .catch((info) => {
+        console.log('表单校验失败: ', info);
+      });
   }
 
   return (
@@ -67,7 +61,6 @@ export default function CreateSignalMessage(props: IProps) {
         type="primary"
         size={'small'}
         style={{
-          // width: '100%',
           marginTop: 8,
           float: 'right',
         }}
@@ -95,27 +88,22 @@ export default function CreateSignalMessage(props: IProps) {
         onOk={handleOK}
         onCancel={handleCancel}
       >
-        <Input
-          size="middle"
-          addonBefore={createType === MESSAGE_CONSTANT ? '消息ID' : '信号ID'}
-          placeholder={'请输入'}
-          value={id}
-          onChange={(event) => {
-            updateId(event.currentTarget.value);
-          }}
-        />
-        <Input
-          size="middle"
-          addonBefore={
-            createType === MESSAGE_CONSTANT ? '消息名称' : '信号名称'
-          }
-          placeholder={'请输入'}
-          style={{ marginTop: 4 }}
-          value={name}
-          onChange={(event) => {
-            updateName(event.currentTarget.value);
-          }}
-        />
+        <Form form={form} labelCol={{ span: 5 }} wrapperCol={{ span: 18 }}>
+          <Form.Item
+            name="id"
+            label={createType === MESSAGE_CONSTANT ? '消息ID' : '信号ID'}
+            rules={[{ required: true, message: '编号不能为空哦!' }]}
+          >
+            <Input placeholder={'请输入'} />
+          </Form.Item>
+          <Form.Item
+            name="name"
+            label={createType === MESSAGE_CONSTANT ? '消息名称' : '信号名称'}
+            rules={[{ required: true, message: '名称不能为空哦!' }]}
+          >
+            <Input placeholder={'请输入'} />
+          </Form.Item>
+        </Form>
       </Modal>
     </>
   );

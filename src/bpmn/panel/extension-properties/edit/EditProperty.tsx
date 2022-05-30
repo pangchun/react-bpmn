@@ -1,5 +1,5 @@
 import React, { Ref, useImperativeHandle, useState } from 'react';
-import { Modal, Input, Typography, Form } from 'antd';
+import { Form, Input, Modal, Typography } from 'antd';
 import { EditOutlined } from '@ant-design/icons';
 
 // todo 设置默认前缀，后面设置多moddle时可从配置获取
@@ -7,28 +7,14 @@ const prefix: string = 'flowable';
 
 interface IProps {
   onRef: Ref<any>;
-  otherExtensionList: any[];
   rowsData: Array<any>;
-  // 新增时传null，编辑时必传
-  // currentRow: any;
-  moddle: any;
-  modeling: any;
-  element: any;
-  reFreshParent: () => any;
+  otherExtensionList: any[];
+  reFreshParent: (rowsData: any[]) => any;
 }
 
 export default function EditProperty(props: IProps) {
   // props属性
-  const {
-    rowsData,
-    // currentRow,
-    onRef,
-    moddle,
-    modeling,
-    element,
-    otherExtensionList,
-    reFreshParent,
-  } = props;
+  const { onRef, rowsData, otherExtensionList, reFreshParent } = props;
 
   // setState属性
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -50,6 +36,7 @@ export default function EditProperty(props: IProps) {
       propertyName: rowObj?.name || '',
       propertyValue: rowObj?.value || '',
     });
+    // debugger
     setCurrentRowKey(rowObj?.key || rowsData.length);
     setIsModalVisible(true);
   }
@@ -64,18 +51,31 @@ export default function EditProperty(props: IProps) {
       .validateFields()
       .then((values) => {
         // 新建属性字段集合，用于保存属性字段
-        const properties = moddle?.create(`${prefix}:Properties`, {
-          values: getPropertiesList(values.propertyName, values.propertyValue),
-        });
+        const properties = window.bpmnInstance.moddle?.create(
+          `${prefix}:Properties`,
+          {
+            values: getPropertiesList(
+              values.propertyName,
+              values.propertyValue,
+            ),
+          },
+        );
         // 新建扩展属性字段
-        const extensionElements = moddle?.create(`bpmn:ExtensionElements`, {
-          values: otherExtensionList.concat(properties),
-        });
+        const extensionElements = window.bpmnInstance.moddle?.create(
+          `bpmn:ExtensionElements`,
+          {
+            values: otherExtensionList.concat(properties),
+          },
+        );
         // 执行更新
-        modeling?.updateProperties(element, {
-          extensionElements: extensionElements,
-        });
-        reFreshParent();
+        window.bpmnInstance.modeling?.updateProperties(
+          window.bpmnInstance.element,
+          {
+            extensionElements: extensionElements,
+          },
+        );
+        // 更新父组件表格数据
+        reFreshParent(rowsData);
         setIsModalVisible(false);
       })
       .catch((info) => {
@@ -94,12 +94,11 @@ export default function EditProperty(props: IProps) {
       value: propertyValue,
     };
     rowsData.splice(currentRowKey, 1, rowObj);
-    rowsData.map((e) => {
-      const newProperty = moddle?.create(`${prefix}:Property`, {
+    propertiesList = rowsData.map((e) => {
+      return window.bpmnInstance.moddle?.create(`${prefix}:Property`, {
         name: e.name,
         value: e.value,
       });
-      propertiesList.push(newProperty);
     });
     return propertiesList;
   }
@@ -121,20 +120,20 @@ export default function EditProperty(props: IProps) {
         onOk={handleOK}
         onCancel={handleCancel}
       >
-        <Form form={form} labelCol={{ span: 4 }} wrapperCol={{ span: 19 }}>
+        <Form form={form} labelCol={{ span: 5 }} wrapperCol={{ span: 18 }}>
           <Form.Item
             label="属性名"
             name="propertyName"
             rules={[{ required: true, message: '属性名不能为空哦!' }]}
           >
-            <Input />
+            <Input placeholder={'请输入'} />
           </Form.Item>
           <Form.Item
             label="属性值"
             name="propertyValue"
             rules={[{ required: true, message: '属性值不能为空哦!' }]}
           >
-            <Input />
+            <Input placeholder={'请输入'} />
           </Form.Item>
         </Form>
       </Modal>

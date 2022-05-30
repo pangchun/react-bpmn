@@ -6,13 +6,19 @@ import { PushpinTwoTone } from '@ant-design/icons';
 const { Panel } = Collapse;
 
 interface IProps {
-  element: any;
-  modeling: any;
+  businessObject: any;
 }
+
+const keyOptions = {
+  id: 'id',
+  name: 'name',
+  isExecutable: 'isExecutable',
+  versionTag: 'versionTag',
+};
 
 export default function ElementBaseInfo(props: IProps) {
   // props属性
-  const { element, modeling } = props;
+  const { businessObject } = props;
 
   // 其它属性
   const [form] = Form.useForm<{
@@ -24,55 +30,54 @@ export default function ElementBaseInfo(props: IProps) {
 
   useEffect(() => {
     initPageData();
-  }, [element]);
+  }, [businessObject?.id]);
 
   function initPageData() {
     form.setFieldsValue({
-      id: element?.businessObject?.id || '',
-      name: element?.businessObject?.name || '',
-      isExecutable: element?.businessObject?.isExecutable || '',
-      versionTag: element?.businessObject?.versionTag || '',
+      id: businessObject?.id || '',
+      name: businessObject?.name || '',
+      isExecutable: businessObject?.isExecutable || false,
+      versionTag: businessObject?.versionTag || '',
     });
   }
 
-  function updateId(value: string) {
-    if (!value) {
+  function updateElementAttr(key: string, value: any) {
+    if (key === keyOptions.id) {
+      if (!value) {
+        return;
+      }
+      // id不能相同, todo 结合antd的自定义校验规则，显示错误提示
+      try {
+        window.bpmnInstance.elementRegistry._validateId(value);
+      } catch (e) {
+        console.log('id重复', e);
+        return;
+      }
+      window.bpmnInstance.modeling.updateProperties(
+        window.bpmnInstance.element,
+        {
+          id: value,
+          di: { id: `${businessObject[key]}_di` },
+        },
+      );
       return;
     }
-    modeling.updateProperties(element, {
-      id: value,
+    window.bpmnInstance.modeling.updateProperties(window.bpmnInstance.element, {
+      [key]: value || undefined,
     });
   }
 
-  function updateName(value: string) {
-    modeling.updateProperties(element, {
-      name: value || undefined,
-    });
-  }
-
-  function updateVersionTag(value: string) {
-    modeling.updateProperties(element, {
-      versionTag: value || undefined,
-    });
-  }
-
-  function updateIsExecutable(value: boolean) {
-    modeling.updateProperties(element, {
-      isExecutable: value,
-    });
-  }
-
-  /**
-   * 渲染process扩展元素
-   */
   function renderProcessExtension() {
-    if (element?.type === 'bpmn:Process') {
+    if (businessObject?.$type === 'bpmn:Process') {
       return (
         <>
           <Form.Item label="版本标签" name="versionTag">
             <Input
               onChange={(event) => {
-                updateVersionTag(event.currentTarget.value);
+                updateElementAttr(
+                  keyOptions.versionTag,
+                  event.currentTarget.value,
+                );
               }}
             />
           </Form.Item>
@@ -81,7 +86,7 @@ export default function ElementBaseInfo(props: IProps) {
               checkedChildren="开"
               unCheckedChildren="关"
               onChange={(checked) => {
-                updateIsExecutable(checked);
+                updateElementAttr(keyOptions.isExecutable, checked);
               }}
             />
           </Form.Item>
@@ -115,16 +120,16 @@ export default function ElementBaseInfo(props: IProps) {
               rules={[{ required: true, message: '编号不能为空哦!' }]}
             >
               <Input
-                readOnly={element?.businessObject?.$type === 'bpmn:Process'}
+                readOnly={businessObject?.$type === 'bpmn:Process'}
                 onChange={(event) => {
-                  updateId(event.currentTarget.value);
+                  updateElementAttr(keyOptions.id, event.currentTarget.value);
                 }}
               />
             </Form.Item>
             <Form.Item label="名称" name="name">
               <Input
                 onChange={(event) => {
-                  updateName(event.currentTarget.value);
+                  updateElementAttr(keyOptions.name, event.currentTarget.value);
                 }}
               />
             </Form.Item>
