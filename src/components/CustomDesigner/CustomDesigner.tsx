@@ -124,7 +124,7 @@ export default function CustomDesigner() {
             style={{
               backgroundColor: '#fff',
               backgroundImage:
-                'linear-gradient(rgba(255,187,51, .5) 1px, transparent 0), linear-gradient(90deg,rgba(255,187,51, .5) 1px, transparent 0)',
+                'linear-gradient(rgba(24,144,255, .5) 1px, transparent 0), linear-gradient(90deg,rgba(24,144,255, .5) 1px, transparent 0)',
               backgroundSize: '20px 20px',
             }}
           />
