@@ -44,7 +44,7 @@ export default function ExtensionProperties(props: IProps) {
     )?.values;
     properties?.map((e, i) => {
       rows.push({
-        key: i,
+        key: i + 1,
         name: e.name,
         value: e.value,
       });
@@ -66,7 +66,7 @@ export default function ExtensionProperties(props: IProps) {
     let rows: any[] = [];
     rowsData?.map((e, i) => {
       rows.push({
-        key: i,
+        key: i + 1,
         name: e.name,
         value: e.value,
       });

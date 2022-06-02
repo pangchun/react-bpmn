@@ -36,8 +36,7 @@ export default function EditProperty(props: IProps) {
       propertyName: rowObj?.name || '',
       propertyValue: rowObj?.value || '',
     });
-    // debugger
-    setCurrentRowKey(rowObj?.key || rowsData.length);
+    setCurrentRowKey(rowObj?.key || rowsData.length + 1);
     setIsModalVisible(true);
   }
 
@@ -87,19 +86,20 @@ export default function EditProperty(props: IProps) {
    * 获取属性列表
    */
   function getPropertiesList(propertyName: string, propertyValue: string) {
-    let propertiesList: any[] = [];
+    let propertiesList: any[];
     let rowObj: any = {
       key: currentRowKey,
       name: propertyName,
       value: propertyValue,
     };
-    rowsData.splice(currentRowKey, 1, rowObj);
+    rowsData.splice(currentRowKey - 1, 1, rowObj);
     propertiesList = rowsData.map((e) => {
       return window.bpmnInstance.moddle?.create(`${prefix}:Property`, {
         name: e.name,
         value: e.value,
       });
     });
+    debugger;
     return propertiesList;
   }
 
