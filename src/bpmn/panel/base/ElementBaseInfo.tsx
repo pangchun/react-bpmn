@@ -47,14 +47,12 @@ export default function ElementBaseInfo(props: IProps) {
       if (!value) {
         return;
       }
-      // id不能相同, todo 结合antd的自定义校验规则，显示错误提示
+      // id不能相同
       try {
         window.bpmnInstance.elementRegistry._validateId(value);
       } catch (e: any) {
-        console.log('id重复', e);
-        message
-          .error('已添加编号为' + value + '的元素, 请重新设置编号')
-          .then((r) => {});
+        console.log('id重复', e.message);
+        message.error('编号名称已存在，请修改编号');
         return;
       }
       window.bpmnInstance.modeling.updateProperties(
@@ -69,6 +67,19 @@ export default function ElementBaseInfo(props: IProps) {
     window.bpmnInstance.modeling.updateProperties(window.bpmnInstance.element, {
       [key]: value || undefined,
     });
+  }
+
+  function validateId(value: string) {
+    if (value.includes(' ')) {
+      return {
+        status: false,
+        message: '编号中不能包含空格',
+      };
+    }
+
+    return {
+      status: true,
+    };
   }
 
   function renderProcessExtension() {
@@ -99,19 +110,6 @@ export default function ElementBaseInfo(props: IProps) {
     }
   }
 
-  function validateId(value: string) {
-    console.log(value);
-    if (value.includes(' ')) {
-      return {
-        status: false,
-        message: '编号中不能包含空格',
-      };
-    }
-    return {
-      status: true,
-    };
-  }
-
   return (
     <>
       <Collapse
@@ -138,10 +136,10 @@ export default function ElementBaseInfo(props: IProps) {
                 { required: true, message: '编号不能为空哦!' },
                 {
                   validator: (_, value) => {
-                    const validateId1 = validateId(value);
-                    return validateId1.status
+                    const validateId$1 = validateId(value);
+                    return validateId$1.status
                       ? Promise.resolve()
-                      : Promise.reject(new Error(validateId1.message));
+                      : Promise.reject(new Error(validateId$1.message));
                   },
                 },
               ]}
