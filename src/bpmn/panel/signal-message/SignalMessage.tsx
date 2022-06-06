@@ -33,13 +33,13 @@ export default function SignalMessage(props: IProps) {
     window.bpmnInstance?.rootElements?.map((e) => {
       if (e.$type === 'bpmn:Message') {
         messageRows.push({
-          key: messageRows.length,
+          key: messageRows.length + 1,
           id: e.id,
           name: e.name,
         });
       } else if (e.$type === 'bpmn:Signal') {
         signalRows.push({
-          key: signalRows.length,
+          key: signalRows.length + 1,
           id: e.id,
           name: e.name,
         });
