@@ -5,6 +5,7 @@ import { PlusOutlined, PlusSquareTwoTone } from '@ant-design/icons';
 import EditProperty from '@/bpmn/panel/extension-properties/edit/EditProperty';
 import DeleteProperty from '@/bpmn/panel/extension-properties/delete/DeleteProperty';
 import { FLOWABLE_PREFIX } from '@/bpmn/constant/moddle-constant';
+import { extractOtherExtensionList } from '@/bpmn/panel/utils/panel-util';
 
 const { Panel } = Collapse;
 
@@ -53,18 +54,29 @@ export default function ExtensionProperties(props: IProps) {
   }
 
   function initOtherExtensionList() {
-    let otherExtensionList: any[] = [];
-    businessObject?.extensionElements?.values?.filter((e: any) => {
-      if (e.$type !== `${FLOWABLE_PREFIX}:Properties`) {
-        otherExtensionList.push(e);
-      }
-    });
+    let otherExtensionList: any[] = extractOtherExtensionList(
+      'Properties',
+      businessObject,
+    );
     setOtherExtensionList(otherExtensionList);
   }
 
   function refreshRows(rowsData: any[]) {
+    // let rows: any[] = [];
+    // rowsData?.map((e, i) => {
+    //   rows.push({
+    //     key: i + 1,
+    //     name: e.name,
+    //     value: e.value,
+    //   });
+    // });
+    // setRows(rows);
+
     let rows: any[] = [];
-    rowsData?.map((e, i) => {
+    let properties: any[] = window.bpmnInstance.element.businessObject?.extensionElements?.values?.find(
+      (e: any) => e.$type === `${FLOWABLE_PREFIX}:Properties`,
+    )?.values;
+    properties?.map((e, i) => {
       rows.push({
         key: i + 1,
         name: e.name,
