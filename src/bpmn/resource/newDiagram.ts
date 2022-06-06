@@ -6,6 +6,10 @@ const xml: string =
   '    <bpmn2:extensionElements>\n' +
   '      <flowable:executionListener class="qwer" event="start" />\n' +
   '      <flowable:executionListener expression="123333" event="start" />\n' +
+  '      <flowable:executionListener delegateExpression="123333" event="start" />\n' +
+  '      <flowable:executionListener event="start">\n' +
+  '        <flowable:script scriptFormat="111">222</flowable:script>\n' +
+  '      </flowable:executionListener>\n' +
   '    </bpmn2:extensionElements>\n' +
   '    <bpmn2:startEvent id="Event_0cvwr8a" name="开始请假流程">\n' +
   '      <bpmn2:outgoing>Flow_04cue2l</bpmn2:outgoing>\n' +

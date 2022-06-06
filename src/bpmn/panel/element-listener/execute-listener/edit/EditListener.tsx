@@ -12,60 +12,79 @@ const { Option } = Select;
 
 interface IProps {
   onRef: Ref<any>;
-  otherExtensionList: any[];
   rowsData: Array<any>;
-  // 新增时传null，编辑时必传
-  currentRow: any;
 }
 
-const layout = {
-  labelCol: { span: 8 },
-  wrapperCol: { span: 16 },
-};
-
 export default function EditListener(props: IProps) {
-  const [form] = Form.useForm();
-
   // props属性
-  const { rowsData, currentRow, onRef, otherExtensionList } = props;
+  const { rowsData, onRef } = props;
 
   // setState属性
   const [visible, setVisible] = useState(false);
   const [eventType, setEventType] = useState<string>('');
-  const [listenerType, setListenerType] = useState<string>('');
-  const [javaClassName, setJavaClassName] = useState<string>('');
-  const [expressionValue, setExpressionValue] = useState<string>('');
-  const [
-    delegateExpressionValue,
-    setDelegateExpressionValue,
-  ] = useState<string>('');
-  const [scriptType, setScriptType] = useState<string>('');
+  // const [listenerType, setListenerType] = useState<string>('');
+  const [javaClass, setJavaClass] = useState<string>('');
+  const [expression, setExpression] = useState<string>('');
+  const [delegateExpression, setDelegateExpression] = useState<string>('');
+  const [scriptFormat, setScriptFormat] = useState<string>('');
+  // const [scriptType, setScriptType] = useState<string>('');
+  const [scriptValue, setScriptValue] = useState<string>('');
+  const [resource, setResource] = useState<string>('');
 
-  /**
-   * 暴露给父组件的方法或变量
-   */
+  // 其它属性
+  const [form] = Form.useForm<{
+    eventType: string;
+    listenerType: string;
+    javaClass: string;
+    expression: string;
+    delegateExpression: string;
+    scriptType: string;
+    scriptFormat: string;
+    scriptValue: string;
+    resource: string;
+  }>();
+
+  const listenerType = Form.useWatch('listenerType', form);
+  const scriptType = Form.useWatch('scriptType', form);
+
   useImperativeHandle(onRef, () => ({
-    showEditDrawer: () => showDrawer(),
+    showEditDrawer: (rowObj: any) => showDrawer(rowObj),
   }));
 
-  const showDrawer = () => {
+  function showDrawer(rowObj: any) {
+    console.log(rowObj);
+    initPageData(rowObj);
     setVisible(true);
-  };
+  }
 
-  const onClose = () => {
+  function closeDrawer() {
     setVisible(false);
-  };
+  }
+
+  function initPageData(rowObj: any) {
+    form.setFieldsValue({
+      eventType: rowObj?.protoListener?.eventType.value || '',
+      listenerType: rowObj?.protoListener?.listenerType.value || '',
+      javaClass: rowObj?.protoListener?.class || '',
+      expression: rowObj?.protoListener?.expression || '',
+      delegateExpression: rowObj?.protoListener?.delegateExpression || '',
+      scriptType: rowObj?.protoListener?.scriptType?.value || '',
+      scriptFormat: rowObj?.protoListener?.script?.scriptFormat || '',
+      scriptValue: rowObj?.protoListener?.script?.value || '',
+      resource: rowObj?.protoListener?.script?.resource || '',
+    });
+  }
 
   function updateEventType(value: string) {
     setEventType(value);
   }
 
   function updateListenerType(value: string) {
-    setListenerType(value);
+    // setListenerType(value);
   }
 
   function updateScriptType(value: string) {
-    setScriptType(value);
+    // setScriptType(value);
   }
 
   function renderListenerForm() {
@@ -184,7 +203,7 @@ export default function EditListener(props: IProps) {
         width={495}
         title="属性配置"
         placement="right"
-        onClose={onClose}
+        onClose={closeDrawer}
         visible={visible}
       >
         <Form labelCol={{ span: 5 }} wrapperCol={{ span: 18 }} form={form}>

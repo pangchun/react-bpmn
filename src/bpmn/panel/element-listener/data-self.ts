@@ -54,6 +54,17 @@ export const task_event_type_options = [
   },
 ];
 
+function findEventType(listener: any) {
+  let eventType: any;
+  eventType = execute_event_type_options.find(
+    (e) => e.value === listener.event,
+  );
+  if (!eventType) {
+    eventType = task_event_type_options.find((e) => e.value === listener.event);
+  }
+  return eventType;
+}
+
 // 任务监听器 定时器类型
 export const timer_type = {
   timeDate: 'timeDate',
@@ -108,7 +119,7 @@ export const listener_event_type_options = [
   },
 ];
 
-export function encapsulateListener(listener: any) {
+function findListenerType(listener: any) {
   let listenerType: any;
   if (listener.class) {
     listenerType = listener_event_type_options.find(
@@ -127,10 +138,19 @@ export function encapsulateListener(listener: any) {
       (e) => e.value === listener_event_type.script,
     );
   }
+  return listenerType;
+}
+
+export function encapsulateListener(listener: any) {
+  let listenerType: any = findListenerType(listener);
+  let eventType: any = findEventType(listener);
+  let scriptType: any = findScriptType(listener);
   return {
     ...JSON.parse(JSON.stringify(listener)),
     ...(listener.script ?? {}),
+    eventType,
     listenerType,
+    scriptType,
   };
 }
 
@@ -150,6 +170,20 @@ export const script_type_options = [
     value: script_type.externalResource,
   },
 ];
+
+function findScriptType(listener: any) {
+  let scriptType: any;
+  if (listener.script?.value) {
+    scriptType = script_type_options.find(
+      (e) => e.value === script_type.inlineScript,
+    );
+  } else if (listener.script?.resource) {
+    scriptType = script_type_options.find(
+      (e) => e.value === script_type.externalResource,
+    );
+  }
+  return scriptType;
+}
 
 // 执行监听器/用户任务监听器 字段类型
 export const field_type = {

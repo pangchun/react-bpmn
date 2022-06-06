@@ -57,7 +57,7 @@ export default function ExecuteListener(props: IProps) {
       let listener = encapsulateListener(e);
       return {
         key: i + 1,
-        eventType: listener.event,
+        eventType: listener.eventType.name,
         listenerType: listener.listenerType.name,
         protoListener: listener,
       };
@@ -112,7 +112,7 @@ export default function ExecuteListener(props: IProps) {
             style={{ color: '#1890ff' }}
             onClick={() => {
               setCurrentRow(record);
-              editRef.current.showEditDrawer();
+              editRef.current.showEditDrawer(record);
             }}
           >
             {'编辑'}
@@ -174,12 +174,7 @@ export default function ExecuteListener(props: IProps) {
       </Collapse>
 
       {/* 弹窗组件 */}
-      <EditListener
-        onRef={editRef}
-        otherExtensionList={otherExtensionList}
-        currentRow={currentRow}
-        rowsData={rows}
-      />
+      <EditListener onRef={editRef} rowsData={rows} />
       {/*<DeleteProperty*/}
       {/*  onRef={deleteRef}*/}
       {/*  otherExtensionList={otherExtensionList}*/}
