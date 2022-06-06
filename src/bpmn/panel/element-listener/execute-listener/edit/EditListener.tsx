@@ -21,15 +21,6 @@ export default function EditListener(props: IProps) {
 
   // setState属性
   const [visible, setVisible] = useState(false);
-  const [eventType, setEventType] = useState<string>('');
-  // const [listenerType, setListenerType] = useState<string>('');
-  const [javaClass, setJavaClass] = useState<string>('');
-  const [expression, setExpression] = useState<string>('');
-  const [delegateExpression, setDelegateExpression] = useState<string>('');
-  const [scriptFormat, setScriptFormat] = useState<string>('');
-  // const [scriptType, setScriptType] = useState<string>('');
-  const [scriptValue, setScriptValue] = useState<string>('');
-  const [resource, setResource] = useState<string>('');
 
   // 其它属性
   const [form] = Form.useForm<{
@@ -44,6 +35,7 @@ export default function EditListener(props: IProps) {
     resource: string;
   }>();
 
+  const eventType = Form.useWatch('eventType', form);
   const listenerType = Form.useWatch('listenerType', form);
   const scriptType = Form.useWatch('scriptType', form);
 
@@ -76,7 +68,7 @@ export default function EditListener(props: IProps) {
   }
 
   function updateEventType(value: string) {
-    setEventType(value);
+    // setEventType(value);
   }
 
   function updateListenerType(value: string) {
