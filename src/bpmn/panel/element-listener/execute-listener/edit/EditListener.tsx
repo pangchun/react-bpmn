@@ -1,12 +1,11 @@
 import React, { Ref, useImperativeHandle, useState } from 'react';
 import { Drawer, Button, Select, Space, Input, Divider, Form } from 'antd';
 import {
-  EXECUTE_EVENT_TYPE,
-  EXECUTE_EVENT_TYPE_OPTIONS,
-  LISTENER_EVENT_TYPE,
-  LISTENER_EVENT_TYPE_OPTIONS,
-  SCRIPT_TYPE,
-  SCRIPT_TYPE_OPTIONS,
+  execute_event_type_options,
+  listener_event_type,
+  listener_event_type_options,
+  script_type,
+  script_type_options,
 } from '@/bpmn/panel/element-listener/data-self';
 
 const { Option } = Select;
@@ -17,9 +16,6 @@ interface IProps {
   rowsData: Array<any>;
   // 新增时传null，编辑时必传
   currentRow: any;
-  moddle: any;
-  modeling: any;
-  element: any;
 }
 
 const layout = {
@@ -31,15 +27,7 @@ export default function EditListener(props: IProps) {
   const [form] = Form.useForm();
 
   // props属性
-  const {
-    rowsData,
-    currentRow,
-    onRef,
-    moddle,
-    modeling,
-    element,
-    otherExtensionList,
-  } = props;
+  const { rowsData, currentRow, onRef, otherExtensionList } = props;
 
   // setState属性
   const [visible, setVisible] = useState(false);
@@ -82,105 +70,73 @@ export default function EditListener(props: IProps) {
 
   function renderListenerForm() {
     switch (listenerType) {
-      case LISTENER_EVENT_TYPE.class:
+      case listener_event_type.class:
         return (
-          <>
-            <Space style={{ display: 'flex', justifyContent: 'end' }}>
-              Java类
-              <Input
-                placeholder="请输入"
-                style={{ width: 350 }}
-                // value={businessObject?.id}
-                // readOnly={businessObject?.$type === 'bpmn:Process'}
-                // onPressEnter={(event) => {
-                //   updateId(event.currentTarget.value);
-                // }}
-                // onBlur={(event) => {
-                //   updateId(event.currentTarget.value);
-                // }}
-                // onChange={(event) => {
-                //   setBusinessObject({ ...businessObject, id: event.target.value });
-                // }}
-              />
-            </Space>
-          </>
+          <Form.Item
+            name="javaClass"
+            label="Java类"
+            rules={[{ required: true }]}
+          >
+            <Input
+              placeholder="请输入"
+              onChange={(event) => {
+                console.log(event.target.value);
+              }}
+            />
+          </Form.Item>
         );
-      case LISTENER_EVENT_TYPE.expression:
+      case listener_event_type.expression:
         return (
-          <>
-            <Space style={{ display: 'flex', justifyContent: 'end' }}>
-              表达式
-              <Input
-                placeholder="请输入"
-                style={{ width: 350 }}
-                // value={businessObject?.id}
-                // readOnly={businessObject?.$type === 'bpmn:Process'}
-                // onPressEnter={(event) => {
-                //   updateId(event.currentTarget.value);
-                // }}
-                // onBlur={(event) => {
-                //   updateId(event.currentTarget.value);
-                // }}
-                // onChange={(event) => {
-                //   setBusinessObject({ ...businessObject, id: event.target.value });
-                // }}
-              />
-            </Space>
-          </>
+          <Form.Item
+            name="expression"
+            label="表达式"
+            rules={[{ required: true }]}
+          >
+            <Input
+              placeholder="请输入"
+              onChange={(event) => {
+                console.log(event.target.value);
+              }}
+            />
+          </Form.Item>
         );
-      case LISTENER_EVENT_TYPE.delegateExpression:
+      case listener_event_type.delegateExpression:
         return (
-          <>
-            <Space style={{ display: 'flex', justifyContent: 'end' }}>
-              代理表达式
-              <Input
-                placeholder="请输入"
-                style={{ width: 350 }}
-                // value={businessObject?.id}
-                // readOnly={businessObject?.$type === 'bpmn:Process'}
-                // onPressEnter={(event) => {
-                //   updateId(event.currentTarget.value);
-                // }}
-                // onBlur={(event) => {
-                //   updateId(event.currentTarget.value);
-                // }}
-                // onChange={(event) => {
-                //   setBusinessObject({ ...businessObject, id: event.target.value });
-                // }}
-              />
-            </Space>
-          </>
+          <Form.Item
+            name="delegateExpression"
+            label="代理表达式"
+            rules={[{ required: true }]}
+          >
+            <Input
+              placeholder="请输入"
+              onChange={(event) => {
+                console.log(event.target.value);
+              }}
+            />
+          </Form.Item>
         );
-      case LISTENER_EVENT_TYPE.script:
+      case listener_event_type.script:
         return (
           <>
-            <Space style={{ display: 'flex', justifyContent: 'end' }}>
-              脚本格式
+            <Form.Item
+              name="scriptFormat"
+              label="脚本格式"
+              rules={[{ required: true }]}
+            >
               <Input
                 placeholder="请输入"
-                style={{ width: 350 }}
-                // value={businessObject?.id}
-                // readOnly={businessObject?.$type === 'bpmn:Process'}
-                // onPressEnter={(event) => {
-                //   updateId(event.currentTarget.value);
-                // }}
-                // onBlur={(event) => {
-                //   updateId(event.currentTarget.value);
-                // }}
-                // onChange={(event) => {
-                //   setBusinessObject({ ...businessObject, id: event.target.value });
-                // }}
+                onChange={(event) => {
+                  console.log(event.target.value);
+                }}
               />
-            </Space>
-
-            <Space style={{ display: 'flex', justifyContent: 'end' }}>
-              脚本类型
-              <Select
-                value={scriptType}
-                style={{ width: 350 }}
-                onChange={updateScriptType}
-              >
-                {SCRIPT_TYPE_OPTIONS.map((e) => {
+            </Form.Item>
+            <Form.Item
+              name="scriptType"
+              label="脚本类型"
+              rules={[{ required: true }]}
+            >
+              <Select value={scriptType} onChange={updateEventType}>
+                {script_type_options.map((e) => {
                   return (
                     <Option key={e.value} value={e.value}>
                       {e.name}
@@ -188,55 +144,39 @@ export default function EditListener(props: IProps) {
                   );
                 })}
               </Select>
-            </Space>
-
-            {scriptType === SCRIPT_TYPE.inlineScript && (
-              <Space style={{ display: 'flex', justifyContent: 'end' }}>
-                脚本内容
+            </Form.Item>
+            {scriptType === script_type.inlineScript && (
+              <Form.Item
+                name="scriptValue"
+                label="脚本内容"
+                rules={[{ required: true }]}
+              >
                 <Input
                   placeholder="请输入"
-                  style={{ width: 350 }}
-                  // value={businessObject?.id}
-                  // readOnly={businessObject?.$type === 'bpmn:Process'}
-                  // onPressEnter={(event) => {
-                  //   updateId(event.currentTarget.value);
-                  // }}
-                  // onBlur={(event) => {
-                  //   updateId(event.currentTarget.value);
-                  // }}
-                  // onChange={(event) => {
-                  //   setBusinessObject({ ...businessObject, id: event.target.value });
-                  // }}
+                  onChange={(event) => {
+                    console.log(event.target.value);
+                  }}
                 />
-              </Space>
+              </Form.Item>
             )}
-
-            {scriptType === SCRIPT_TYPE.externalResource && (
-              <Space style={{ display: 'flex', justifyContent: 'end' }}>
-                资源地址
+            {scriptType === script_type.externalResource && (
+              <Form.Item
+                name="resource"
+                label="资源地址"
+                rules={[{ required: true }]}
+              >
                 <Input
                   placeholder="请输入"
-                  style={{ width: 350 }}
-                  // value={businessObject?.id}
-                  // readOnly={businessObject?.$type === 'bpmn:Process'}
-                  // onPressEnter={(event) => {
-                  //   updateId(event.currentTarget.value);
-                  // }}
-                  // onBlur={(event) => {
-                  //   updateId(event.currentTarget.value);
-                  // }}
-                  // onChange={(event) => {
-                  //   setBusinessObject({ ...businessObject, id: event.target.value });
-                  // }}
+                  onChange={(event) => {
+                    console.log(event.target.value);
+                  }}
                 />
-              </Space>
+              </Form.Item>
             )}
           </>
         );
     }
   }
-
-  function renderScriptForm() {}
 
   return (
     <>
@@ -247,36 +187,14 @@ export default function EditListener(props: IProps) {
         onClose={onClose}
         visible={visible}
       >
-        <Form labelCol={{ span: 5 }} wrapperCol={{ span: 14 }} form={form}>
-          <Form.Item name="note" label="测试" rules={[{ required: true }]}>
-            <Input
-              placeholder="请输入"
-              style={{ width: 350 }}
-              value={'123133'}
-              // readOnly={businessObject?.$type === 'bpmn:Process'}
-              // onPressEnter={(event) => {
-              //   updateId(event.currentTarget.value);
-              // }}
-              // onBlur={(event) => {
-              //   updateId(event.currentTarget.value);
-              // }}
-              // onChange={(event) => {
-              //   setBusinessObject({ ...businessObject, id: event.target.value });
-              // }}
-            />
-          </Form.Item>
+        <Form labelCol={{ span: 5 }} wrapperCol={{ span: 18 }} form={form}>
           <Form.Item
             name="eventType"
             label="事件类型"
             rules={[{ required: true }]}
           >
-            <Select
-              // defaultValue="lucy"
-              value={eventType}
-              style={{ width: 350 }}
-              onChange={updateEventType}
-            >
-              {EXECUTE_EVENT_TYPE_OPTIONS.map((e) => {
+            <Select value={eventType} onChange={updateEventType}>
+              {execute_event_type_options.map((e) => {
                 return (
                   <Option key={e.value} value={e.value}>
                     {e.name}
@@ -285,17 +203,13 @@ export default function EditListener(props: IProps) {
               })}
             </Select>
           </Form.Item>
-        </Form>
-        <Space direction={'vertical'}>
-          <Space style={{ display: 'flex', justifyContent: 'end' }}>
-            事件类型
-            <Select
-              // defaultValue="lucy"
-              value={eventType}
-              style={{ width: 350 }}
-              onChange={updateEventType}
-            >
-              {EXECUTE_EVENT_TYPE_OPTIONS.map((e) => {
+          <Form.Item
+            name="listenerType"
+            label="监听器类型"
+            rules={[{ required: true }]}
+          >
+            <Select value={listenerType} onChange={updateListenerType}>
+              {listener_event_type_options.map((e) => {
                 return (
                   <Option key={e.value} value={e.value}>
                     {e.name}
@@ -303,25 +217,9 @@ export default function EditListener(props: IProps) {
                 );
               })}
             </Select>
-          </Space>
-          <Space>
-            监听器类型
-            <Select
-              value={listenerType}
-              style={{ width: 350 }}
-              onChange={updateListenerType}
-            >
-              {LISTENER_EVENT_TYPE_OPTIONS.map((e) => {
-                return (
-                  <Option key={e.value} value={e.value}>
-                    {e.name}
-                  </Option>
-                );
-              })}
-            </Select>
-          </Space>
+          </Form.Item>
           {renderListenerForm()}
-        </Space>
+        </Form>
         <Divider />
       </Drawer>
     </>

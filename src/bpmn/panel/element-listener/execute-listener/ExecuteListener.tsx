@@ -44,37 +44,34 @@ export default function ExecuteListener(props: IProps) {
    */
   function initRows() {
     if (!businessObject) {
-      return [];
+      return;
     }
 
-    let initialRows: any[];
-
+    let rows: any[];
     let listeners: any[] =
       businessObject?.extensionElements?.values?.filter(
         (e: any) => e.$type === `${FLOWABLE_PREFIX}:ExecutionListener`,
       ) ?? [];
-
     setListenerExtensionList(listeners);
-
-    initialRows = listeners?.map((e, i) => {
+    rows = listeners?.map((e, i) => {
       let listener = encapsulateListener(e);
       return {
-        key: i,
+        key: i + 1,
         eventType: listener.event,
         listenerType: listener.listenerType.name,
         protoListener: listener,
       };
     });
-    setRows(initialRows);
+    setRows(rows);
   }
 
   /**
-   * 初始化其他非扩展属性元素
+   * 初始化其他扩展属性
    */
   function initOtherExtensionList() {
     let otherExtensionList: any[] = [];
     businessObject?.extensionElements?.values?.filter((e: any) => {
-      if (e.$type !== `${FLOWABLE_PREFIX}:Properties`) {
+      if (e.$type !== `${FLOWABLE_PREFIX}:ExecutionListener`) {
         otherExtensionList.push(e);
       }
     });
@@ -177,15 +174,12 @@ export default function ExecuteListener(props: IProps) {
       </Collapse>
 
       {/* 弹窗组件 */}
-      {/*<EditListener*/}
-      {/*  onRef={editRef}*/}
-      {/*  otherExtensionList={otherExtensionList}*/}
-      {/*  currentRow={currentRow}*/}
-      {/*  rowsData={rows}*/}
-      {/*  moddle={moddle}*/}
-      {/*  modeling={modeling}*/}
-      {/*  element={element}*/}
-      {/*/>*/}
+      <EditListener
+        onRef={editRef}
+        otherExtensionList={otherExtensionList}
+        currentRow={currentRow}
+        rowsData={rows}
+      />
       {/*<DeleteProperty*/}
       {/*  onRef={deleteRef}*/}
       {/*  otherExtensionList={otherExtensionList}*/}

@@ -1,24 +1,24 @@
 //tips： 执行监听器/用户任务监听器 通用数据
 
 // 执行监听器 事件类型
-export const EXECUTE_EVENT_TYPE = {
+export const execute_event_type = {
   start: 'start',
   end: 'end',
 };
 
-export const EXECUTE_EVENT_TYPE_OPTIONS = [
+export const execute_event_type_options = [
   {
     name: '开始',
-    value: EXECUTE_EVENT_TYPE.start,
+    value: execute_event_type.start,
   },
   {
     name: '结束',
-    value: EXECUTE_EVENT_TYPE.end,
+    value: execute_event_type.end,
   },
 ];
 
 // 任务监听器 事件类型
-export const TASK_EVENT_TYPE = {
+export const task_event_type = {
   create: '创建',
   assignment: '指派',
   complete: '完成',
@@ -27,104 +27,104 @@ export const TASK_EVENT_TYPE = {
   timeout: '超时',
 };
 
-export const TASK_EVENT_TYPE_OPTIONS = [
+export const task_event_type_options = [
   {
     name: 'create',
-    value: TASK_EVENT_TYPE.create,
+    value: task_event_type.create,
   },
   {
     name: 'assignment',
-    value: TASK_EVENT_TYPE.assignment,
+    value: task_event_type.assignment,
   },
   {
     name: 'complete',
-    value: TASK_EVENT_TYPE.complete,
+    value: task_event_type.complete,
   },
   {
     name: 'delete',
-    value: TASK_EVENT_TYPE.delete,
+    value: task_event_type.delete,
   },
   {
     name: 'update',
-    value: TASK_EVENT_TYPE.update,
+    value: task_event_type.update,
   },
   {
     name: 'timeout',
-    value: TASK_EVENT_TYPE.timeout,
+    value: task_event_type.timeout,
   },
 ];
 
 // 任务监听器 定时器类型
-export const TIMER_TYPE = {
+export const timer_type = {
   timeDate: 'timeDate',
   timeCycle: 'timeCycle',
   timeDuration: 'timeDuration',
   none: '',
 };
 
-export const TIMER_TYPE_OPTIONS = [
+export const timer_type_options = [
   {
     name: '日期',
-    value: TIMER_TYPE.timeDate,
+    value: timer_type.timeDate,
   },
   {
     name: '循环',
-    value: TIMER_TYPE.timeCycle,
+    value: timer_type.timeCycle,
   },
   {
     name: '持续时间',
-    value: TIMER_TYPE.timeDuration,
+    value: timer_type.timeDuration,
   },
   {
     name: '无',
-    value: TIMER_TYPE.none,
+    value: timer_type.none,
   },
 ];
 
 // 执行监听器/用户任务监听器 监听器类型
-export const LISTENER_EVENT_TYPE = {
+export const listener_event_type = {
   class: 'class',
   expression: 'expression',
   delegateExpression: 'delegateExpression',
   script: 'script',
 };
 
-export const LISTENER_EVENT_TYPE_OPTIONS = [
+export const listener_event_type_options = [
   {
     name: 'Java 类',
-    value: LISTENER_EVENT_TYPE.class,
+    value: listener_event_type.class,
   },
   {
     name: '表达式',
-    value: LISTENER_EVENT_TYPE.expression,
+    value: listener_event_type.expression,
   },
   {
     name: '代理表达式',
-    value: LISTENER_EVENT_TYPE.delegateExpression,
+    value: listener_event_type.delegateExpression,
   },
   {
     name: '脚本',
-    value: LISTENER_EVENT_TYPE.script,
+    value: listener_event_type.script,
   },
 ];
 
 export function encapsulateListener(listener: any) {
   let listenerType: any;
   if (listener.class) {
-    listenerType = LISTENER_EVENT_TYPE_OPTIONS.find(
-      (e) => e.value === LISTENER_EVENT_TYPE.class,
+    listenerType = listener_event_type_options.find(
+      (e) => e.value === listener_event_type.class,
     );
   } else if (listener.expression) {
-    listenerType = LISTENER_EVENT_TYPE_OPTIONS.find(
-      (e) => e.value === LISTENER_EVENT_TYPE.expression,
+    listenerType = listener_event_type_options.find(
+      (e) => e.value === listener_event_type.expression,
     );
   } else if (listener.delegateExpression) {
-    listenerType = LISTENER_EVENT_TYPE_OPTIONS.find(
-      (e) => e.value === LISTENER_EVENT_TYPE.delegateExpression,
+    listenerType = listener_event_type_options.find(
+      (e) => e.value === listener_event_type.delegateExpression,
     );
   } else if (listener.script) {
-    listenerType = LISTENER_EVENT_TYPE_OPTIONS.find(
-      (e) => e.value === LISTENER_EVENT_TYPE.script,
+    listenerType = listener_event_type_options.find(
+      (e) => e.value === listener_event_type.script,
     );
   }
   return {
@@ -135,46 +135,46 @@ export function encapsulateListener(listener: any) {
 }
 
 // 执行监听器/用户任务监听器 脚本类型
-export const SCRIPT_TYPE = {
+export const script_type = {
   inlineScript: 'inlineScript',
   externalResource: 'externalResource',
 };
 
-export const SCRIPT_TYPE_OPTIONS = [
+export const script_type_options = [
   {
     name: '内联脚本',
-    value: SCRIPT_TYPE.inlineScript,
+    value: script_type.inlineScript,
   },
   {
     name: '外部脚本',
-    value: SCRIPT_TYPE.externalResource,
+    value: script_type.externalResource,
   },
 ];
 
 // 执行监听器/用户任务监听器 字段类型
-export const FIELD_TYPE = {
+export const field_type = {
   string: 'string',
   expression: 'expression',
 };
 
-export const FIELD_TYPE_OPTIONS = [
+export const field_type_options = [
   {
     name: '字符串',
-    value: FIELD_TYPE.string,
+    value: field_type.string,
   },
   {
     name: '表达式',
-    value: FIELD_TYPE.expression,
+    value: field_type.expression,
   },
 ];
 
 export function encapsulateField(field: any) {
   let fieldType: any;
   if (field.string) {
-    fieldType = FIELD_TYPE_OPTIONS.find((e) => e.value === FIELD_TYPE.string);
+    fieldType = field_type_options.find((e) => e.value === field_type.string);
   } else if (field.expression) {
-    fieldType = LISTENER_EVENT_TYPE_OPTIONS.find(
-      (e) => e.value === FIELD_TYPE.expression,
+    fieldType = listener_event_type_options.find(
+      (e) => e.value === field_type.expression,
     );
   }
   return {
