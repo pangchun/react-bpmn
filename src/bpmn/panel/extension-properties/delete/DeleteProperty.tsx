@@ -19,6 +19,7 @@ export default function DeleteProperty(props: IProps) {
   // setState属性
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [currentRow, setCurrentRow] = useState<any>();
+  const [currentRowKey, setCurrentRowKey] = useState<any>();
 
   useImperativeHandle(onRef, () => ({
     showDeleteModal: (rowObj: any) => showModal(rowObj),
@@ -27,6 +28,7 @@ export default function DeleteProperty(props: IProps) {
   function showModal(rowObj: any) {
     setCurrentRow(rowObj);
     setIsModalVisible(true);
+    setCurrentRowKey(rowObj?.key || rowsData.length + 1);
   }
 
   function handleCancel() {
@@ -55,7 +57,6 @@ export default function DeleteProperty(props: IProps) {
         extensionElements: extensionElements,
       },
     );
-    rowsData.splice(currentRow.key, 1);
     reFreshParent(rowsData);
     handleCancel();
   }
@@ -64,22 +65,14 @@ export default function DeleteProperty(props: IProps) {
    * 获取属性列表
    */
   function getPropertiesList() {
-    let propertiesList: any[] = [];
-    // 保存原有的全部属性，当前序号的属性不保存即可
-    if (rowsData) {
-      rowsData.map((e) => {
-        if (e.key !== currentRow?.key) {
-          const newProperty = window.bpmnInstance.moddle?.create(
-            `${prefix}:Property`,
-            {
-              name: e.name,
-              value: e.value,
-            },
-          );
-          propertiesList.push(newProperty);
-        }
+    let propertiesList: any[];
+    rowsData.splice(currentRowKey - 1, 1);
+    propertiesList = rowsData.map((e) => {
+      return window.bpmnInstance.moddle?.create(`${prefix}:Property`, {
+        name: e.name,
+        value: e.value,
       });
-    }
+    });
     return propertiesList;
   }
 
@@ -100,16 +93,7 @@ export default function DeleteProperty(props: IProps) {
         onOk={handleOK}
         onCancel={handleCancel}
       >
-        {'正在删除属性: 【'}
-        <span
-          style={{
-            fontWeight: 'bold',
-            color: '#ff1818',
-          }}
-        >
-          {currentRow?.key} - {currentRow?.name} - {currentRow?.value}
-        </span>
-        {'】'}
+        {'确认删除该属性?'}
       </Modal>
     </>
   );

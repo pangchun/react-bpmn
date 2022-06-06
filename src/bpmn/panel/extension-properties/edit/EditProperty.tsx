@@ -99,7 +99,6 @@ export default function EditProperty(props: IProps) {
         value: e.value,
       });
     });
-    debugger;
     return propertiesList;
   }
 
