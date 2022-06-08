@@ -23,6 +23,26 @@ export function IdGenerator(prefix: string, length: number = 8) {
 }
 
 /**
+ * 更新扩展元素属性
+ * @param element
+ * @param extensionList
+ */
+export function updateElementExtensions(
+  element: any,
+  extensionList: Array<any>,
+) {
+  const extensions = window.bpmnInstance?.moddle?.create(
+    'bpmn:ExtensionElements',
+    {
+      values: extensionList,
+    },
+  );
+  window.bpmnInstance?.modeling?.updateProperties(element, {
+    extensionElements: extensions,
+  });
+}
+
+/**
  * 提取扩展元素，指定类型为非suffix类型
  * @param suffix
  * @param businessObject 当前元素的业务镜像

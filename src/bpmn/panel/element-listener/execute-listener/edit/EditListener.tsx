@@ -73,6 +73,7 @@ export default function EditListener(props: IProps) {
   }
 
   function closeDrawer() {
+    form.resetFields();
     setVisible(false);
   }
 
@@ -103,6 +104,19 @@ export default function EditListener(props: IProps) {
       return row;
     });
     setRows(rows);
+  }
+
+  function handleOK() {
+    form
+      .validateFields()
+      .then((values) => {
+        // 更新父组件表格数据
+        // reFreshParent(rowsData);
+        // setIsModalVisible(false);
+      })
+      .catch((info) => {
+        console.log('表单校验失败: ', info);
+      });
   }
 
   function updateEventType(value: string) {
@@ -381,10 +395,25 @@ export default function EditListener(props: IProps) {
             </Select>
           </Form.Item>
           {renderListenerForm()}
+
+          <Divider />
+          {renderTable()}
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              marginTop: 8,
+              width: '100%',
+            }}
+          >
+            <Button style={{ width: '49%' }} onClick={closeDrawer}>
+              {'取消'}
+            </Button>
+            <Button style={{ width: '49%' }} type="primary" onClick={handleOK}>
+              {'确定'}
+            </Button>
+          </div>
         </Form>
-        <Divider />
-        {renderTable()}
-        <Divider />
       </Drawer>
 
       <EditField onRef={editRef} reFreshParent={createOrUpdateField} />
