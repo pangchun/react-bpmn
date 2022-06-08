@@ -9,6 +9,7 @@ import {
   Form,
   Table,
   Typography,
+  notification,
 } from 'antd';
 import {
   encapsulateField,
@@ -118,6 +119,28 @@ export default function EditListener(props: IProps) {
     rowObj.key = key > 0 ? key : rows.length + 1;
     newRows.splice(rowObj.key - 1, 1, rowObj);
     setRows(newRows);
+  }
+
+  function removeField(key: number) {
+    let newRows: Array<any> = [...rows];
+    newRows.splice(key - 1, 1);
+    newRows = newRows.map((el, index) => {
+      if (el.key !== key) {
+        el.key = index + 1;
+        return el;
+      }
+    });
+    setRows(newRows);
+    // 提示通知
+    notification.open({
+      message: <span style={{ color: 'red' }}>字段已删除</span>,
+      placement: 'top',
+      duration: 2,
+      description: `已删除编号为 ${key} 的字段`,
+      onClick: () => {
+        console.log('Notification Clicked!');
+      },
+    });
   }
 
   function renderListenerForm() {
@@ -279,10 +302,7 @@ export default function EditListener(props: IProps) {
             danger
             type="text"
             size={'small'}
-            onClick={() => {
-              // setCurrentRow(record);
-              // deleteRef.current.showDeleteModal();
-            }}
+            onClick={() => removeField(record.key)}
           >
             {'删除'}
           </Button>
