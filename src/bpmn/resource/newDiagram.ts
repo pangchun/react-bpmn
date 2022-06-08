@@ -10,6 +10,14 @@ const xml: string =
   '      <flowable:executionListener event="start">\n' +
   '        <flowable:script scriptFormat="111">222</flowable:script>\n' +
   '      </flowable:executionListener>\n' +
+  '      <flowable:executionListener class="1" event="start">\n' +
+  '        <flowable:field name="1">\n' +
+  '          <flowable:string>1</flowable:string>\n' +
+  '        </flowable:field>\n' +
+  '        <flowable:field name="2">\n' +
+  '          <flowable:expression>2</flowable:expression>\n' +
+  '        </flowable:field>\n' +
+  '      </flowable:executionListener>\n' +
   '    </bpmn2:extensionElements>\n' +
   '    <bpmn2:startEvent id="Event_0cvwr8a" name="开始请假流程">\n' +
   '      <bpmn2:outgoing>Flow_04cue2l</bpmn2:outgoing>\n' +
