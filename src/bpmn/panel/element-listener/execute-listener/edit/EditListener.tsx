@@ -54,7 +54,6 @@ export default function EditListener(props: IProps) {
     resource: string;
   }>();
 
-  const eventType = Form.useWatch('eventType', form);
   const listenerType = Form.useWatch('listenerType', form);
   const scriptType = Form.useWatch('scriptType', form);
 
@@ -119,8 +118,12 @@ export default function EditListener(props: IProps) {
       });
   }
 
+  /**
+   * 新建或修改注入字段
+   * @param rowObj [key, fieldName, fieldType, fieldTypeValue, fieldValue]
+   */
   function createOrUpdateField(rowObj: any) {
-    const { key, fieldName, fieldType, fieldTypeValue, fieldValue } = rowObj;
+    const { key } = rowObj;
     let newRows: Array<any> = [...rows];
     rowObj.key = key > 0 ? key : rows.length + 1;
     newRows.splice(rowObj.key - 1, 1, rowObj);

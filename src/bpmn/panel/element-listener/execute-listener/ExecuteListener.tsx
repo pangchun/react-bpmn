@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Button, Collapse, Space, Table, Typography } from 'antd';
+import { Button, Collapse, notification, Space, Table, Typography } from 'antd';
 import { BellOutlined, PlusOutlined } from '@ant-design/icons';
 import { FLOWABLE_PREFIX } from '@/bpmn/constant/moddle-constant';
 import { encapsulateListener } from '@/bpmn/panel/element-listener/data-self';
@@ -37,7 +37,6 @@ export default function ExecuteListener(props: IProps) {
    * 初始化行数据
    */
   function initRows() {
-    // console.log("@@@@ \n", window.bpmnInstance?.element?.businessObject)
     let businessObject: any =
       window.bpmnInstance?.element?.businessObject || props.businessObject;
     if (!businessObject) {
@@ -128,6 +127,34 @@ export default function ExecuteListener(props: IProps) {
     initRows();
   }
 
+  /**
+   * 移除监听器
+   * @param key
+   */
+  function remove(key: number) {
+    // 将监听器实例绑定到bpmn
+    let newListenerExtensionList: Array<any> = [...listenerExtensionList];
+    newListenerExtensionList.splice(key - 1, 1);
+    updateElementExtensions(
+      window.bpmnInstance?.element,
+      otherExtensionList.concat(newListenerExtensionList),
+    );
+
+    // 刷新表格
+    initRows();
+
+    // 提示通知
+    notification.open({
+      message: <span style={{ color: 'red' }}>监听器已删除</span>,
+      placement: 'top',
+      duration: 2,
+      description: `已删除编号为 ${key} 的监听器`,
+      onClick: () => {
+        console.log('Notification Clicked!');
+      },
+    });
+  }
+
   const columns = [
     {
       title: '序号',
@@ -170,9 +197,7 @@ export default function ExecuteListener(props: IProps) {
             danger
             type="text"
             size={'small'}
-            onClick={() => {
-              deleteRef.current.showDeleteModal();
-            }}
+            onClick={() => remove(record.key)}
           >
             {'删除'}
           </Button>
