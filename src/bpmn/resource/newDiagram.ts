@@ -24,6 +24,27 @@ const xml: string =
   '    </bpmn2:startEvent>\n' +
   '    <bpmn2:sequenceFlow id="Flow_04cue2l" sourceRef="Event_0cvwr8a" targetRef="Activity_01qnzb7" />\n' +
   '    <bpmn2:userTask id="Activity_01qnzb7" name="提交申请">\n' +
+  '    <bpmn2:extensionElements>\n' +
+  '      <flowable:executionListener class="qwer" event="start" />\n' +
+  '      <flowable:executionListener expression="123333" event="start" />\n' +
+  '      <flowable:executionListener delegateExpression="123333" event="start" />\n' +
+  '      <flowable:executionListener event="start">\n' +
+  '        <flowable:script scriptFormat="111">222</flowable:script>\n' +
+  '      </flowable:executionListener>\n' +
+  '      <flowable:executionListener class="1" event="start">\n' +
+  '        <flowable:field name="1">\n' +
+  '          <flowable:string>1</flowable:string>\n' +
+  '        </flowable:field>\n' +
+  '        <flowable:field name="2">\n' +
+  '          <flowable:expression>2</flowable:expression>\n' +
+  '        </flowable:field>\n' +
+  '        </flowable:executionListener>\n' +
+  '        <flowable:taskListener class="1" event="create" id="123">\n' +
+  '          <flowable:field name="1">\n' +
+  '            <flowable:string>1</flowable:string>\n' +
+  '          </flowable:field>\n' +
+  '        </flowable:taskListener>\n' +
+  '    </bpmn2:extensionElements>\n' +
   '      <bpmn2:incoming>Flow_04cue2l</bpmn2:incoming>\n' +
   '      <bpmn2:outgoing>Flow_1w9obph</bpmn2:outgoing>\n' +
   '    </bpmn2:userTask>\n' +

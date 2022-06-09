@@ -11,11 +11,12 @@ const { Panel } = Collapse;
 
 interface IProps {
   businessObject: any;
+  isTask: boolean;
 }
 
-export default function ExecuteListener(props: IProps) {
+export default function ElementListener(props: IProps) {
   // props属性
-  const { businessObject } = props;
+  const { businessObject, isTask } = props;
 
   // setState属性
   const [rows, setRows] = useState<Array<any>>([]);
@@ -26,7 +27,6 @@ export default function ExecuteListener(props: IProps) {
 
   // ref
   const editRef = useRef<any>();
-  const deleteRef = useRef<any>();
 
   useEffect(() => {
     initRows();
@@ -46,7 +46,9 @@ export default function ExecuteListener(props: IProps) {
     let rows: any[];
     let listeners: any[] =
       businessObject?.extensionElements?.values?.filter(
-        (e: any) => e.$type === `${FLOWABLE_PREFIX}:ExecutionListener`,
+        (e: any) =>
+          e.$type ===
+          `${FLOWABLE_PREFIX}:${isTask ? 'TaskListener' : 'ExecutionListener'}`,
       ) ?? [];
     setListenerExtensionList(listeners);
     rows = listeners?.map((e, i) => {
@@ -54,6 +56,7 @@ export default function ExecuteListener(props: IProps) {
       return {
         key: i + 1,
         eventType: listener.eventType.name,
+        eventId: listener.id,
         listenerType: listener.listenerType.name,
         protoListener: listener,
       };
@@ -67,7 +70,10 @@ export default function ExecuteListener(props: IProps) {
   function initOtherExtensionList() {
     let otherExtensionList: any[] = [];
     businessObject?.extensionElements?.values?.filter((e: any) => {
-      if (e.$type !== `${FLOWABLE_PREFIX}:ExecutionListener`) {
+      if (
+        e.$type !==
+        `${FLOWABLE_PREFIX}:${isTask ? 'TaskListener' : 'ExecutionListener'}`
+      ) {
         otherExtensionList.push(e);
       }
     });
@@ -79,7 +85,7 @@ export default function ExecuteListener(props: IProps) {
 
     // 创建监听器对象
     let listener: any = Object.create(null);
-    listener.id = options.listenerId; // 只有任务监听器才需要设置id
+    listener.id = options.eventId; // 只有任务监听器才需要设置事件id
     listener.event = options.eventType;
     listener.listenerType = options.listenerType;
     listener.expression = options.expression;
@@ -108,13 +114,17 @@ export default function ExecuteListener(props: IProps) {
     listener.resource = options.resource;
 
     // 创建监听器实例
-    let listenerObject = createListenerObject(listener, false, FLOWABLE_PREFIX);
+    let listenerObject = createListenerObject(
+      listener,
+      isTask,
+      FLOWABLE_PREFIX,
+    );
     console.log(listenerObject);
 
     // 将监听器实例绑定到bpmn
     let newListenerExtensionList: Array<any> = [...listenerExtensionList];
     newListenerExtensionList.splice(
-      options.key > 0 ? options.key - 1 : listenerExtensionList.length,
+      options.rowKey > 0 ? options.rowKey - 1 : listenerExtensionList.length,
       1,
       listenerObject,
     );
@@ -155,56 +165,115 @@ export default function ExecuteListener(props: IProps) {
     });
   }
 
-  const columns = [
-    {
-      title: '序号',
-      width: 40,
-      dataIndex: 'key',
-      key: 'key',
-      render: (text: any) => <a>{text}</a>,
-    },
-    {
-      title: '事件类型',
-      width: 110,
-      dataIndex: 'eventType',
-      key: 'eventType',
-      ellipsis: true,
-    },
-    {
-      title: '监听器类型',
-      width: 110,
-      dataIndex: 'listenerType',
-      key: 'listenerType',
-      ellipsis: true,
-    },
-    {
-      title: '操作',
-      width: 80,
-      key: 'action',
-      render: (text: string, record: any) => (
-        <Space size="small">
-          <Button
-            type="text"
-            size={'small'}
-            style={{ color: '#1890ff' }}
-            onClick={() => {
-              editRef.current.showEditDrawer(record);
-            }}
-          >
-            {'编辑'}
-          </Button>
-          <Button
-            danger
-            type="text"
-            size={'small'}
-            onClick={() => remove(record.key)}
-          >
-            {'删除'}
-          </Button>
-        </Space>
-      ),
-    },
-  ];
+  // todo 需要把这个数组优化，太过于臃肿
+  const columns = isTask
+    ? [
+        {
+          title: '序号',
+          width: 40,
+          dataIndex: 'key',
+          key: 'key',
+          render: (text: any) => <a>{text}</a>,
+        },
+        {
+          title: '事件类型',
+          width: 80,
+          dataIndex: 'eventType',
+          key: 'eventType',
+          ellipsis: true,
+        },
+        {
+          title: '事件id',
+          width: 80,
+          dataIndex: 'eventId',
+          key: 'eventId',
+          ellipsis: true,
+        },
+        {
+          title: '监听器类型',
+          width: 80,
+          dataIndex: 'listenerType',
+          key: 'listenerType',
+          ellipsis: true,
+        },
+        {
+          title: '操作',
+          width: 90,
+          key: 'action',
+          render: (text: string, record: any) => (
+            <Space size="small">
+              <Button
+                type="text"
+                size={'small'}
+                style={{ color: '#1890ff' }}
+                onClick={() => {
+                  editRef.current.showEditDrawer(record);
+                }}
+              >
+                {'编辑'}
+              </Button>
+              <Button
+                danger
+                type="text"
+                size={'small'}
+                onClick={() => remove(record.key)}
+              >
+                {'删除'}
+              </Button>
+            </Space>
+          ),
+        },
+      ]
+    : [
+        {
+          title: '序号',
+          width: 40,
+          dataIndex: 'key',
+          key: 'key',
+          render: (text: any) => <a>{text}</a>,
+        },
+        {
+          title: '事件类型',
+          width: 110,
+          dataIndex: 'eventType',
+          key: 'eventType',
+          ellipsis: true,
+        },
+        {
+          title: '监听器类型',
+          width: 110,
+          dataIndex: 'listenerType',
+          key: 'listenerType',
+          ellipsis: true,
+        },
+        {
+          title: '操作',
+          width: 80,
+          key: 'action',
+          render: (text: string, record: any) => (
+            <Space size="small">
+              <Button
+                type="text"
+                size={'small'}
+                style={{ color: '#1890ff' }}
+                onClick={() => {
+                  editRef.current.showEditDrawer(record);
+                }}
+              >
+                {'编辑'}
+              </Button>
+              <Button
+                danger
+                type="text"
+                size={'small'}
+                onClick={() => remove(record.key)}
+              >
+                {'删除'}
+              </Button>
+            </Space>
+          ),
+        },
+      ];
 
   return (
     <>
@@ -213,7 +282,7 @@ export default function ExecuteListener(props: IProps) {
           header={
             <Typography style={{ color: '#1890ff', fontWeight: 'bold' }}>
               <BellOutlined />
-              &nbsp;执行监听器
+              &nbsp;{isTask ? '任务监听器' : '执行监听器'}
             </Typography>
           }
           key="1"
@@ -247,7 +316,7 @@ export default function ExecuteListener(props: IProps) {
       {/* 弹窗组件 */}
       <EditListener
         onRef={editRef}
-        isTask={true}
+        isTask={isTask}
         reFreshParent={createOrUpdate}
       />
       {/*<DeleteProperty*/}

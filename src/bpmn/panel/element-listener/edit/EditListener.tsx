@@ -46,7 +46,7 @@ export default function EditListener(props: IProps) {
   const [form] = Form.useForm<{
     key: number;
     eventType: string;
-    listenerId: string;
+    eventId: string;
     listenerType: string;
     javaClass: string;
     expression: string;
@@ -79,7 +79,7 @@ export default function EditListener(props: IProps) {
     form.setFieldsValue({
       key: rowObj?.key || -1,
       eventType: rowObj?.protoListener?.eventType.value || '',
-      listenerId: rowObj?.protoListener?.listenerId || '',
+      eventId: rowObj?.protoListener?.id || '',
       listenerType: rowObj?.protoListener?.listenerType.value || '',
       javaClass: rowObj?.protoListener?.class || '',
       expression: rowObj?.protoListener?.expression || '',
@@ -383,8 +383,8 @@ export default function EditListener(props: IProps) {
           </Form.Item>
           {isTask && (
             <Form.Item
-              name="listenerId"
-              label="监听器id"
+              name="eventId"
+              label="事件id"
               rules={[{ required: true }]}
             >
               <Input placeholder="请输入" />

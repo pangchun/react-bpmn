@@ -5,7 +5,7 @@ import ElementBaseInfo from '@/bpmn/panel/base/ElementBaseInfo';
 import ElementOtherInfo from '@/bpmn/panel/other/ElementOtherInfo';
 import ExtensionProperties from '@/bpmn/panel/extension-properties/ExtensionProperties';
 import SignalMessage from '@/bpmn/panel/signal-message/SignalMessage';
-import ExecuteListener from '@/bpmn/panel/element-listener/execute-listener/ExecuteListener';
+import ElementListener from '@/bpmn/panel/element-listener/ElementListener';
 
 // todo 这个全局声明后面可以抽取到单独的ts文件中
 declare global {
@@ -138,7 +138,9 @@ export default function CustomPanel(props: IProps) {
         <CustomDivider />
         {renderSignalMessage()}
         <CustomDivider />
-        <ExecuteListener businessObject={businessObject} />
+        <ElementListener businessObject={businessObject} isTask={false} />
+        <CustomDivider />
+        <ElementListener businessObject={businessObject} isTask={true} />
         <CustomDivider />
         <ExtensionProperties businessObject={businessObject} />
         <CustomDivider />
