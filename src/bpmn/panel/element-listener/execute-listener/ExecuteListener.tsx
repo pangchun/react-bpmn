@@ -3,7 +3,7 @@ import { Button, Collapse, notification, Space, Table, Typography } from 'antd';
 import { BellOutlined, PlusOutlined } from '@ant-design/icons';
 import { FLOWABLE_PREFIX } from '@/bpmn/constant/moddle-constant';
 import { encapsulateListener } from '@/bpmn/panel/element-listener/data-self';
-import EditListener from '@/bpmn/panel/element-listener/execute-listener/edit/EditListener';
+import EditListener from '@/bpmn/panel/element-listener/edit/EditListener';
 import { createListenerObject } from '@/bpmn/panel/element-listener/listener-util';
 import { updateElementExtensions } from '@/bpmn/panel/utils/panel-util';
 
@@ -79,7 +79,7 @@ export default function ExecuteListener(props: IProps) {
 
     // 创建监听器对象
     let listener: any = Object.create(null);
-    listener.id = null; // 只有任务监听器才需要设置id
+    listener.id = options.listenerId; // 只有任务监听器才需要设置id
     listener.event = options.eventType;
     listener.listenerType = options.listenerType;
     listener.expression = options.expression;
@@ -245,7 +245,11 @@ export default function ExecuteListener(props: IProps) {
       </Collapse>
 
       {/* 弹窗组件 */}
-      <EditListener onRef={editRef} reFreshParent={createOrUpdate} />
+      <EditListener
+        onRef={editRef}
+        isTask={true}
+        reFreshParent={createOrUpdate}
+      />
       {/*<DeleteProperty*/}
       {/*  onRef={deleteRef}*/}
       {/*  otherExtensionList={otherExtensionList}*/}

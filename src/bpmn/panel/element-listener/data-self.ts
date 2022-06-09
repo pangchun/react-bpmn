@@ -19,37 +19,37 @@ export const execute_event_type_options = [
 
 // 任务监听器 事件类型
 export const task_event_type = {
-  create: '创建',
-  assignment: '指派',
-  complete: '完成',
-  delete: '删除',
-  update: '更新',
-  timeout: '超时',
+  create: 'create',
+  assignment: 'assignment',
+  complete: 'complete',
+  delete: 'delete',
+  update: 'update',
+  timeout: 'timeout',
 };
 
 export const task_event_type_options = [
   {
-    name: 'create',
+    name: '创建',
     value: task_event_type.create,
   },
   {
-    name: 'assignment',
+    name: '指派',
     value: task_event_type.assignment,
   },
   {
-    name: 'complete',
+    name: '完成',
     value: task_event_type.complete,
   },
   {
-    name: 'delete',
+    name: '删除',
     value: task_event_type.delete,
   },
   {
-    name: 'update',
+    name: '更新',
     value: task_event_type.update,
   },
   {
-    name: 'timeout',
+    name: '超时',
     value: task_event_type.timeout,
   },
 ];

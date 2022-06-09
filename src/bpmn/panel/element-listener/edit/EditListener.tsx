@@ -18,20 +18,22 @@ import {
   listener_type_options,
   script_type,
   script_type_options,
+  task_event_type_options,
 } from '@/bpmn/panel/element-listener/data-self';
 import { AppstoreOutlined } from '@ant-design/icons';
-import EditField from '@/bpmn/panel/element-listener/execute-listener/edit/EditField';
+import EditField from '@/bpmn/panel/element-listener/edit/EditField';
 
 const { Option } = Select;
 
 interface IProps {
   onRef: Ref<any>;
+  isTask: boolean;
   reFreshParent: (options: any) => any;
 }
 
 export default function EditListener(props: IProps) {
   // props属性
-  const { onRef, reFreshParent } = props;
+  const { onRef, isTask, reFreshParent } = props;
 
   // setState属性
   const [visible, setVisible] = useState(false);
@@ -44,6 +46,7 @@ export default function EditListener(props: IProps) {
   const [form] = Form.useForm<{
     key: number;
     eventType: string;
+    listenerId: string;
     listenerType: string;
     javaClass: string;
     expression: string;
@@ -76,6 +79,7 @@ export default function EditListener(props: IProps) {
     form.setFieldsValue({
       key: rowObj?.key || -1,
       eventType: rowObj?.protoListener?.eventType.value || '',
+      listenerId: rowObj?.protoListener?.listenerId || '',
       listenerType: rowObj?.protoListener?.listenerType.value || '',
       javaClass: rowObj?.protoListener?.class || '',
       expression: rowObj?.protoListener?.expression || '',
@@ -365,7 +369,10 @@ export default function EditListener(props: IProps) {
             rules={[{ required: true }]}
           >
             <Select>
-              {execute_event_type_options.map((e) => {
+              {(isTask
+                ? task_event_type_options
+                : execute_event_type_options
+              ).map((e) => {
                 return (
                   <Option key={e.value} value={e.value}>
                     {e.name}
@@ -374,6 +381,15 @@ export default function EditListener(props: IProps) {
               })}
             </Select>
           </Form.Item>
+          {isTask && (
+            <Form.Item
+              name="listenerId"
+              label="监听器id"
+              rules={[{ required: true }]}
+            >
+              <Input placeholder="请输入" />
+            </Form.Item>
+          )}
           <Form.Item
             name="listenerType"
             label="监听器类型"
