@@ -70,7 +70,7 @@ export const timer_type = {
   timeDate: 'timeDate',
   timeCycle: 'timeCycle',
   timeDuration: 'timeDuration',
-  none: '',
+  none: 'none',
 };
 
 export const timer_type_options = [

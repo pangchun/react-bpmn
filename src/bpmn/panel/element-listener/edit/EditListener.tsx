@@ -18,7 +18,10 @@ import {
   listener_type_options,
   script_type,
   script_type_options,
+  task_event_type,
   task_event_type_options,
+  timer_type,
+  timer_type_options,
 } from '@/bpmn/panel/element-listener/data-self';
 import { AppstoreOutlined } from '@ant-design/icons';
 import EditField from '@/bpmn/panel/element-listener/edit/EditField';
@@ -55,10 +58,14 @@ export default function EditListener(props: IProps) {
     scriptFormat: string;
     scriptValue: string;
     resource: string;
+    timerType: string;
+    timerValue: string;
   }>();
 
+  const eventType = Form.useWatch('eventType', form);
   const listenerType = Form.useWatch('listenerType', form);
   const scriptType = Form.useWatch('scriptType', form);
+  const timerType = Form.useWatch('timerType', form);
 
   useImperativeHandle(onRef, () => ({
     showEditDrawer: (rowObj: any) => showDrawer(rowObj),
@@ -88,6 +95,8 @@ export default function EditListener(props: IProps) {
       scriptFormat: rowObj?.protoListener?.script?.scriptFormat || '',
       scriptValue: rowObj?.protoListener?.script?.value || '',
       resource: rowObj?.protoListener?.script?.resource || '',
+      timerType: rowObj?.protoListener?.timerType || '',
+      timerValue: rowObj?.protoListener?.timerValue || '',
     });
     // 初始化rows
     let fields: Array<any> = rowObj?.protoListener?.fields || [];
@@ -266,6 +275,42 @@ export default function EditListener(props: IProps) {
     }
   }
 
+  /**
+   * 渲染超时组件，事件类型为超时时需要渲染
+   */
+  function renderTimeOutForm() {
+    if (eventType === task_event_type.timeout) {
+      return (
+        <>
+          <Form.Item
+            name="timerType"
+            label="定时器类型"
+            rules={[{ required: true }]}
+          >
+            <Select>
+              {timer_type_options.map((e) => {
+                return (
+                  <Option key={e.value} value={e.value}>
+                    {e.name}
+                  </Option>
+                );
+              })}
+            </Select>
+          </Form.Item>
+          {timerType !== timer_type.none && (
+            <Form.Item
+              name="timerValue"
+              label="定时器"
+              rules={[{ required: true }]}
+            >
+              <Input placeholder="请输入" />
+            </Form.Item>
+          )}
+        </>
+      );
+    }
+  }
+
   const columns = [
     {
       title: '序号',
@@ -406,6 +451,7 @@ export default function EditListener(props: IProps) {
             </Select>
           </Form.Item>
           {renderListenerForm()}
+          {renderTimeOutForm()}
 
           <Divider />
           {renderTable()}
