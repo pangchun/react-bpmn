@@ -1,16 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Button, Space, Typography, Table } from 'antd';
-import { Collapse } from 'antd';
-import {
-  BellOutlined,
-  PlusOutlined,
-  PlusSquareTwoTone,
-} from '@ant-design/icons';
-import EditProperty from '@/bpmn/panel/extension-properties/edit/EditProperty';
-import DeleteProperty from '@/bpmn/panel/extension-properties/delete/DeleteProperty';
+import { Button, Collapse, Space, Table, Typography } from 'antd';
+import { BellOutlined, PlusOutlined } from '@ant-design/icons';
 import { FLOWABLE_PREFIX } from '@/bpmn/constant/moddle-constant';
 import { encapsulateListener } from '@/bpmn/panel/element-listener/data-self';
 import EditListener from '@/bpmn/panel/element-listener/execute-listener/edit/EditListener';
+import { createListenerObject } from '@/bpmn/panel/element-listener/listener-util';
+import { updateElementExtensions } from '@/bpmn/panel/utils/panel-util';
 
 const { Panel } = Collapse;
 
@@ -24,7 +19,6 @@ export default function ExecuteListener(props: IProps) {
 
   // setState属性
   const [rows, setRows] = useState<Array<any>>([]);
-  const [currentRow, setCurrentRow] = useState<any>();
   const [otherExtensionList, setOtherExtensionList] = useState<Array<any>>([]);
   const [listenerExtensionList, setListenerExtensionList] = useState<
     Array<any>
@@ -43,6 +37,9 @@ export default function ExecuteListener(props: IProps) {
    * 初始化行数据
    */
   function initRows() {
+    // console.log("@@@@ \n", window.bpmnInstance?.element?.businessObject)
+    let businessObject: any =
+      window.bpmnInstance?.element?.businessObject || props.businessObject;
     if (!businessObject) {
       return;
     }
@@ -78,6 +75,59 @@ export default function ExecuteListener(props: IProps) {
     setOtherExtensionList(otherExtensionList);
   }
 
+  function createOrUpdate(options: any) {
+    console.log(options);
+
+    // 创建监听器对象
+    let listener: any = Object.create(null);
+    listener.id = null; // 只有任务监听器才需要设置id
+    listener.event = options.eventType;
+    listener.listenerType = options.listenerType;
+    listener.expression = options.expression;
+    listener.delegateExpression = options.delegateExpression;
+    listener.class = options.javaClass;
+
+    // 创建注入字段对象
+    let fields: Array<any> = options.fields;
+    if (fields && fields.length > 0) {
+      fields = fields.map((el) => {
+        return {
+          name: el.fieldName,
+          fieldType: el.fieldTypeValue,
+          string: el.fieldValue,
+          expression: el.fieldValue,
+        };
+      });
+    }
+
+    // 设置注入字段属性
+    listener.fields = fields;
+    // 设置脚本属性
+    listener.scriptType = options.scriptType;
+    listener.scriptFormat = options.scriptFormat;
+    listener.value = options.scriptValue;
+    listener.resource = options.resource;
+
+    // 创建监听器实例
+    let listenerObject = createListenerObject(listener, false, FLOWABLE_PREFIX);
+    console.log(listenerObject);
+
+    // 将监听器实例绑定到bpmn
+    let newListenerExtensionList: Array<any> = [...listenerExtensionList];
+    newListenerExtensionList.splice(
+      options.key > 0 ? options.key - 1 : listenerExtensionList.length,
+      1,
+      listenerObject,
+    );
+    updateElementExtensions(
+      window.bpmnInstance?.element,
+      otherExtensionList.concat(newListenerExtensionList),
+    );
+
+    // 刷新表格
+    initRows();
+  }
+
   const columns = [
     {
       title: '序号',
@@ -111,7 +161,6 @@ export default function ExecuteListener(props: IProps) {
             size={'small'}
             style={{ color: '#1890ff' }}
             onClick={() => {
-              setCurrentRow(record);
               editRef.current.showEditDrawer(record);
             }}
           >
@@ -122,7 +171,6 @@ export default function ExecuteListener(props: IProps) {
             type="text"
             size={'small'}
             onClick={() => {
-              setCurrentRow(record);
               deleteRef.current.showDeleteModal();
             }}
           >
@@ -162,8 +210,6 @@ export default function ExecuteListener(props: IProps) {
               marginTop: 8,
             }}
             onClick={() => {
-              // 新增时，设置当前行对象为空
-              setCurrentRow(null);
               editRef.current.showEditDrawer();
             }}
           >
@@ -174,7 +220,7 @@ export default function ExecuteListener(props: IProps) {
       </Collapse>
 
       {/* 弹窗组件 */}
-      <EditListener onRef={editRef} rowsData={rows} />
+      <EditListener onRef={editRef} reFreshParent={createOrUpdate} />
       {/*<DeleteProperty*/}
       {/*  onRef={deleteRef}*/}
       {/*  otherExtensionList={otherExtensionList}*/}

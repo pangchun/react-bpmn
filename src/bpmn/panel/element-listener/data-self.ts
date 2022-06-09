@@ -93,49 +93,49 @@ export const timer_type_options = [
 ];
 
 // 执行监听器/用户任务监听器 监听器类型
-export const listener_event_type = {
+export const listener_type = {
   class: 'class',
   expression: 'expression',
   delegateExpression: 'delegateExpression',
   script: 'script',
 };
 
-export const listener_event_type_options = [
+export const listener_type_options = [
   {
     name: 'Java 类',
-    value: listener_event_type.class,
+    value: listener_type.class,
   },
   {
     name: '表达式',
-    value: listener_event_type.expression,
+    value: listener_type.expression,
   },
   {
     name: '代理表达式',
-    value: listener_event_type.delegateExpression,
+    value: listener_type.delegateExpression,
   },
   {
     name: '脚本',
-    value: listener_event_type.script,
+    value: listener_type.script,
   },
 ];
 
 function findListenerType(listener: any) {
   let listenerType: any;
   if (listener.class) {
-    listenerType = listener_event_type_options.find(
-      (e) => e.value === listener_event_type.class,
+    listenerType = listener_type_options.find(
+      (e) => e.value === listener_type.class,
     );
   } else if (listener.expression) {
-    listenerType = listener_event_type_options.find(
-      (e) => e.value === listener_event_type.expression,
+    listenerType = listener_type_options.find(
+      (e) => e.value === listener_type.expression,
     );
   } else if (listener.delegateExpression) {
-    listenerType = listener_event_type_options.find(
-      (e) => e.value === listener_event_type.delegateExpression,
+    listenerType = listener_type_options.find(
+      (e) => e.value === listener_type.delegateExpression,
     );
   } else if (listener.script) {
-    listenerType = listener_event_type_options.find(
-      (e) => e.value === listener_event_type.script,
+    listenerType = listener_type_options.find(
+      (e) => e.value === listener_type.script,
     );
   }
   return listenerType;
@@ -207,7 +207,7 @@ export function encapsulateField(field: any) {
   if (field.string) {
     fieldType = field_type_options.find((e) => e.value === field_type.string);
   } else if (field.expression) {
-    fieldType = listener_event_type_options.find(
+    fieldType = listener_type_options.find(
       (e) => e.value === field_type.expression,
     );
   }

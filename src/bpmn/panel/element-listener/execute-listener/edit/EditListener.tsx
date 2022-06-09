@@ -14,28 +14,24 @@ import {
 import {
   encapsulateField,
   execute_event_type_options,
-  listener_event_type,
-  listener_event_type_options,
+  listener_type,
+  listener_type_options,
   script_type,
   script_type_options,
 } from '@/bpmn/panel/element-listener/data-self';
-import {
-  AppstoreOutlined,
-  BellOutlined,
-  PlusOutlined,
-} from '@ant-design/icons';
+import { AppstoreOutlined } from '@ant-design/icons';
 import EditField from '@/bpmn/panel/element-listener/execute-listener/edit/EditField';
 
 const { Option } = Select;
 
 interface IProps {
   onRef: Ref<any>;
-  rowsData: Array<any>;
+  reFreshParent: (options: any) => any;
 }
 
 export default function EditListener(props: IProps) {
   // props属性
-  const { rowsData, onRef } = props;
+  const { onRef, reFreshParent } = props;
 
   // setState属性
   const [visible, setVisible] = useState(false);
@@ -43,10 +39,10 @@ export default function EditListener(props: IProps) {
 
   // ref
   const editRef = useRef<any>();
-  const deleteRef = useRef<any>();
 
   // 其它属性
   const [form] = Form.useForm<{
+    key: number;
     eventType: string;
     listenerType: string;
     javaClass: string;
@@ -79,6 +75,7 @@ export default function EditListener(props: IProps) {
 
   function initPageData(rowObj: any) {
     form.setFieldsValue({
+      key: rowObj?.key || -1,
       eventType: rowObj?.protoListener?.eventType.value || '',
       listenerType: rowObj?.protoListener?.listenerType.value || '',
       javaClass: rowObj?.protoListener?.class || '',
@@ -91,7 +88,6 @@ export default function EditListener(props: IProps) {
     });
     // 初始化rows
     let fields: Array<any> = rowObj?.protoListener?.fields || [];
-    console.log('=========');
     let rows: Array<any> = fields.map((el, index) => {
       let field: any = encapsulateField(el);
       let row: any = Object.create(null);
@@ -111,20 +107,16 @@ export default function EditListener(props: IProps) {
       .validateFields()
       .then((values) => {
         // 更新父组件表格数据
-        // reFreshParent(rowsData);
-        // setIsModalVisible(false);
+        reFreshParent({
+          rowKey: form.getFieldValue('key'),
+          ...values,
+          fields: [...rows],
+        });
+        closeDrawer();
       })
       .catch((info) => {
         console.log('表单校验失败: ', info);
       });
-  }
-
-  function updateEventType(value: string) {
-    // setEventType(value);
-  }
-
-  function updateListenerType(value: string) {
-    // setListenerType(value);
   }
 
   function createOrUpdateField(rowObj: any) {
@@ -159,7 +151,7 @@ export default function EditListener(props: IProps) {
 
   function renderListenerForm() {
     switch (listenerType) {
-      case listener_event_type.class:
+      case listener_type.class:
         return (
           <Form.Item
             name="javaClass"
@@ -174,7 +166,7 @@ export default function EditListener(props: IProps) {
             />
           </Form.Item>
         );
-      case listener_event_type.expression:
+      case listener_type.expression:
         return (
           <Form.Item
             name="expression"
@@ -189,7 +181,7 @@ export default function EditListener(props: IProps) {
             />
           </Form.Item>
         );
-      case listener_event_type.delegateExpression:
+      case listener_type.delegateExpression:
         return (
           <Form.Item
             name="delegateExpression"
@@ -204,7 +196,7 @@ export default function EditListener(props: IProps) {
             />
           </Form.Item>
         );
-      case listener_event_type.script:
+      case listener_type.script:
         return (
           <>
             <Form.Item
@@ -224,7 +216,7 @@ export default function EditListener(props: IProps) {
               label="脚本类型"
               rules={[{ required: true }]}
             >
-              <Select value={scriptType} onChange={updateEventType}>
+              <Select value={scriptType}>
                 {script_type_options.map((e) => {
                   return (
                     <Option key={e.value} value={e.value}>
@@ -331,7 +323,7 @@ export default function EditListener(props: IProps) {
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
           <Typography style={{ fontWeight: 'bold' }}>
             <AppstoreOutlined />
-            &nbsp;执行监听器
+            &nbsp;注入字段
           </Typography>
           <Button
             type="primary"
@@ -369,7 +361,7 @@ export default function EditListener(props: IProps) {
             label="事件类型"
             rules={[{ required: true }]}
           >
-            <Select value={eventType} onChange={updateEventType}>
+            <Select>
               {execute_event_type_options.map((e) => {
                 return (
                   <Option key={e.value} value={e.value}>
@@ -384,8 +376,8 @@ export default function EditListener(props: IProps) {
             label="监听器类型"
             rules={[{ required: true }]}
           >
-            <Select value={listenerType} onChange={updateListenerType}>
-              {listener_event_type_options.map((e) => {
+            <Select>
+              {listener_type_options.map((e) => {
                 return (
                   <Option key={e.value} value={e.value}>
                     {e.name}
