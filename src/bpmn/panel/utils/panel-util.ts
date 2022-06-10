@@ -45,18 +45,29 @@ export function updateElementExtensions(
 /**
  * 提取扩展元素，指定类型为非suffix类型
  * @param suffix
- * @param businessObject 当前元素的业务镜像
  */
-export function extractOtherExtensionList(
-  suffix: string,
-  businessObject?: any,
-) {
+export function extractOtherExtensionList(suffix: string) {
   let extensionElements: any =
-    businessObject?.extensionElements ||
     window.bpmnInstance?.element.businessObject.extensionElements;
-  let otherExtensionList: any[];
-  otherExtensionList = extensionElements?.values?.filter((el: any) => {
-    return el.$type !== `${FLOWABLE_PREFIX}:${suffix}`;
-  });
+  let otherExtensionList: any[] =
+    extensionElements?.values?.filter((el: any) => {
+      return el.$type !== `${FLOWABLE_PREFIX}:${suffix}`;
+    }) || [];
   return otherExtensionList;
+}
+
+export function createProperty(options: any) {
+  const { name, value } = options;
+  return window.bpmnInstance.moddle?.create(`${FLOWABLE_PREFIX}:Property`, {
+    name,
+    value,
+  });
+}
+
+export function createProperties(options: any) {
+  const { properties } = options;
+  debugger;
+  return window.bpmnInstance.moddle?.create(`${FLOWABLE_PREFIX}:Properties`, {
+    values: properties,
+  });
 }

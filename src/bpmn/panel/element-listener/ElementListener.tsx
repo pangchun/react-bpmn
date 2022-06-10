@@ -146,10 +146,8 @@ export default function ElementListener(props: IProps) {
       window.bpmnInstance?.element,
       getOtherExtensionList().concat(newListenerExtensionList),
     );
-
     // 刷新表格
     initRows();
-
     // 提示通知
     notification.open({
       message: <span style={{ color: 'red' }}>监听器已删除</span>,
@@ -313,15 +311,6 @@ export default function ElementListener(props: IProps) {
         isTask={isTask}
         reFreshParent={createOrUpdate}
       />
-      {/*<DeleteProperty*/}
-      {/*  onRef={deleteRef}*/}
-      {/*  otherExtensionList={otherExtensionList}*/}
-      {/*  currentRow={currentRow}*/}
-      {/*  rowsData={rows}*/}
-      {/*  moddle={moddle}*/}
-      {/*  modeling={modeling}*/}
-      {/*  element={element}*/}
-      {/*/>*/}
     </>
   );
 }

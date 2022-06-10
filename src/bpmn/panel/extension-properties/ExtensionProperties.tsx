@@ -1,11 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Button, Space, Typography, Table } from 'antd';
-import { Collapse } from 'antd';
+import { Button, Collapse, Space, Table, Typography } from 'antd';
 import { PlusOutlined, PlusSquareTwoTone } from '@ant-design/icons';
 import EditProperty from '@/bpmn/panel/extension-properties/edit/EditProperty';
-import DeleteProperty from '@/bpmn/panel/extension-properties/delete/DeleteProperty';
 import { FLOWABLE_PREFIX } from '@/bpmn/constant/moddle-constant';
-import { extractOtherExtensionList } from '@/bpmn/panel/utils/panel-util';
+import {
+  createProperties,
+  createProperty,
+  extractOtherExtensionList,
+  updateElementExtensions,
+} from '@/bpmn/panel/utils/panel-util';
 
 const { Panel } = Collapse;
 
@@ -19,7 +22,7 @@ export default function ExtensionProperties(props: IProps) {
 
   // setState属性
   const [rows, setRows] = useState<Array<any>>([]);
-  const [otherExtensionList, setOtherExtensionList] = useState<Array<any>>([]);
+  const [propertyList, setPropertyList] = useState<Array<any>>([]);
 
   // ref
   const editRef = useRef<any>();
@@ -27,63 +30,68 @@ export default function ExtensionProperties(props: IProps) {
 
   useEffect(() => {
     initPageData();
-    console.log('当前的业务对象\n', businessObject);
   }, [businessObject?.id]);
 
   function initPageData() {
     initRows();
-    initOtherExtensionList();
   }
 
   function initRows() {
+    let businessObject =
+      window.bpmnInstance?.element.businessObject || props.businessObject;
     if (!businessObject) {
       return;
     }
-    let rows: any[] = [];
-    let properties: any[] = businessObject?.extensionElements?.values?.find(
-      (e: any) => e.$type === `${FLOWABLE_PREFIX}:Properties`,
-    )?.values;
-    properties?.map((e, i) => {
-      rows.push({
-        key: i + 1,
-        name: e.name,
-        value: e.value,
-      });
-    });
+    // 获取扩展属性
+    let properties: any[] =
+      businessObject.extensionElements?.values?.find(
+        (e: any) => e.$type === `${FLOWABLE_PREFIX}:Properties`,
+      )?.values || [];
+    setPropertyList(properties);
+    // 初始化行数据源
+    let rows: any[] =
+      properties?.map((e, i) => {
+        return {
+          key: i + 1,
+          name: e.name,
+          value: e.value,
+        };
+      }) || [];
     setRows(rows);
   }
 
-  function initOtherExtensionList() {
-    let otherExtensionList: any[] = extractOtherExtensionList(
-      'Properties',
-      businessObject,
+  function getOtherExtensionList() {
+    return extractOtherExtensionList('Properties');
+  }
+
+  function createOrUpdate(options: any) {
+    const { rowKey, propertyName, propertyValue } = options;
+
+    // 创建属性实例
+    let property: any = createProperty({
+      name: propertyName,
+      value: propertyValue,
+    });
+
+    // 创建扩展属性列表实例
+    let newProperties: Array<any> = [...propertyList];
+    newProperties.splice(
+      rowKey > 0 ? rowKey - 1 : propertyList.length,
+      1,
+      property,
     );
-    setOtherExtensionList(otherExtensionList);
-  }
-
-  function refreshRows(rowsData: any[]) {
-    // let rows: any[] = [];
-    // rowsData?.map((e, i) => {
-    //   rows.push({
-    //     key: i + 1,
-    //     name: e.name,
-    //     value: e.value,
-    //   });
-    // });
-    // setRows(rows);
-
-    let rows: any[] = [];
-    let properties: any[] = window.bpmnInstance.element.businessObject?.extensionElements?.values?.find(
-      (e: any) => e.$type === `${FLOWABLE_PREFIX}:Properties`,
-    )?.values;
-    properties?.map((e, i) => {
-      rows.push({
-        key: i + 1,
-        name: e.name,
-        value: e.value,
-      });
+    let properties: any = createProperties({
+      properties: newProperties,
     });
-    setRows(rows);
+
+    // 更新扩展属性
+    updateElementExtensions(
+      window.bpmnInstance?.element,
+      getOtherExtensionList().concat([properties]),
+    );
+
+    // 刷新表格
+    initRows();
   }
 
   const columns = [
@@ -177,18 +185,13 @@ export default function ExtensionProperties(props: IProps) {
       </Collapse>
 
       {/* 弹窗组件 */}
-      <EditProperty
-        onRef={editRef}
-        rowsData={rows}
-        otherExtensionList={otherExtensionList}
-        reFreshParent={refreshRows}
-      />
-      <DeleteProperty
-        onRef={deleteRef}
-        rowsData={rows}
-        otherExtensionList={otherExtensionList}
-        reFreshParent={refreshRows}
-      />
+      <EditProperty onRef={editRef} createOrUpdate={createOrUpdate} />
+      {/*<DeleteProperty*/}
+      {/*  onRef={deleteRef}*/}
+      {/*  rowsData={rows}*/}
+      {/*  otherExtensionList={otherExtensionList}*/}
+      {/*  reFreshParent={refreshRows}*/}
+      {/*/>*/}
     </>
   );
 }
