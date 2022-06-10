@@ -8,7 +8,7 @@ import {
   createProperty,
   extractOtherExtensionList,
   updateElementExtensions,
-} from '@/bpmn/panel/utils/panel-util';
+} from '@/bpmn/util/panel-util';
 
 const { Panel } = Collapse;
 
@@ -81,10 +81,7 @@ export default function ExtensionProperties(props: IProps) {
       properties: newProperties,
     });
     // 更新扩展属性
-    updateElementExtensions(
-      window.bpmnInstance?.element,
-      getOtherExtensionList().concat([properties]),
-    );
+    updateElementExtensions(getOtherExtensionList().concat([properties]));
     // 刷新表格
     initRows();
   }
@@ -97,10 +94,7 @@ export default function ExtensionProperties(props: IProps) {
       properties: newProperties,
     });
     // 更新扩展属性
-    updateElementExtensions(
-      window.bpmnInstance?.element,
-      getOtherExtensionList().concat([properties]),
-    );
+    updateElementExtensions(getOtherExtensionList().concat([properties]));
     // 刷新表格
     initRows();
 

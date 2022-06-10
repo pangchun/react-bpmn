@@ -6,7 +6,7 @@ import {
   script_type,
   task_event_type,
 } from '@/bpmn/panel/element-listener/data-self';
-import { IdGenerator } from '@/bpmn/panel/utils/panel-util';
+import { IdGenerator } from '@/bpmn/util/id-util';
 
 /**
  * 创建 监听器实例

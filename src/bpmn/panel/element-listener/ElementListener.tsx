@@ -5,7 +5,7 @@ import { FLOWABLE_PREFIX } from '@/bpmn/constant/moddle-constant';
 import { encapsulateListener } from '@/bpmn/panel/element-listener/data-self';
 import EditListener from '@/bpmn/panel/element-listener/edit/EditListener';
 import { createListenerObject } from '@/bpmn/panel/element-listener/listener-util';
-import { updateElementExtensions } from '@/bpmn/panel/utils/panel-util';
+import { updateElementExtensions } from '@/bpmn/util/panel-util';
 
 const { Panel } = Collapse;
 
@@ -127,7 +127,6 @@ export default function ElementListener(props: IProps) {
       listenerObject,
     );
     updateElementExtensions(
-      window.bpmnInstance?.element,
       getOtherExtensionList().concat(newListenerExtensionList),
     );
     // 刷新表格
@@ -143,7 +142,6 @@ export default function ElementListener(props: IProps) {
     let newListenerExtensionList: Array<any> = [...listenerExtensionList];
     newListenerExtensionList.splice(key - 1, 1);
     updateElementExtensions(
-      window.bpmnInstance?.element,
       getOtherExtensionList().concat(newListenerExtensionList),
     );
     // 刷新表格
