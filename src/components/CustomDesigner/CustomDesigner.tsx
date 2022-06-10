@@ -19,7 +19,7 @@ import 'bpmn-js-properties-panel/dist/assets/element-templates.css';
 import 'bpmn-js-properties-panel/dist/assets/properties-panel.css';
 
 // 引入流程图文件
-import newDiagram from '@/bpmn/resource/newDiagram';
+import diagramExample from '@/bpmn/resource/diagram-example';
 
 // 引入当前组件样式
 import CustomPanel from '@/components/CustomDesigner/components/CustomPanel/CustomPanel';
@@ -33,7 +33,7 @@ import { FolderOpenOutlined } from '@ant-design/icons';
 export default function CustomDesigner() {
   // setState属性
   const [bpmnModeler, setBpmnModeler] = useState<any>();
-  const [xmlStr, setXmlStr] = useState<string>(newDiagram.xml);
+  const [xmlStr, setXmlStr] = useState<string>(diagramExample.xml);
 
   /**
    * 初始化建模器

@@ -173,8 +173,8 @@ const xml: string =
 /**
  * 初始化流程图示例 请假流程
  */
-const newDiagram = {
+const diagramExample = {
   xml: xml,
 };
 
-export default newDiagram;
+export default diagramExample;
