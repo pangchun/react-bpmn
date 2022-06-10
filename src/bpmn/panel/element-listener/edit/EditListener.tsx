@@ -72,7 +72,6 @@ export default function EditListener(props: IProps) {
   }));
 
   function showDrawer(rowObj: any) {
-    console.log(rowObj);
     initPageData(rowObj);
     setVisible(true);
   }
@@ -108,7 +107,6 @@ export default function EditListener(props: IProps) {
       row.fieldType = field.fieldType.name;
       row.fieldTypeValue = field.fieldType.value;
       row.fieldValue = field.string || field.expression;
-      console.log(row);
       return row;
     });
     setRows(rows);
@@ -159,9 +157,6 @@ export default function EditListener(props: IProps) {
       placement: 'top',
       duration: 2,
       description: `已删除编号为 ${key} 的字段`,
-      onClick: () => {
-        console.log('Notification Clicked!');
-      },
     });
   }
 
@@ -174,12 +169,7 @@ export default function EditListener(props: IProps) {
             label="Java类"
             rules={[{ required: true }]}
           >
-            <Input
-              placeholder="请输入"
-              onChange={(event) => {
-                console.log(event.target.value);
-              }}
-            />
+            <Input placeholder="请输入" />
           </Form.Item>
         );
       case listener_type.expression:
@@ -189,12 +179,7 @@ export default function EditListener(props: IProps) {
             label="表达式"
             rules={[{ required: true }]}
           >
-            <Input
-              placeholder="请输入"
-              onChange={(event) => {
-                console.log(event.target.value);
-              }}
-            />
+            <Input placeholder="请输入" />
           </Form.Item>
         );
       case listener_type.delegateExpression:
@@ -204,12 +189,7 @@ export default function EditListener(props: IProps) {
             label="代理表达式"
             rules={[{ required: true }]}
           >
-            <Input
-              placeholder="请输入"
-              onChange={(event) => {
-                console.log(event.target.value);
-              }}
-            />
+            <Input placeholder="请输入" />
           </Form.Item>
         );
       case listener_type.script:
@@ -220,12 +200,7 @@ export default function EditListener(props: IProps) {
               label="脚本格式"
               rules={[{ required: true }]}
             >
-              <Input
-                placeholder="请输入"
-                onChange={(event) => {
-                  console.log(event.target.value);
-                }}
-              />
+              <Input placeholder="请输入" />
             </Form.Item>
             <Form.Item
               name="scriptType"
@@ -248,12 +223,7 @@ export default function EditListener(props: IProps) {
                 label="脚本内容"
                 rules={[{ required: true }]}
               >
-                <Input
-                  placeholder="请输入"
-                  onChange={(event) => {
-                    console.log(event.target.value);
-                  }}
-                />
+                <Input placeholder="请输入" />
               </Form.Item>
             )}
             {scriptType === script_type.externalResource && (
@@ -262,12 +232,7 @@ export default function EditListener(props: IProps) {
                 label="资源地址"
                 rules={[{ required: true }]}
               >
-                <Input
-                  placeholder="请输入"
-                  onChange={(event) => {
-                    console.log(event.target.value);
-                  }}
-                />
+                <Input placeholder="请输入" />
               </Form.Item>
             )}
           </>

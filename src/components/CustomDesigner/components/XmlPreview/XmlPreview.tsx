@@ -17,6 +17,7 @@ export default function XmlPreview(props: IProps) {
 
     let result = await modeler.saveXML({ format: true });
     const { xml } = result;
+    console.log(xml);
     setXml(xml);
   };
 

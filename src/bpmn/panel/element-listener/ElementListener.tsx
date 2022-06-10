@@ -20,7 +20,6 @@ export default function ElementListener(props: IProps) {
 
   // setState属性
   const [rows, setRows] = useState<Array<any>>([]);
-  const [otherExtensionList, setOtherExtensionList] = useState<Array<any>>([]);
   const [listenerExtensionList, setListenerExtensionList] = useState<
     Array<any>
   >([]);
@@ -30,7 +29,6 @@ export default function ElementListener(props: IProps) {
 
   useEffect(() => {
     initRows();
-    initOtherExtensionList();
   }, [businessObject?.id]);
 
   /**
@@ -42,15 +40,17 @@ export default function ElementListener(props: IProps) {
     if (!businessObject) {
       return;
     }
-
+    // 获取监听器
     let rows: any[];
     let listeners: any[] =
-      businessObject?.extensionElements?.values?.filter(
-        (e: any) =>
+      businessObject.extensionElements?.values?.filter((e: any) => {
+        return (
           e.$type ===
-          `${FLOWABLE_PREFIX}:${isTask ? 'TaskListener' : 'ExecutionListener'}`,
-      ) ?? [];
+          `${FLOWABLE_PREFIX}:${isTask ? 'TaskListener' : 'ExecutionListener'}`
+        );
+      }) || [];
     setListenerExtensionList(listeners);
+    // 初始化行数据源
     rows = listeners?.map((e, i) => {
       let listener = encapsulateListener(e);
       return {
@@ -65,24 +65,24 @@ export default function ElementListener(props: IProps) {
   }
 
   /**
-   * 初始化其他扩展属性
+   * 获取其它类型扩展元素
    */
-  function initOtherExtensionList() {
-    let otherExtensionList: any[] = [];
-    businessObject?.extensionElements?.values?.filter((e: any) => {
-      if (
-        e.$type !==
-        `${FLOWABLE_PREFIX}:${isTask ? 'TaskListener' : 'ExecutionListener'}`
-      ) {
-        otherExtensionList.push(e);
-      }
-    });
-    setOtherExtensionList(otherExtensionList);
+  function getOtherExtensionList() {
+    let otherExtensionList: Array<any> =
+      window.bpmnInstance?.element?.businessObject?.extensionElements?.values?.filter(
+        (e: any) => {
+          return (
+            e.$type !==
+            `${FLOWABLE_PREFIX}:${
+              isTask ? 'TaskListener' : 'ExecutionListener'
+            }`
+          );
+        },
+      ) || [];
+    return otherExtensionList;
   }
 
   function createOrUpdate(options: any) {
-    console.log(options);
-
     // 创建监听器对象
     let listener: any = Object.create(null);
     listener.id = options.eventId; // 只有任务监听器才需要设置事件id
@@ -91,7 +91,9 @@ export default function ElementListener(props: IProps) {
     listener.expression = options.expression;
     listener.delegateExpression = options.delegateExpression;
     listener.class = options.javaClass;
-
+    // 设置定时器属性
+    listener.timerType = options.timerType;
+    listener.timerValue = options.timerValue;
     // 创建注入字段对象
     let fields: Array<any> = options.fields;
     if (fields && fields.length > 0) {
@@ -104,7 +106,6 @@ export default function ElementListener(props: IProps) {
         };
       });
     }
-
     // 设置注入字段属性
     listener.fields = fields;
     // 设置脚本属性
@@ -112,15 +113,12 @@ export default function ElementListener(props: IProps) {
     listener.scriptFormat = options.scriptFormat;
     listener.value = options.scriptValue;
     listener.resource = options.resource;
-
     // 创建监听器实例
     let listenerObject = createListenerObject(
       listener,
       isTask,
       FLOWABLE_PREFIX,
     );
-    console.log(listenerObject);
-
     // 将监听器实例绑定到bpmn
     let newListenerExtensionList: Array<any> = [...listenerExtensionList];
     newListenerExtensionList.splice(
@@ -130,9 +128,8 @@ export default function ElementListener(props: IProps) {
     );
     updateElementExtensions(
       window.bpmnInstance?.element,
-      otherExtensionList.concat(newListenerExtensionList),
+      getOtherExtensionList().concat(newListenerExtensionList),
     );
-
     // 刷新表格
     initRows();
   }
@@ -147,7 +144,7 @@ export default function ElementListener(props: IProps) {
     newListenerExtensionList.splice(key - 1, 1);
     updateElementExtensions(
       window.bpmnInstance?.element,
-      otherExtensionList.concat(newListenerExtensionList),
+      getOtherExtensionList().concat(newListenerExtensionList),
     );
 
     // 刷新表格
@@ -159,9 +156,6 @@ export default function ElementListener(props: IProps) {
       placement: 'top',
       duration: 2,
       description: `已删除编号为 ${key} 的监听器`,
-      onClick: () => {
-        console.log('Notification Clicked!');
-      },
     });
   }
 

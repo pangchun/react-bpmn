@@ -4,7 +4,9 @@ import {
   field_type,
   listener_type,
   script_type,
+  task_event_type,
 } from '@/bpmn/panel/element-listener/data-self';
+import { IdGenerator } from '@/bpmn/panel/utils/panel-util';
 
 /**
  * 创建 监听器实例
@@ -40,23 +42,25 @@ export function createListenerObject(
     });
   }
   // 任务监听器的 定时器 设置
-  if (isTask && options.event === 'timeout' && !!options.eventDefinitionType) {
+  if (
+    isTask &&
+    options.event === task_event_type.timeout &&
+    !!options.timerType
+  ) {
     const timeDefinition = window.bpmnInstance?.moddle.create(
       'bpmn:FormalExpression',
       {
-        body: options.eventTimeDefinitions,
+        body: options.timerValue,
       },
     );
-    const TimerEventDefinition = window.bpmnInstance?.moddle.create(
+    const timerEventDefinition = window.bpmnInstance?.moddle.create(
       'bpmn:TimerEventDefinition',
       {
-        id: `TimerEventDefinition_${uuid(8)}`,
-        [`time${options.eventDefinitionType.replace(/^\S/, (s) =>
-          s.toUpperCase(),
-        )}`]: timeDefinition,
+        id: `TimerEventDefinition_${IdGenerator('', 8)}`,
+        [options.timerType]: timeDefinition,
       },
     );
-    listenerObj.eventDefinitions = [TimerEventDefinition];
+    listenerObj.eventDefinitions = [timerEventDefinition];
   }
   return window.bpmnInstance?.moddle.create(
     `${prefix}:${isTask ? 'TaskListener' : 'ExecutionListener'}`,
