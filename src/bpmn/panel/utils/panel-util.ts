@@ -66,7 +66,6 @@ export function createProperty(options: any) {
 
 export function createProperties(options: any) {
   const { properties } = options;
-  debugger;
   return window.bpmnInstance.moddle?.create(`${FLOWABLE_PREFIX}:Properties`, {
     values: properties,
   });

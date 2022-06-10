@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Button, Collapse, Space, Table, Typography } from 'antd';
+import { Button, Collapse, notification, Space, Table, Typography } from 'antd';
 import { PlusOutlined, PlusSquareTwoTone } from '@ant-design/icons';
 import EditProperty from '@/bpmn/panel/extension-properties/edit/EditProperty';
 import { FLOWABLE_PREFIX } from '@/bpmn/constant/moddle-constant';
@@ -26,7 +26,6 @@ export default function ExtensionProperties(props: IProps) {
 
   // ref
   const editRef = useRef<any>();
-  const deleteRef = useRef<any>();
 
   useEffect(() => {
     initPageData();
@@ -66,13 +65,11 @@ export default function ExtensionProperties(props: IProps) {
 
   function createOrUpdate(options: any) {
     const { rowKey, propertyName, propertyValue } = options;
-
     // 创建属性实例
     let property: any = createProperty({
       name: propertyName,
       value: propertyValue,
     });
-
     // 创建扩展属性列表实例
     let newProperties: Array<any> = [...propertyList];
     newProperties.splice(
@@ -83,15 +80,37 @@ export default function ExtensionProperties(props: IProps) {
     let properties: any = createProperties({
       properties: newProperties,
     });
-
     // 更新扩展属性
     updateElementExtensions(
       window.bpmnInstance?.element,
       getOtherExtensionList().concat([properties]),
     );
-
     // 刷新表格
     initRows();
+  }
+
+  function remove(rowKey: number) {
+    // 创建扩展属性列表实例
+    let newProperties: Array<any> = [...propertyList];
+    newProperties.splice(rowKey - 1, 1);
+    let properties: any = createProperties({
+      properties: newProperties,
+    });
+    // 更新扩展属性
+    updateElementExtensions(
+      window.bpmnInstance?.element,
+      getOtherExtensionList().concat([properties]),
+    );
+    // 刷新表格
+    initRows();
+
+    // 提示通知
+    notification.open({
+      message: <span style={{ color: 'red' }}>属性已删除</span>,
+      placement: 'top',
+      duration: 2,
+      description: `已删除编号为 ${rowKey} 的监听器`,
+    });
   }
 
   const columns = [
@@ -137,7 +156,7 @@ export default function ExtensionProperties(props: IProps) {
             type="text"
             size={'small'}
             onClick={() => {
-              deleteRef.current.showDeleteModal(record);
+              remove(record.key);
             }}
           >
             {'删除'}
@@ -183,15 +202,7 @@ export default function ExtensionProperties(props: IProps) {
           </Button>
         </Panel>
       </Collapse>
-
-      {/* 弹窗组件 */}
       <EditProperty onRef={editRef} createOrUpdate={createOrUpdate} />
-      {/*<DeleteProperty*/}
-      {/*  onRef={deleteRef}*/}
-      {/*  rowsData={rows}*/}
-      {/*  otherExtensionList={otherExtensionList}*/}
-      {/*  reFreshParent={refreshRows}*/}
-      {/*/>*/}
     </>
   );
 }
