@@ -6,6 +6,7 @@ import ElementOtherInfo from '@/bpmn/panel/other/ElementOtherInfo';
 import ExtensionProperties from '@/bpmn/panel/extension-properties/ExtensionProperties';
 import SignalMessage from '@/bpmn/panel/signal-message/SignalMessage';
 import ElementListener from '@/bpmn/panel/element-listener/ElementListener';
+import ElementTask from '@/bpmn/panel/task/ElementTask';
 
 // todo 这个全局声明后面可以抽取到单独的ts文件中
 declare global {
@@ -107,6 +108,10 @@ export default function CustomPanel(props: IProps) {
     // 如果element为空，则设置流程节点为当前节点，否则设置选中节点为当前节点 (点击canvas空白处默认指流程节点)
     if (!element) {
       // todo 目前是通过流程id获取，但是这个id固定不好，后面要修改
+      /* todo 获取流程节点可以通过这个方法获取
+      function getProcess$1(element) {
+        return is$3(element, 'bpmn:Process') ? getBusinessObject(element) : getBusinessObject(element).get('processRef');
+      }*/
       let processElement: any = modeler.get('elementRegistry').get('Process_1');
       setElement(processElement);
       window.bpmnInstance.element = processElement;
@@ -135,6 +140,8 @@ export default function CustomPanel(props: IProps) {
     <>
       <Space direction="vertical" size={0} style={{ display: 'flex' }}>
         <ElementBaseInfo businessObject={businessObject} />
+        <CustomDivider />
+        <ElementTask businessObject={businessObject} />
         <CustomDivider />
         {renderSignalMessage()}
         <CustomDivider />
