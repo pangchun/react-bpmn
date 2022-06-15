@@ -19,13 +19,6 @@ interface IProps {
   businessObject: any;
 }
 
-const keyOptions = {
-  id: 'id',
-  name: 'name',
-  isExecutable: 'isExecutable',
-  versionTag: 'versionTag',
-};
-
 export default function ElementTask(props: IProps) {
   // props属性
   const { businessObject } = props;
@@ -37,6 +30,7 @@ export default function ElementTask(props: IProps) {
     exclusive: boolean;
   }>();
 
+  // 字段监听
   const asyncBefore = Form.useWatch('asyncBefore', form);
   const asyncAfter = Form.useWatch('asyncAfter', form);
 
@@ -49,6 +43,21 @@ export default function ElementTask(props: IProps) {
       asyncBefore: businessObject?.asyncBefore || false,
       asyncAfter: businessObject?.asyncAfter || false,
       exclusive: businessObject?.exclusive || false,
+    });
+  }
+
+  function updateTaskAsync() {
+    console.log(form.getFieldsValue());
+    let asyncBefore: boolean = form.getFieldValue('asyncBefore');
+    let asyncAfter: boolean = form.getFieldValue('asyncAfter');
+    let exclusive: boolean = form.getFieldValue('exclusive');
+    if (!asyncBefore && !asyncAfter) {
+      exclusive = false;
+    }
+    window.bpmnInstance.modeling.updateProperties(window.bpmnInstance.element, {
+      asyncBefore,
+      asyncAfter,
+      exclusive,
     });
   }
 
@@ -75,15 +84,18 @@ export default function ElementTask(props: IProps) {
               label={'异步延续'}
               name="asyncBefore"
               valuePropName="checked"
+              style={{ marginLeft: 6 }}
             >
-              <Checkbox style={{ marginLeft: 5 }}>异步前</Checkbox>
+              <Checkbox style={{ marginLeft: 5 }} onChange={updateTaskAsync}>
+                异步前
+              </Checkbox>
             </Form.Item>
             <Form.Item name="asyncAfter" valuePropName="checked">
-              <Checkbox>异步后</Checkbox>
+              <Checkbox onChange={updateTaskAsync}>异步后</Checkbox>
             </Form.Item>
             {(asyncBefore || asyncAfter) && (
               <Form.Item name="exclusive" valuePropName="checked">
-                <Checkbox>是否排除</Checkbox>
+                <Checkbox onChange={updateTaskAsync}>是否排除</Checkbox>
               </Form.Item>
             )}
           </Form>
