@@ -35,10 +35,10 @@ export default function ElementBaseInfo(props: IProps) {
 
   function initPageData() {
     form.setFieldsValue({
-      id: businessObject?.id || '',
-      name: businessObject?.name || '',
+      id: businessObject?.id,
+      name: businessObject?.name,
       isExecutable: businessObject?.isExecutable || false,
-      versionTag: businessObject?.versionTag || '',
+      versionTag: businessObject?.versionTag,
     });
   }
 
@@ -88,6 +88,7 @@ export default function ElementBaseInfo(props: IProps) {
         <>
           <Form.Item label="版本标签" name="versionTag">
             <Input
+              placeholder={'请输入'}
               onChange={(event) => {
                 updateElementAttr(
                   keyOptions.versionTag,
@@ -128,7 +129,7 @@ export default function ElementBaseInfo(props: IProps) {
           style={{ backgroundColor: '#FFF' }}
           showArrow={true}
         >
-          <Form form={form} labelCol={{ span: 4 }} wrapperCol={{ span: 19 }}>
+          <Form form={form} labelCol={{ span: 5 }} wrapperCol={{ span: 18 }}>
             <Form.Item
               label="编号"
               name="id"
@@ -145,6 +146,7 @@ export default function ElementBaseInfo(props: IProps) {
               ]}
             >
               <Input
+                placeholder={'请输入'}
                 readOnly={businessObject?.$type === 'bpmn:Process'}
                 onChange={(event) => {
                   updateElementAttr(keyOptions.id, event.currentTarget.value);
@@ -153,6 +155,7 @@ export default function ElementBaseInfo(props: IProps) {
             </Form.Item>
             <Form.Item label="名称" name="name">
               <Input
+                placeholder={'请输入'}
                 onChange={(event) => {
                   updateElementAttr(keyOptions.name, event.currentTarget.value);
                 }}

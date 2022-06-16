@@ -66,7 +66,7 @@ export default function ElementOtherInfo(props: IProps) {
           showArrow={true}
           forceRender={true}
         >
-          <Form form={form} labelCol={{ span: 4 }} wrapperCol={{ span: 19 }}>
+          <Form form={form} labelCol={{ span: 5 }} wrapperCol={{ span: 18 }}>
             <Form.Item label="元素文档" name="documentation">
               <TextArea
                 rows={4}

@@ -12,6 +12,7 @@ import { Collapse } from 'antd';
 import { PushpinTwoTone } from '@ant-design/icons';
 import { useInterval } from 'ahooks';
 import { useWatch } from 'antd/es/form/Form';
+import UserTask from '@/bpmn/panel/task/task-components/UserTask';
 
 const { Panel } = Collapse;
 
@@ -84,7 +85,7 @@ export default function ElementTask(props: IProps) {
               label={'异步延续'}
               name="asyncBefore"
               valuePropName="checked"
-              style={{ marginLeft: 6 }}
+              style={{ marginLeft: 22, marginBottom: 20 }}
             >
               <Checkbox style={{ marginLeft: 5 }} onChange={updateTaskAsync}>
                 异步前
@@ -99,6 +100,9 @@ export default function ElementTask(props: IProps) {
               </Form.Item>
             )}
           </Form>
+          {businessObject.$type === 'bpmn:UserTask' && (
+            <UserTask businessObject={businessObject} />
+          )}
         </Panel>
       </Collapse>
     </>
