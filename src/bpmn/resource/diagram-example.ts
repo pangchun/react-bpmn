@@ -86,6 +86,8 @@ const xml: string =
   '    </bpmn2:intermediateThrowEvent>\n' +
   '    <bpmn2:sequenceFlow id="Flow_0d8zq2t" sourceRef="Gateway_1af8bvn" targetRef="Event_0ki06s5" />\n' +
   '  </bpmn2:process>\n' +
+  '  <bpmn2:message id="qwe" name="111qwr11" />\n' +
+  '  <bpmn2:message id="qwerer" name="111" />\n' +
   '  <bpmndi:BPMNDiagram id="BPMNDiagram_1">\n' +
   '    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_1">\n' +
   '      <bpmndi:BPMNEdge id="Flow_04cue2l_di" bpmnElement="Flow_04cue2l">\n' +

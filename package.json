@@ -29,8 +29,8 @@
     "bpmn-js-properties-panel": "^1.0.0",
     "camunda-bpmn-moddle": "^6.1.2",
     "moment": "^2.29.3",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
     "umi": "^3.5.23"
   },
   "devDependencies": {

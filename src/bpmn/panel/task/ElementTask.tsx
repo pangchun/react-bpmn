@@ -13,6 +13,7 @@ import { PushpinTwoTone } from '@ant-design/icons';
 import { useInterval } from 'ahooks';
 import { useWatch } from 'antd/es/form/Form';
 import UserTask from '@/bpmn/panel/task/task-components/UserTask';
+import ReceiveTask from '@/bpmn/panel/task/task-components/ReceiveTask';
 
 const { Panel } = Collapse;
 
@@ -100,8 +101,11 @@ export default function ElementTask(props: IProps) {
               </Form.Item>
             )}
           </Form>
-          {businessObject.$type === 'bpmn:UserTask' && (
+          {businessObject?.$type === 'bpmn:UserTask' && (
             <UserTask businessObject={businessObject} />
+          )}
+          {businessObject?.$type === 'bpmn:ReceiveTask' && (
+            <ReceiveTask businessObject={businessObject} />
           )}
         </Panel>
       </Collapse>

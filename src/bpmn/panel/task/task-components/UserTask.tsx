@@ -125,6 +125,7 @@ export default function UserTask(props: IProps) {
         </Form.Item>
         <Form.Item name="dueDate" label="到期时间">
           <DatePicker
+            placeholder={'请选择'}
             showTime
             format="YYYY-MM-DD HH:mm:ss"
             placement={'topLeft'}
@@ -134,6 +135,7 @@ export default function UserTask(props: IProps) {
         </Form.Item>
         <Form.Item name="followUpDate" label="跟踪时间">
           <DatePicker
+            placeholder={'请选择'}
             showTime
             format="YYYY-MM-DD HH:mm:ss"
             placement={'topLeft'}
