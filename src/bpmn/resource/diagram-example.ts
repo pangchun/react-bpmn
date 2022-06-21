@@ -85,6 +85,7 @@ const xml: string =
   '      <bpmn2:incoming>Flow_0d8zq2t</bpmn2:incoming>\n' +
   '    </bpmn2:intermediateThrowEvent>\n' +
   '    <bpmn2:sequenceFlow id="Flow_0d8zq2t" sourceRef="Gateway_1af8bvn" targetRef="Event_0ki06s5" />\n' +
+  '    <bpmn2:scriptTask id="Activity_0czjist" scriptFormat="1111" flowable:resultVariable="34444" flowable:resource="444" />\n' +
   '  </bpmn2:process>\n' +
   '  <bpmn2:message id="qwe" name="111qwr11" />\n' +
   '  <bpmn2:message id="qwerer" name="111" />\n' +

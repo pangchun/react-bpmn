@@ -14,6 +14,7 @@ import { useInterval } from 'ahooks';
 import { useWatch } from 'antd/es/form/Form';
 import UserTask from '@/bpmn/panel/task/task-components/UserTask';
 import ReceiveTask from '@/bpmn/panel/task/task-components/ReceiveTask';
+import ScriptTask from '@/bpmn/panel/task/task-components/ScriptTask';
 
 const { Panel } = Collapse;
 
@@ -107,6 +108,8 @@ export default function ElementTask(props: IProps) {
           {businessObject?.$type === 'bpmn:ReceiveTask' && (
             <ReceiveTask businessObject={businessObject} />
           )}
+
+          <ScriptTask businessObject={businessObject} />
         </Panel>
       </Collapse>
     </>
