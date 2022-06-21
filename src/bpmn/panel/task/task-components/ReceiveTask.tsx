@@ -11,6 +11,7 @@ const defaultOptions = {
   value: '-1',
 };
 
+// 注意：直接在xml中定义消息id全为数字时，会导致无法回显
 export default function ReceiveTask(props: IProps) {
   // props属性
   const { businessObject } = props;
