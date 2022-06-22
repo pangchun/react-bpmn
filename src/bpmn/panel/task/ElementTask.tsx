@@ -66,11 +66,7 @@ export default function ElementTask(props: IProps) {
 
   return (
     <>
-      <Collapse
-        bordered={false}
-        expandIconPosition={'right'}
-        defaultActiveKey={['1']}
-      >
+      <Collapse bordered={false} expandIconPosition={'right'}>
         <Panel
           header={
             <Typography style={{ color: '#1890ff', fontWeight: 'bold' }}>
