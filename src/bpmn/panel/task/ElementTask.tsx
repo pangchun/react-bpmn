@@ -108,8 +108,9 @@ export default function ElementTask(props: IProps) {
           {businessObject?.$type === 'bpmn:ReceiveTask' && (
             <ReceiveTask businessObject={businessObject} />
           )}
-
-          <ScriptTask businessObject={businessObject} />
+          {businessObject?.$type === 'bpmn:ScriptTask' && (
+            <ScriptTask businessObject={businessObject} />
+          )}
         </Panel>
       </Collapse>
     </>

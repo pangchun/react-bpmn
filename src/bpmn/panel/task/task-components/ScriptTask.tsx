@@ -12,11 +12,11 @@ import {
 } from '@/bpmn/panel/element-listener/data-self';
 
 const keyOptions = {
-  scriptFormat: '',
-  scriptType: '',
-  scriptValue: '',
-  resource: '',
-  resultVariable: '',
+  scriptFormat: 'scriptFormat',
+  scriptType: 'scriptType',
+  script: 'script',
+  resource: 'resource',
+  resultVariable: 'resultVariable',
 };
 
 interface IProps {
@@ -31,7 +31,7 @@ export default function ScriptTask(props: IProps) {
   const [form] = Form.useForm<{
     scriptFormat: string;
     scriptType: string;
-    scriptValue: string;
+    script: string;
     resource: string;
     resultVariable: string;
   }>();
@@ -46,28 +46,31 @@ export default function ScriptTask(props: IProps) {
   function initPageData() {
     form.setFieldsValue({
       scriptFormat: businessObject?.scriptFormat,
-      scriptType: businessObject?.script
-        ? script_type.inlineScript
-        : script_type.externalResource,
-      scriptValue: businessObject?.script,
+      scriptType: businessObject?.resource
+        ? script_type.externalResource
+        : script_type.inlineScript,
+      script: businessObject?.script,
       resource: businessObject?.resource,
     });
   }
 
-  function updateScriptTask(key: string) {
-    let values: any = form.getFieldsValue();
+  function updateScriptTask() {
     let taskAttr = Object.create(null);
-    if (key === keyOptions.scriptValue || key === keyOptions.resource) {
-      // 先重置再设置值
-      taskAttr[keyOptions.scriptValue] = null;
-      taskAttr[keyOptions.resource] = null;
-      taskAttr[key] = values[key];
-    } else if (
-      key === keyOptions.scriptFormat ||
-      key === keyOptions.resultVariable
+    if (
+      form.getFieldValue(keyOptions.scriptType) === script_type.inlineScript
     ) {
-      taskAttr[key] = values[key];
+      taskAttr[keyOptions.script] = form.getFieldValue(keyOptions.script);
+      taskAttr[keyOptions.resource] = undefined;
+    } else {
+      taskAttr[keyOptions.resource] = form.getFieldValue(keyOptions.resource);
+      taskAttr[keyOptions.script] = undefined;
     }
+    taskAttr[keyOptions.scriptFormat] = form.getFieldValue(
+      keyOptions.scriptFormat,
+    );
+    taskAttr[keyOptions.resultVariable] = form.getFieldValue(
+      keyOptions.resultVariable,
+    );
     window.bpmnInstance.modeling.updateProperties(
       window.bpmnInstance.element,
       taskAttr,
@@ -78,13 +81,10 @@ export default function ScriptTask(props: IProps) {
     <>
       <Form form={form} labelCol={{ span: 5 }} wrapperCol={{ span: 18 }}>
         <Form.Item name="scriptFormat" label="脚本格式">
-          <Input
-            placeholder="请输入"
-            onChange={() => updateScriptTask(keyOptions.scriptFormat)}
-          />
+          <Input placeholder="请输入" onChange={updateScriptTask} />
         </Form.Item>
         <Form.Item name="scriptType" label="脚本类型">
-          <Select>
+          <Select onChange={updateScriptTask}>
             {script_type_options.map((e) => {
               return (
                 <Select.Option key={e.value} value={e.value}>
@@ -95,26 +95,17 @@ export default function ScriptTask(props: IProps) {
           </Select>
         </Form.Item>
         {scriptType === script_type.inlineScript && (
-          <Form.Item name="scriptValue" label="脚本内容">
-            <Input.TextArea
-              placeholder="请输入"
-              onChange={() => updateScriptTask(keyOptions.scriptValue)}
-            />
+          <Form.Item name="script" label="脚本内容">
+            <Input.TextArea placeholder="请输入" onChange={updateScriptTask} />
           </Form.Item>
         )}
         {scriptType === script_type.externalResource && (
           <Form.Item name="resource" label="资源地址">
-            <Input
-              placeholder="请输入"
-              onChange={() => updateScriptTask(keyOptions.resource)}
-            />
+            <Input placeholder="请输入" onChange={updateScriptTask} />
           </Form.Item>
         )}
         <Form.Item name="resultVariable" label="结果变量">
-          <Input
-            placeholder="请输入"
-            onChange={() => updateScriptTask(keyOptions.resultVariable)}
-          />
+          <Input placeholder="请输入" onChange={updateScriptTask} />
         </Form.Item>
       </Form>
     </>
