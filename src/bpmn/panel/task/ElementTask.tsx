@@ -50,7 +50,6 @@ export default function ElementTask(props: IProps) {
   }
 
   function updateTaskAsync() {
-    console.log(form.getFieldsValue());
     let asyncBefore: boolean = form.getFieldValue('asyncBefore');
     let asyncAfter: boolean = form.getFieldValue('asyncAfter');
     let exclusive: boolean = form.getFieldValue('exclusive');
