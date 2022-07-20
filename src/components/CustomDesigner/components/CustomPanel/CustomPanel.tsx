@@ -8,6 +8,7 @@ import SignalMessage from '@/bpmn/panel/signal-message/SignalMessage';
 import ElementListener from '@/bpmn/panel/element-listener/ElementListener';
 import ElementTask from '@/bpmn/panel/task/ElementTask';
 import MultiInstance from '@/bpmn/panel/multi-instance/MultiInstance';
+import ElementForm from '@/bpmn/panel/form/ElementForm';
 
 // todo 这个全局声明后面可以抽取到单独的ts文件中
 declare global {
@@ -146,6 +147,7 @@ export default function CustomPanel(props: IProps) {
         <CustomDivider />
         {renderSignalMessage()}
         <CustomDivider />
+        <ElementForm businessObject={businessObject} />
         <MultiInstance businessObject={businessObject} />
         <CustomDivider />
         <ElementListener businessObject={businessObject} isTask={false} />
