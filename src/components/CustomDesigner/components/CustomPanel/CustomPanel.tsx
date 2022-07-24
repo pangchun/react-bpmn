@@ -148,6 +148,7 @@ export default function CustomPanel(props: IProps) {
         {renderSignalMessage()}
         <CustomDivider />
         <ElementForm businessObject={businessObject} />
+        <CustomDivider />
         <MultiInstance businessObject={businessObject} />
         <CustomDivider />
         <ElementListener businessObject={businessObject} isTask={false} />
