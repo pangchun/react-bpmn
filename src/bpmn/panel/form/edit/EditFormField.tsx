@@ -9,16 +9,10 @@ import {
   Form,
   Table,
   Typography,
+  notification,
 } from 'antd';
-import {
-  encapsulateField,
-  execute_event_type_options,
-  field_type_options,
-  listener_type_options,
-  task_event_type_options,
-} from '@/bpmn/panel/element-listener/data-self';
+import { encapsulateField } from '@/bpmn/panel/element-listener/data-self';
 import { AppstoreOutlined } from '@ant-design/icons';
-import EditField from '@/bpmn/panel/element-listener/edit/EditField';
 import {
   form_field_type,
   form_field_type_options,
@@ -39,6 +33,8 @@ export default function EditFormField(props: IProps) {
 
   // setState属性
   const [visible, setVisible] = useState(false);
+  const [constraintRows, setConstraintRows] = useState<Array<any>>([]);
+  const [propertyRows, setPropertyRows] = useState<Array<any>>([]);
   const [rows, setRows] = useState<Array<any>>([]);
 
   // ref
@@ -111,6 +107,41 @@ export default function EditFormField(props: IProps) {
       });
   }
 
+  /**
+   * 新建或修改约束条件
+   * @param rowObj [key, name, config]
+   */
+  function createOrUpdateConstraint(rowObj: any) {
+    const { key } = rowObj;
+    let newRows: Array<any> = [...constraintRows];
+    rowObj.key = key > 0 ? key : constraintRows.length + 1;
+    newRows.splice(rowObj.key - 1, 1, rowObj);
+    setConstraintRows(newRows);
+  }
+
+  /**
+   * 删除约束条件
+   * @param key
+   */
+  function removeConstraint(key: number) {
+    let newRows: Array<any> = [...constraintRows];
+    newRows.splice(key - 1, 1);
+    newRows = newRows.map((el, index) => {
+      if (el.key !== key) {
+        el.key = index + 1;
+        return el;
+      }
+    });
+    setConstraintRows(newRows);
+    // 提示通知
+    notification.open({
+      message: <span style={{ color: 'red' }}>约束条件已删除</span>,
+      placement: 'top',
+      duration: 2,
+      description: `已删除序号为 ${key} 的约束条件`,
+    });
+  }
+
   const constraintColumns = [
     {
       title: '序号',
@@ -144,7 +175,7 @@ export default function EditFormField(props: IProps) {
             size={'small'}
             style={{ color: '#1890ff' }}
             onClick={() => {
-              editPropertyRef.current.showEditModal(record);
+              editConstraintRef.current.showEditModal(record);
             }}
           >
             {'编辑'}
@@ -153,7 +184,7 @@ export default function EditFormField(props: IProps) {
             danger
             type="text"
             size={'small'}
-            // onClick={() => removeField(record.key)}
+            onClick={() => removeConstraint(record.key)}
           >
             {'删除'}
           </Button>
@@ -182,13 +213,48 @@ export default function EditFormField(props: IProps) {
         </div>
         <Table
           columns={constraintColumns}
-          dataSource={rows}
+          dataSource={constraintRows}
           pagination={false}
           bordered
           size={'small'}
         />
       </Space>
     );
+  }
+
+  /**
+   * 新建或修改字段属性
+   * @param rowObj [key, id, value]
+   */
+  function createOrUpdateProperty(rowObj: any) {
+    const { key } = rowObj;
+    let newRows: Array<any> = [...propertyRows];
+    rowObj.key = key > 0 ? key : propertyRows.length + 1;
+    newRows.splice(rowObj.key - 1, 1, rowObj);
+    setPropertyRows(newRows);
+  }
+
+  /**
+   * 删除字段属性
+   * @param key
+   */
+  function removeProperty(key: number) {
+    let newRows: Array<any> = [...propertyRows];
+    newRows.splice(key - 1, 1);
+    newRows = newRows.map((el, index) => {
+      if (el.key !== key) {
+        el.key = index + 1;
+        return el;
+      }
+    });
+    setPropertyRows(newRows);
+    // 提示通知
+    notification.open({
+      message: <span style={{ color: 'red' }}>约束条件已删除</span>,
+      placement: 'top',
+      duration: 2,
+      description: `已删除序号为 ${key} 的约束条件`,
+    });
   }
 
   const propertyColumns = [
@@ -233,7 +299,7 @@ export default function EditFormField(props: IProps) {
             danger
             type="text"
             size={'small'}
-            // onClick={() => removeField(record.key)}
+            onClick={() => removeProperty(record.key)}
           >
             {'删除'}
           </Button>
@@ -262,7 +328,7 @@ export default function EditFormField(props: IProps) {
         </div>
         <Table
           columns={propertyColumns}
-          dataSource={rows}
+          dataSource={propertyRows}
           pagination={false}
           bordered
           size={'small'}
@@ -336,8 +402,14 @@ export default function EditFormField(props: IProps) {
         </Form>
       </Drawer>
 
-      <EditConstraint onRef={editConstraintRef} reFreshParent={() => {}} />
-      <EditProperty onRef={editPropertyRef} reFreshParent={() => {}} />
+      <EditConstraint
+        onRef={editConstraintRef}
+        reFreshParent={createOrUpdateConstraint}
+      />
+      <EditProperty
+        onRef={editPropertyRef}
+        reFreshParent={createOrUpdateProperty}
+      />
     </>
   );
 }
