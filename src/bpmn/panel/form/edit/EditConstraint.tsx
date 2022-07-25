@@ -45,18 +45,14 @@ export default function EditConstraint(props: IProps) {
     form
       .validateFields()
       .then((values) => {
-        console.log(values);
-        // let rowObj: any = Object.create(null);
-        // rowObj.key = form.getFieldValue('key');
-        // rowObj.fieldName = values.fieldName;
-        // rowObj.fieldType = field_type_options.find(
-        //   (el) => el.value === values.fieldTypeValue,
-        // )?.name;
-        // rowObj.fieldTypeValue = values.fieldTypeValue;
-        // rowObj.fieldValue = values.fieldValue;
-        // // 更新父组件表格数据
-        // reFreshParent(rowObj);
-        // setIsModalVisible(false);
+        let rowObj: any = Object.create(null);
+        rowObj.key = form.getFieldValue('key');
+        rowObj.name = values.name;
+        rowObj.config = values.config;
+        // 更新父组件表格数据
+        console.log(rowObj);
+        reFreshParent(rowObj);
+        setIsModalVisible(false);
       })
       .catch((info) => {
         console.log('表单校验失败: ', info);
