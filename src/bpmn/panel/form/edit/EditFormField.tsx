@@ -35,7 +35,6 @@ export default function EditFormField(props: IProps) {
   const [visible, setVisible] = useState(false);
   const [constraintRows, setConstraintRows] = useState<Array<any>>([]);
   const [propertyRows, setPropertyRows] = useState<Array<any>>([]);
-  const [rows, setRows] = useState<Array<any>>([]);
 
   // ref
   const editConstraintRef = useRef<any>();
@@ -43,6 +42,7 @@ export default function EditFormField(props: IProps) {
 
   // 其它属性
   const [form] = Form.useForm<{
+    key: number;
     id: string;
     label: string;
     type: string;
@@ -68,25 +68,14 @@ export default function EditFormField(props: IProps) {
 
   function initPageData(rowObj: any) {
     form.setFieldsValue({
-      id: rowObj?.id || '',
-      label: rowObj?.label || '',
+      // -1表示当前是新增
+      key: rowObj?.key || -1,
+      id: rowObj?.id || undefined,
+      label: rowObj?.label || undefined,
       type: rowObj?.type || undefined,
-      customType: rowObj?.customType || '',
-      defaultValue: rowObj?.defaultValue || '',
+      customType: rowObj?.customType || undefined,
+      defaultValue: rowObj?.defaultValue || undefined,
     });
-    // 初始化rows
-    let fields: Array<any> = rowObj?.protoListener?.fields || [];
-    let rows: Array<any> = fields.map((el, index) => {
-      let field: any = encapsulateField(el);
-      let row: any = Object.create(null);
-      row.key = index + 1;
-      row.fieldName = field.name;
-      row.fieldType = field.fieldType.name;
-      row.fieldTypeValue = field.fieldType.value;
-      row.fieldValue = field.string || field.expression;
-      return row;
-    });
-    setRows(rows);
   }
 
   function handleOK() {
