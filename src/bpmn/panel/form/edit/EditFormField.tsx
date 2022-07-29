@@ -57,6 +57,7 @@ export default function EditFormField(props: IProps) {
   }));
 
   function showDrawer(rowObj: any) {
+    console.log(rowObj);
     initPageData(rowObj);
     setVisible(true);
   }

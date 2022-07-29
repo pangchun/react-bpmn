@@ -173,11 +173,39 @@ const xml: string =
   '  </bpmndi:BPMNDiagram>\n' +
   '</bpmn2:definitions>\n';
 
+const xml2: string =
+  '<?xml version="1.0" encoding="UTF-8"?>\n' +
+  '<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:flowable="http://flowable.org/bpmn" id="diagram_Process_1659074432368" targetNamespace="http://flowable.org/bpmn">\n' +
+  '  <bpmn2:process id="Process_1659074432368" name="业务流程_1659074432368" isExecutable="true">\n' +
+  '    <bpmn2:userTask id="Activity_1sk3980" flowable:formKey="表单标识111">\n' +
+  '      <bpmn2:extensionElements>\n' +
+  '        <flowable:formData businessKey="111">\n' +
+  '          <flowable:formField id="111" label="222" type="long" defaultValue="333">\n' +
+  '            <flowable:properties>\n' +
+  '              <flowable:property id="666" value="777" />\n' +
+  '            </flowable:properties>\n' +
+  '            <flowable:validation>\n' +
+  '              <flowable:constraint name="444" config="555" />\n' +
+  '            </flowable:validation>\n' +
+  '          </flowable:formField>\n' +
+  '        </flowable:formData>\n' +
+  '      </bpmn2:extensionElements>\n' +
+  '    </bpmn2:userTask>\n' +
+  '  </bpmn2:process>\n' +
+  '  <bpmndi:BPMNDiagram id="BPMNDiagram_1">\n' +
+  '    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_1659074432368">\n' +
+  '      <bpmndi:BPMNShape id="Activity_1sk3980_di" bpmnElement="Activity_1sk3980">\n' +
+  '        <dc:Bounds x="570" y="260" width="100" height="80" />\n' +
+  '      </bpmndi:BPMNShape>\n' +
+  '    </bpmndi:BPMNPlane>\n' +
+  '  </bpmndi:BPMNDiagram>\n' +
+  '</bpmn2:definitions>';
+
 /**
  * 初始化流程图示例 请假流程
  */
 const diagramExample = {
-  xml: xml,
+  xml: xml2,
 };
 
 export default diagramExample;

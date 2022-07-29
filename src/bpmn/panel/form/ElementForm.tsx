@@ -3,6 +3,8 @@ import { Button, Form, Input, Select, Space, Table, Typography } from 'antd';
 import { Collapse } from 'antd';
 import { PlusOutlined, PushpinTwoTone } from '@ant-design/icons';
 import EditFormField from '@/bpmn/panel/form/edit/EditFormField';
+import { FLOWABLE_PREFIX } from '@/bpmn/constant/moddle-constant';
+import { getFormFieldNameByType } from '@/bpmn/panel/form/data-self';
 
 const { Panel } = Collapse;
 
@@ -15,7 +17,9 @@ export default function ElementForm(props: IProps) {
   const { businessObject } = props;
 
   // setState属性
-  const [rows, setRows] = useState<Array<any>>([]);
+  const [formFields, setFormFields] = useState<Array<any>>([]);
+  const [formData, setFormData] = useState<any>();
+  const [businessKeyOptions, setBusinessKeyOptions] = useState<Array<any>>([]);
 
   // ref
   const editFormFieldRef = useRef<any>();
@@ -26,18 +30,48 @@ export default function ElementForm(props: IProps) {
     businessKey: string;
   }>();
 
-  // 字段监听
-  const asyncBefore = Form.useWatch('asyncBefore', form);
-  const asyncAfter = Form.useWatch('asyncAfter', form);
-
   useEffect(() => {
     initPageData();
   }, [businessObject?.id]);
 
   function initPageData() {
+    // 获取业务对象
+    let businessObject: any =
+      window.bpmnInstance?.element?.businessObject || props.businessObject;
+    if (!businessObject) {
+      return;
+    }
+    // 获取FormData
+    let formData: any =
+      businessObject.extensionElements?.values?.filter(
+        (e: any) => e.$type === `${FLOWABLE_PREFIX}:FormData`,
+      )?.[0] ||
+      window.bpmnInstance.moddle.create(`${FLOWABLE_PREFIX}:FormData`, {
+        fields: [],
+      });
+    setFormData(formData);
+    // 获取表单字段，填充table表格 todo 解析封装一下字段对象，不传原生对象
+    let fields: Array<any> = JSON.parse(JSON.stringify(formData?.fields || []));
+    fields = fields?.map((e, i) => {
+      return {
+        key: i + 1,
+        ...e,
+      };
+    });
+    setFormFields(fields);
+    // 获取表单字段id与名称，构造业务标识下拉项
+    let businessKeyOptions: Array<any> =
+      fields?.map((e) => {
+        return {
+          name: e.label,
+          value: e.id,
+        };
+      }) || [];
+    setBusinessKeyOptions(businessKeyOptions);
+    // 设置表单初始值
     form.setFieldsValue({
-      formKey: undefined,
-      businessKey: undefined,
+      formKey: businessObject.formKey || undefined,
+      businessKey: formData?.businessKey || undefined,
     });
   }
 
@@ -47,8 +81,15 @@ export default function ElementForm(props: IProps) {
     });
   }
 
-  function updateBusinessKey(key: any) {
-    console.log(key);
+  function updateBusinessKey(value: any) {
+    console.log(value);
+    window.bpmnInstance.modeling.updateModdleProperties(
+      window.bpmnInstance.element,
+      formData,
+      {
+        businessKey: value,
+      },
+    );
   }
 
   const columns = [
@@ -62,22 +103,23 @@ export default function ElementForm(props: IProps) {
     {
       title: '字段名称',
       width: 80,
-      dataIndex: 'eventType',
-      key: 'eventType',
+      dataIndex: 'label',
+      key: 'label',
       ellipsis: true,
     },
     {
       title: '字段类型',
       width: 80,
-      dataIndex: 'eventId',
-      key: 'eventId',
+      dataIndex: 'type',
+      key: 'type',
       ellipsis: true,
+      render: (text: any) => getFormFieldNameByType(text),
     },
     {
       title: '默认值',
       width: 80,
-      dataIndex: 'listenerType',
-      key: 'listenerType',
+      dataIndex: 'defaultValue',
+      key: 'defaultValue',
       ellipsis: true,
     },
     {
@@ -124,7 +166,7 @@ export default function ElementForm(props: IProps) {
           showArrow={true}
         >
           <Form form={form} labelCol={{ span: 5 }} wrapperCol={{ span: 18 }}>
-            <Form.Item label="表单标识" name="formKey">
+            <Form.Item name="formKey" label="表单标识">
               <Input
                 placeholder={'请输入'}
                 onChange={(event) => {
@@ -137,6 +179,13 @@ export default function ElementForm(props: IProps) {
                 placeholder={'请选择'}
                 onChange={(value, option) => updateBusinessKey(value)}
               >
+                {businessKeyOptions?.map((e) => {
+                  return (
+                    <Select.Option key={e.value} value={e.value}>
+                      {e.name}
+                    </Select.Option>
+                  );
+                })}
                 <Select.Option key={'no'} value={'no'}>
                   {'无'}
                 </Select.Option>
@@ -156,7 +205,7 @@ export default function ElementForm(props: IProps) {
           </Typography.Paragraph>
           <Table
             columns={columns}
-            dataSource={rows}
+            dataSource={formFields}
             pagination={false}
             bordered
             size={'small'}

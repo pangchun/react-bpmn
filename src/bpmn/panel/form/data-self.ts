@@ -1,5 +1,10 @@
 //tips： 这些数据是从bpmn-js包下的bpmn-js-properties-panel源码中获取的，搜索FormField与FormDataProps可以查看
 
+import {
+  script_type,
+  script_type_options,
+} from '@/bpmn/panel/element-listener/data-self';
+
 export const form_field_type = {
   long: 'long',
   string: 'string',
@@ -35,3 +40,15 @@ export const form_field_type_options = [
     value: 'custom',
   },
 ];
+
+/**
+ * 通过字段类型查询字段类型名称
+ * @param type 类型 form_field_type
+ */
+export function getFormFieldNameByType(type: string) {
+  const option = form_field_type_options.find((e) => e.value === type);
+  if (option === undefined) {
+    throw new Error('传入非法类型');
+  }
+  return option.name;
+}
