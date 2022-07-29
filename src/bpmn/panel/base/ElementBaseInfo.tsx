@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { Form, Input, message, Switch, Typography } from 'antd';
 import { Collapse } from 'antd';
 import { PushpinTwoTone } from '@ant-design/icons';
-import { useInterval } from 'ahooks';
 
 const { Panel } = Collapse;
 
@@ -34,6 +33,7 @@ export default function ElementBaseInfo(props: IProps) {
   }, [businessObject?.id]);
 
   function initPageData() {
+    // todo 跟其它初始化form报错相比，这里是因为手风琴状态是展开状态，所以才没报错，后期优化可以设置在点击召开手风琴时才调用初始化方法，也能加快渲染速度
     form.setFieldsValue({
       id: businessObject?.id,
       name: businessObject?.name,
@@ -51,8 +51,9 @@ export default function ElementBaseInfo(props: IProps) {
       try {
         window.bpmnInstance.elementRegistry._validateId(value);
       } catch (e: any) {
-        console.log('id重复', e.message);
-        message.error('编号名称已存在，请修改编号');
+        message
+          .error('编号名称已存在，请修改编号')
+          .then(() => console.log(e.message));
         return;
       }
       window.bpmnInstance.modeling.updateProperties(
