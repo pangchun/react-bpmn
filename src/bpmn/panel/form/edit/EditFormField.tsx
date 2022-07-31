@@ -94,8 +94,13 @@ export default function EditFormField(props: IProps) {
       .then((values) => {
         // 更新父组件表格数据
         reFreshParent({
-          rowKey: form.getFieldValue('key'),
-          ...values,
+          key: form.getFieldValue('key'),
+          id: form.getFieldValue('id'),
+          label: form.getFieldValue('label'),
+          type: form.getFieldValue('type'),
+          customType: form.getFieldValue('customType'),
+          defaultValue: form.getFieldValue('defaultValue'),
+          values: enumValuesRows,
           properties: propertyRows,
           validation: constraintRows,
         });

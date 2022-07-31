@@ -138,15 +138,78 @@ export default function ElementForm(props: IProps) {
     console.log(options);
     // properties 是特殊变量，重命名使不警告
     const {
-      rowKey,
+      key,
       id,
       label,
       type,
+      customType,
       defaultValue,
+      values,
       properties: properties,
       validation,
     } = options;
+
     // 创建或更新表单字段
+    const Field = window.bpmnInstance.moddle.create(
+      `${FLOWABLE_PREFIX}:FormField`,
+      { id, type, label },
+    );
+    defaultValue && (Field.defaultValue = defaultValue);
+    // 设置枚举值
+    if (values && values.length) {
+      Field.values = values.map((e: any, i: number) => {
+        return window.bpmnInstance.moddle.create(`${FLOWABLE_PREFIX}:Value`, {
+          name: e.name,
+          id: e.id,
+        });
+      });
+    }
+    // 设置字段属性
+    if (properties && properties.length) {
+      const propertiesConfig: Array<any> = properties.map(
+        (e: any, i: number) => {
+          return window.bpmnInstance.moddle.create(
+            `${FLOWABLE_PREFIX}:Property`,
+            { id: e.id, value: e.value },
+          );
+        },
+      );
+      Field.properties = window.bpmnInstance.moddle.create(
+        `${FLOWABLE_PREFIX}:Properties`,
+        {
+          values: propertiesConfig,
+        },
+      );
+    }
+    // 设置字段约束
+    if (validation && validation.length) {
+      const validationConfig: Array<any> = validation.map(
+        (e: any, i: number) => {
+          return window.bpmnInstance.moddle.create(
+            `${FLOWABLE_PREFIX}:Constraint`,
+            { name: e.name, config: e.config },
+          );
+        },
+      );
+      Field.properties = window.bpmnInstance.moddle.create(
+        `${FLOWABLE_PREFIX}:Validation`,
+        {
+          constraints: validationConfig,
+        },
+      );
+    }
+
+    // 更新表格数据和FormData
+    if (key === -1) {
+      let newFormFields: Array<any> = [...formFields];
+      options.key = formFields.length + 1;
+      newFormFields.push(options);
+      setFormFields(newFormFields);
+    } else {
+      let newFormFields: Array<any> = [...formFields];
+      newFormFields.splice(key, 1, options);
+      setFormFields(newFormFields);
+    }
 
     // 修改字段后直接更新FormData
   }
