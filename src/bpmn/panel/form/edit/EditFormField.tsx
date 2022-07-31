@@ -11,7 +11,6 @@ import {
   Typography,
   notification,
 } from 'antd';
-import { encapsulateField } from '@/bpmn/panel/element-listener/data-self';
 import { AppstoreOutlined } from '@ant-design/icons';
 import {
   form_field_type,
@@ -19,6 +18,7 @@ import {
 } from '@/bpmn/panel/form/data-self';
 import EditConstraint from '@/bpmn/panel/form/edit/EditConstraint';
 import EditProperty from '@/bpmn/panel/form/edit/EditProperty';
+import EditEnumValues from '@/bpmn/panel/form/edit/EditEnumValues';
 
 const { Option } = Select;
 
@@ -33,10 +33,12 @@ export default function EditFormField(props: IProps) {
 
   // setState属性
   const [visible, setVisible] = useState(false);
+  const [enumValuesRows, setEnumValuesRows] = useState<Array<any>>([]);
   const [constraintRows, setConstraintRows] = useState<Array<any>>([]);
   const [propertyRows, setPropertyRows] = useState<Array<any>>([]);
 
   // ref
+  const editEnumValuesRef = useRef<any>();
   const editConstraintRef = useRef<any>();
   const editPropertyRef = useRef<any>();
 
@@ -88,18 +90,133 @@ export default function EditFormField(props: IProps) {
     form
       .validateFields()
       .then((values) => {
-        console.log(values);
         // 更新父组件表格数据
-        // reFreshParent({
-        //   rowKey: form.getFieldValue('key'),
-        //   ...values,
-        //   fields: [...rows],
-        // });
-        // closeDrawer();
+        reFreshParent({
+          rowKey: form.getFieldValue('key'),
+          ...values,
+          properties: propertyRows,
+          validation: constraintRows,
+        });
+        closeDrawer();
       })
       .catch((info) => {
         console.log('表单校验失败: ', info);
       });
+  }
+
+  /**
+   * 新建或修改枚举值
+   * @param rowObj [key, name, config]
+   */
+  function createOrUpdateEnumValues(rowObj: any) {
+    const { key } = rowObj;
+    let newRows: Array<any> = [...enumValuesRows];
+    rowObj.key = key > 0 ? key : enumValuesRows.length + 1;
+    newRows.splice(rowObj.key - 1, 1, rowObj);
+    setEnumValuesRows(newRows);
+  }
+
+  /**
+   * 删除枚举值
+   * @param key
+   */
+  function removeEnumValues(key: number) {
+    let newRows: Array<any> = [...constraintRows];
+    newRows.splice(key - 1, 1);
+    newRows = newRows.map((el, index) => {
+      if (el.key !== key) {
+        el.key = index + 1;
+        return el;
+      }
+    });
+    setEnumValuesRows(newRows);
+    // 提示通知
+    notification.open({
+      message: <span style={{ color: 'red' }}>枚举值已删除</span>,
+      placement: 'top',
+      duration: 2,
+      description: `已删除序号为 ${key} 的约束条件`,
+    });
+  }
+
+  const enumValuesColumns = [
+    {
+      title: '序号',
+      width: 40,
+      dataIndex: 'key',
+      key: 'key',
+      render: (text: any) => <a>{text}</a>,
+    },
+    {
+      title: 'ID',
+      width: 80,
+      dataIndex: 'id',
+      key: 'id',
+      ellipsis: true,
+    },
+    {
+      title: '名称',
+      width: 80,
+      dataIndex: 'name',
+      key: 'name',
+      ellipsis: true,
+    },
+    {
+      title: '操作',
+      width: 80,
+      key: 'action',
+      render: (text: string, record: any) => (
+        <Space size={0}>
+          <Button
+            type="text"
+            size={'small'}
+            style={{ color: '#1890ff' }}
+            onClick={() => {
+              editEnumValuesRef.current.showEditModal(record);
+            }}
+          >
+            {'编辑'}
+          </Button>
+          <Button
+            danger
+            type="text"
+            size={'small'}
+            onClick={() => removeEnumValues(record.key)}
+          >
+            {'删除'}
+          </Button>
+        </Space>
+      ),
+    },
+  ];
+
+  function renderEnumValuesTable() {
+    return (
+      <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+          <Typography style={{ fontWeight: 'bold' }}>
+            <AppstoreOutlined />
+            &nbsp;枚举值
+          </Typography>
+          <Button
+            type="primary"
+            size={'small'}
+            onClick={() => {
+              editEnumValuesRef.current.showEditModal();
+            }}
+          >
+            <span>新增枚举</span>
+          </Button>
+        </div>
+        <Table
+          columns={enumValuesColumns}
+          dataSource={enumValuesRows}
+          pagination={false}
+          bordered
+          size={'small'}
+        />
+      </Space>
+    );
   }
 
   /**
@@ -376,6 +493,8 @@ export default function EditFormField(props: IProps) {
             <Input placeholder={'请输入'} />
           </Form.Item>
           <Divider />
+          {type === form_field_type.enum && renderEnumValuesTable()}
+          <Divider />
           {renderConstraintTable()}
           <Divider />
           {renderPropertyTable()}
@@ -397,10 +516,16 @@ export default function EditFormField(props: IProps) {
         </Form>
       </Drawer>
 
+      <EditEnumValues
+        onRef={editEnumValuesRef}
+        reFreshParent={createOrUpdateEnumValues}
+      />
+
       <EditConstraint
         onRef={editConstraintRef}
         reFreshParent={createOrUpdateConstraint}
       />
+
       <EditProperty
         onRef={editPropertyRef}
         reFreshParent={createOrUpdateProperty}
