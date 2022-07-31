@@ -65,7 +65,19 @@ const xml: string =
   '      <bpmn2:outgoing>Flow_01n06d5</bpmn2:outgoing>\n' +
   '    </bpmn2:userTask>\n' +
   '    <bpmn2:sequenceFlow id="Flow_0kuen7a" sourceRef="Gateway_1vux1tc" targetRef="Activity_0jtkkd4" />\n' +
-  '    <bpmn2:userTask id="Activity_0jtkkd4" name="审批不通过">\n' +
+  '    <bpmn2:userTask id="Activity_0jtkkd4" name="审批不通过" flowable:formKey="表单标识111">\n' +
+  '      <bpmn2:extensionElements>\n' +
+  '        <flowable:formData businessKey="111">\n' +
+  '          <flowable:formField id="111" label="222" type="long" defaultValue="333">\n' +
+  '            <flowable:properties>\n' +
+  '              <flowable:property id="666" value="777" />\n' +
+  '            </flowable:properties>\n' +
+  '            <flowable:validation>\n' +
+  '              <flowable:constraint name="444" config="555" />\n' +
+  '            </flowable:validation>\n' +
+  '          </flowable:formField>\n' +
+  '        </flowable:formData>\n' +
+  '      </bpmn2:extensionElements>\n' +
   '      <bpmn2:incoming>Flow_0kuen7a</bpmn2:incoming>\n' +
   '      <bpmn2:outgoing>Flow_1131euh</bpmn2:outgoing>\n' +
   '    </bpmn2:userTask>\n' +
@@ -205,7 +217,7 @@ const xml2: string =
  * 初始化流程图示例 请假流程
  */
 const diagramExample = {
-  xml: xml2,
+  xml: xml,
 };
 
 export default diagramExample;

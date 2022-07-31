@@ -37,7 +37,7 @@ export default function ExtensionProperties(props: IProps) {
 
   function initRows() {
     let businessObject =
-      window.bpmnInstance?.element.businessObject || props.businessObject;
+      window.bpmnInstance?.element?.businessObject || props.businessObject;
     if (!businessObject) {
       return;
     }

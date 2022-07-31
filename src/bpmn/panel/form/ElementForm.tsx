@@ -41,6 +41,7 @@ export default function ElementForm(props: IProps) {
     if (!businessObject) {
       return;
     }
+
     // 获取FormData
     let formData: any =
       businessObject.extensionElements?.values?.filter(
@@ -50,15 +51,41 @@ export default function ElementForm(props: IProps) {
         fields: [],
       });
     setFormData(formData);
-    // 获取表单字段，填充table表格 todo 解析封装一下字段对象，不传原生对象
+
+    // 获取表单字段，填充table表格
     let fields: Array<any> = JSON.parse(JSON.stringify(formData?.fields || []));
     fields = fields?.map((e, i) => {
+      // 获取字段属性
+      let properties: Array<any> = e.properties?.values;
+      properties = properties?.map((e, i) => {
+        return {
+          key: i + 1,
+          id: e.id,
+          value: e.value,
+        };
+      });
+      // 获取字段约束
+      let validation: Array<any> = e.validation?.constraints;
+      validation = validation?.map((e, i) => {
+        return {
+          key: i + 1,
+          name: e.name,
+          config: e.config,
+        };
+      });
+      // 获取其他属性并封装后返回
       return {
         key: i + 1,
-        ...e,
+        id: e.id,
+        label: e.label,
+        type: e.type,
+        defaultValue: e.defaultValue,
+        properties,
+        validation,
       };
     });
     setFormFields(fields);
+
     // 获取表单字段id与名称，构造业务标识下拉项
     let businessKeyOptions: Array<any> =
       fields?.map((e) => {

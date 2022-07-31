@@ -68,6 +68,7 @@ export default function EditFormField(props: IProps) {
   }
 
   function initPageData(rowObj: any) {
+    // 设置表单初始值
     form.setFieldsValue({
       // -1表示当前是新增
       key: rowObj?.key || -1,
@@ -77,6 +78,10 @@ export default function EditFormField(props: IProps) {
       customType: rowObj?.customType || undefined,
       defaultValue: rowObj?.defaultValue || undefined,
     });
+    // 初始化字段属性
+    setPropertyRows(rowObj?.properties);
+    // 初始化字段约束
+    setConstraintRows(rowObj?.validation);
   }
 
   function handleOK() {
