@@ -5,6 +5,11 @@ import { PlusOutlined, PushpinTwoTone } from '@ant-design/icons';
 import EditFormField from '@/bpmn/panel/form/edit/EditFormField';
 import { FLOWABLE_PREFIX } from '@/bpmn/constant/moddle-constant';
 import { getFormFieldNameByType } from '@/bpmn/panel/form/data-self';
+import {
+  createProperties,
+  createProperty,
+  updateElementExtensions,
+} from '@/bpmn/util/panel-util';
 
 const { Panel } = Collapse;
 
@@ -55,6 +60,15 @@ export default function ElementForm(props: IProps) {
     // 获取表单字段，填充table表格
     let fields: Array<any> = JSON.parse(JSON.stringify(formData?.fields || []));
     fields = fields?.map((e, i) => {
+      // 获取枚举值列表
+      let values: Array<any> = e.values;
+      values = values?.map((e, i) => {
+        return {
+          key: i + 1,
+          id: e.id,
+          name: e.name,
+        };
+      });
       // 获取字段属性
       let properties: Array<any> = e.properties?.values;
       properties = properties?.map((e, i) => {
@@ -80,6 +94,7 @@ export default function ElementForm(props: IProps) {
         label: e.label,
         type: e.type,
         defaultValue: e.defaultValue,
+        values,
         properties,
         validation,
       };
@@ -117,6 +132,23 @@ export default function ElementForm(props: IProps) {
         businessKey: value,
       },
     );
+  }
+
+  function createOrUpdateFormFields(options: any) {
+    console.log(options);
+    // properties 是特殊变量，重命名使不警告
+    const {
+      rowKey,
+      id,
+      label,
+      type,
+      defaultValue,
+      properties: properties,
+      validation,
+    } = options;
+    // 创建或更新表单字段
+
+    // 修改字段后直接更新FormData
   }
 
   const columns = [
@@ -255,9 +287,7 @@ export default function ElementForm(props: IProps) {
       </Collapse>
       <EditFormField
         onRef={editFormFieldRef}
-        reFreshParent={() => {
-          console.log('111');
-        }}
+        reFreshParent={createOrUpdateFormFields}
       />
     </>
   );

@@ -80,6 +80,8 @@ export default function EditFormField(props: IProps) {
       customType: rowObj?.customType || undefined,
       defaultValue: rowObj?.defaultValue || undefined,
     });
+    // 初始化枚举值列表
+    setEnumValuesRows(rowObj?.values);
     // 初始化字段属性
     setPropertyRows(rowObj?.properties);
     // 初始化字段约束
