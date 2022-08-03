@@ -114,58 +114,58 @@ export default function ElementBaseInfo(props: IProps) {
 
   return (
     <>
-      <Collapse
-        bordered={false}
-        expandIconPosition={'right'}
-        defaultActiveKey={['1']}
-      >
-        <Panel
-          header={
-            <Typography style={{ color: '#1890ff', fontWeight: 'bold' }}>
-              <PushpinTwoTone />
-              &nbsp;常规
-            </Typography>
-          }
-          key="1"
-          style={{ backgroundColor: '#FFF' }}
-          showArrow={true}
+      {/*<Collapse*/}
+      {/*  bordered={false}*/}
+      {/*  expandIconPosition={'right'}*/}
+      {/*  defaultActiveKey={['1']}*/}
+      {/*>*/}
+      {/*  <Panel*/}
+      {/*    header={*/}
+      {/*      <Typography style={{ color: '#1890ff', fontWeight: 'bold' }}>*/}
+      {/*        <PushpinTwoTone />*/}
+      {/*        &nbsp;常规*/}
+      {/*      </Typography>*/}
+      {/*    }*/}
+      {/*    key="1"*/}
+      {/*    style={{ backgroundColor: '#FFF' }}*/}
+      {/*    showArrow={true}*/}
+      {/*  >*/}
+      <Form form={form} labelCol={{ span: 5 }} wrapperCol={{ span: 18 }}>
+        <Form.Item
+          label="编号"
+          name="id"
+          rules={[
+            { required: true, message: '编号不能为空哦!' },
+            {
+              validator: (_, value) => {
+                const validateId$1 = validateId(value);
+                return validateId$1.status
+                  ? Promise.resolve()
+                  : Promise.reject(new Error(validateId$1.message));
+              },
+            },
+          ]}
         >
-          <Form form={form} labelCol={{ span: 5 }} wrapperCol={{ span: 18 }}>
-            <Form.Item
-              label="编号"
-              name="id"
-              rules={[
-                { required: true, message: '编号不能为空哦!' },
-                {
-                  validator: (_, value) => {
-                    const validateId$1 = validateId(value);
-                    return validateId$1.status
-                      ? Promise.resolve()
-                      : Promise.reject(new Error(validateId$1.message));
-                  },
-                },
-              ]}
-            >
-              <Input
-                placeholder={'请输入'}
-                readOnly={businessObject?.$type === 'bpmn:Process'}
-                onChange={(event) => {
-                  updateElementAttr(keyOptions.id, event.currentTarget.value);
-                }}
-              />
-            </Form.Item>
-            <Form.Item label="名称" name="name">
-              <Input
-                placeholder={'请输入'}
-                onChange={(event) => {
-                  updateElementAttr(keyOptions.name, event.currentTarget.value);
-                }}
-              />
-            </Form.Item>
-            {renderProcessExtension()}
-          </Form>
-        </Panel>
-      </Collapse>
+          <Input
+            placeholder={'请输入'}
+            readOnly={businessObject?.$type === 'bpmn:Process'}
+            onChange={(event) => {
+              updateElementAttr(keyOptions.id, event.currentTarget.value);
+            }}
+          />
+        </Form.Item>
+        <Form.Item label="名称" name="name">
+          <Input
+            placeholder={'请输入'}
+            onChange={(event) => {
+              updateElementAttr(keyOptions.name, event.currentTarget.value);
+            }}
+          />
+        </Form.Item>
+        {renderProcessExtension()}
+      </Form>
+      {/*  </Panel>*/}
+      {/*</Collapse>*/}
     </>
   );
 }

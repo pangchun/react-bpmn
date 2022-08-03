@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Divider, Space } from 'antd';
+import { Collapse, Divider, Form, Input, Space, Typography } from 'antd';
 import ElementBaseInfo from '@/bpmn/panel/base/ElementBaseInfo';
 
 import ElementOtherInfo from '@/bpmn/panel/other/ElementOtherInfo';
@@ -9,6 +9,7 @@ import ElementListener from '@/bpmn/panel/element-listener/ElementListener';
 import ElementTask from '@/bpmn/panel/task/ElementTask';
 import MultiInstance from '@/bpmn/panel/multi-instance/MultiInstance';
 import ElementForm from '@/bpmn/panel/form/ElementForm';
+import { PushpinTwoTone } from '@ant-design/icons';
 
 // todo 这个全局声明后面可以抽取到单独的ts文件中
 declare global {
@@ -141,7 +142,7 @@ export default function CustomPanel(props: IProps) {
   return (
     <>
       <Space direction="vertical" size={0} style={{ display: 'flex' }}>
-        <ElementBaseInfo businessObject={businessObject} />
+        {/*<ElementBaseInfo businessObject={businessObject} />*/}
         <CustomDivider />
         <ElementTask businessObject={businessObject} />
         <CustomDivider />
@@ -155,10 +156,47 @@ export default function CustomPanel(props: IProps) {
         <CustomDivider />
         <ElementListener businessObject={businessObject} isTask={true} />
         <CustomDivider />
-        <ExtensionProperties businessObject={businessObject} />
+        {/*<ExtensionProperties businessObject={businessObject} />*/}
         <CustomDivider />
         <ElementOtherInfo businessObject={businessObject} />
         <CustomDivider />
+
+        <Collapse
+          bordered={false}
+          expandIconPosition={'right'}
+          accordion
+          defaultActiveKey={['1']}
+          destroyInactivePanel={true}
+        >
+          <Collapse.Panel
+            header={
+              <Typography style={{ color: '#1890ff', fontWeight: 'bold' }}>
+                <PushpinTwoTone />
+                &nbsp;常规
+              </Typography>
+            }
+            key={1}
+            style={{ backgroundColor: '#FFF' }}
+            showArrow={true}
+            forceRender={false}
+          >
+            <ElementBaseInfo businessObject={businessObject} />
+          </Collapse.Panel>
+          <Collapse.Panel
+            header={
+              <Typography style={{ color: '#1890ff', fontWeight: 'bold' }}>
+                <PushpinTwoTone />
+                &nbsp;扩展属性
+              </Typography>
+            }
+            key={2}
+            style={{ backgroundColor: '#FFF' }}
+            showArrow={true}
+            forceRender={false}
+          >
+            <ExtensionProperties businessObject={businessObject} />
+          </Collapse.Panel>
+        </Collapse>
       </Space>
     </>
   );

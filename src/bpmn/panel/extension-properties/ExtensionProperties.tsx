@@ -33,6 +33,7 @@ export default function ExtensionProperties(props: IProps) {
 
   function initPageData() {
     initRows();
+    console.log(7888888);
   }
 
   function initRows() {
@@ -162,40 +163,40 @@ export default function ExtensionProperties(props: IProps) {
 
   return (
     <>
-      <Collapse bordered={false} expandIconPosition={'right'}>
-        <Panel
-          header={
-            <Typography style={{ color: '#1890ff', fontWeight: 'bold' }}>
-              <PlusSquareTwoTone />
-              &nbsp;扩展属性
-            </Typography>
-          }
-          key="1"
-          style={{ backgroundColor: '#FFF' }}
-          showArrow={true}
-        >
-          <Table
-            columns={columns}
-            dataSource={rows}
-            pagination={false}
-            bordered
-            size={'small'}
-          />
-          <Button
-            type="primary"
-            style={{
-              width: '100%',
-              marginTop: 8,
-            }}
-            onClick={() => {
-              editRef.current.showEditModal();
-            }}
-          >
-            <PlusOutlined />
-            <span style={{ marginLeft: 0 }}>添加属性</span>
-          </Button>
-        </Panel>
-      </Collapse>
+      {/*<Collapse bordered={false} expandIconPosition={'right'}>*/}
+      {/*  <Panel*/}
+      {/*    header={*/}
+      {/*      <Typography style={{ color: '#1890ff', fontWeight: 'bold' }}>*/}
+      {/*        <PlusSquareTwoTone />*/}
+      {/*        &nbsp;扩展属性*/}
+      {/*      </Typography>*/}
+      {/*    }*/}
+      {/*    key="1"*/}
+      {/*    style={{ backgroundColor: '#FFF' }}*/}
+      {/*    showArrow={true}*/}
+      {/*  >*/}
+      <Table
+        columns={columns}
+        dataSource={rows}
+        pagination={false}
+        bordered
+        size={'small'}
+      />
+      <Button
+        type="primary"
+        style={{
+          width: '100%',
+          marginTop: 8,
+        }}
+        onClick={() => {
+          editRef.current.showEditModal();
+        }}
+      >
+        <PlusOutlined />
+        <span style={{ marginLeft: 0 }}>添加属性</span>
+      </Button>
+      {/*  </Panel>*/}
+      {/*</Collapse>*/}
       <EditProperty onRef={editRef} createOrUpdate={createOrUpdate} />
     </>
   );
