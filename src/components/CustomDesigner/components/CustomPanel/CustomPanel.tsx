@@ -9,7 +9,13 @@ import ElementListener from '@/bpmn/panel/element-listener/ElementListener';
 import ElementTask from '@/bpmn/panel/task/ElementTask';
 import MultiInstance from '@/bpmn/panel/multi-instance/MultiInstance';
 import ElementForm from '@/bpmn/panel/form/ElementForm';
-import { PushpinTwoTone } from '@ant-design/icons';
+import {
+  BellOutlined,
+  MessageOutlined,
+  PlusOutlined,
+  PlusSquareTwoTone,
+  PushpinTwoTone,
+} from '@ant-design/icons';
 
 // todo 这个全局声明后面可以抽取到单独的ts文件中
 declare global {
@@ -133,34 +139,229 @@ export default function CustomPanel(props: IProps) {
     setElement(element);
   }
 
+  /**
+   * 渲染 常规信息 组件
+   * 1、所有节点都有
+   */
+  function renderElementBaseInfo() {
+    return (
+      <Collapse.Panel
+        header={
+          <Typography style={{ color: '#1890ff', fontWeight: 'bold' }}>
+            <PushpinTwoTone />
+            &nbsp;常规
+          </Typography>
+        }
+        key={1}
+        style={{ backgroundColor: '#FFF' }}
+        showArrow={true}
+        forceRender={false}
+      >
+        <ElementBaseInfo businessObject={businessObject} />
+      </Collapse.Panel>
+    );
+  }
+
+  /**
+   * 渲染 消息与信号 组件
+   * 1、只有 Process 有
+   */
   function renderSignalMessage() {
     if (element?.type === 'bpmn:Process') {
-      return <SignalMessage businessObject={businessObject} />;
+      return (
+        <Collapse.Panel
+          header={
+            <Typography style={{ color: '#1890ff', fontWeight: 'bold' }}>
+              <MessageOutlined />
+              &nbsp;消息与信号
+            </Typography>
+          }
+          key={3}
+          style={{ backgroundColor: '#FFF' }}
+          showArrow={true}
+          forceRender={false}
+        >
+          <SignalMessage businessObject={businessObject} />
+        </Collapse.Panel>
+      );
     }
+  }
+
+  /**
+   * 渲染 表单 组件
+   * 1、只有 UserTask 或 StartEvent 有
+   */
+  function renderElementForm() {
+    if (
+      element?.type === 'bpmn:UserTask' ||
+      element?.type === 'bpmn:StartEvent'
+    ) {
+      return (
+        <Collapse.Panel
+          header={
+            <Typography style={{ color: '#1890ff', fontWeight: 'bold' }}>
+              <MessageOutlined />
+              &nbsp;表单
+            </Typography>
+          }
+          key={4}
+          style={{ backgroundColor: '#FFF' }}
+          showArrow={true}
+          forceRender={false}
+        >
+          <ElementForm businessObject={businessObject} />
+        </Collapse.Panel>
+      );
+    }
+  }
+
+  /**
+   * 渲染 任务 组件
+   * 1、所有 Task 类节点都有
+   */
+  function renderElementTask() {
+    if (element?.type.indexOf('Task') !== -1) {
+      return (
+        <Collapse.Panel
+          header={
+            <Typography style={{ color: '#1890ff', fontWeight: 'bold' }}>
+              <PushpinTwoTone />
+              &nbsp;任务
+            </Typography>
+          }
+          key={5}
+          style={{ backgroundColor: '#FFF' }}
+          showArrow={true}
+          forceRender={false}
+        >
+          <ElementTask businessObject={businessObject} />
+        </Collapse.Panel>
+      );
+    }
+  }
+
+  /**
+   * 渲染 多实例 组件
+   * 1、所有 Task 类节点都有
+   */
+  function renderMultiInstance() {
+    if (element?.type.indexOf('Task') !== -1) {
+      return (
+        <Collapse.Panel
+          header={
+            <Typography style={{ color: '#1890ff', fontWeight: 'bold' }}>
+              <PushpinTwoTone />
+              &nbsp;多实例
+            </Typography>
+          }
+          key={6}
+          style={{ backgroundColor: '#FFF' }}
+          showArrow={true}
+          forceRender={false}
+        >
+          <MultiInstance businessObject={businessObject} />
+        </Collapse.Panel>
+      );
+    }
+  }
+
+  /**
+   * 渲染 执行监听器 组件
+   * 1、所有节点都有
+   */
+  function renderElementListener() {
+    return (
+      <Collapse.Panel
+        header={
+          <Typography style={{ color: '#1890ff', fontWeight: 'bold' }}>
+            <BellOutlined />
+            &nbsp;执行监听器
+          </Typography>
+        }
+        key={7}
+        style={{ backgroundColor: '#FFF' }}
+        showArrow={true}
+        forceRender={false}
+      >
+        <ElementListener businessObject={businessObject} isTask={false} />
+      </Collapse.Panel>
+    );
+  }
+
+  /**
+   * 渲染 任务监听器 组件
+   * 1、只有 UserTask 才有
+   */
+  function renderElementListenerOfTask() {
+    if (element?.type === 'bpmn:UserTask') {
+      return (
+        <Collapse.Panel
+          header={
+            <Typography style={{ color: '#1890ff', fontWeight: 'bold' }}>
+              <PlusOutlined />
+              &nbsp;任务监听器
+            </Typography>
+          }
+          key={8}
+          style={{ backgroundColor: '#FFF' }}
+          showArrow={true}
+          forceRender={false}
+        >
+          <ElementListener businessObject={businessObject} isTask={true} />
+        </Collapse.Panel>
+      );
+    }
+  }
+
+  /**
+   * 渲染 扩展属性 组件
+   * 1、所有节点都有
+   */
+  function renderExtensionProperties() {
+    return (
+      <Collapse.Panel
+        header={
+          <Typography style={{ color: '#1890ff', fontWeight: 'bold' }}>
+            <PlusSquareTwoTone />
+            &nbsp;扩展属性
+          </Typography>
+        }
+        key={10}
+        style={{ backgroundColor: '#FFF' }}
+        showArrow={true}
+        forceRender={false}
+      >
+        <ExtensionProperties businessObject={businessObject} />
+      </Collapse.Panel>
+    );
+  }
+
+  /**
+   * 渲染 其它属性(元素文档) 组件
+   * 1、所有节点都有
+   */
+  function renderElementOtherInfo() {
+    return (
+      <Collapse.Panel
+        header={
+          <Typography style={{ color: '#1890ff', fontWeight: 'bold' }}>
+            <PlusSquareTwoTone />
+            &nbsp;其它属性
+          </Typography>
+        }
+        key={11}
+        style={{ backgroundColor: '#FFF' }}
+        showArrow={true}
+        forceRender={false}
+      >
+        <ElementOtherInfo businessObject={businessObject} />
+      </Collapse.Panel>
+    );
   }
 
   return (
     <>
       <Space direction="vertical" size={0} style={{ display: 'flex' }}>
-        {/*<ElementBaseInfo businessObject={businessObject} />*/}
-        <CustomDivider />
-        <ElementTask businessObject={businessObject} />
-        <CustomDivider />
-        {renderSignalMessage()}
-        <CustomDivider />
-        <ElementForm businessObject={businessObject} />
-        <CustomDivider />
-        <MultiInstance businessObject={businessObject} />
-        <CustomDivider />
-        <ElementListener businessObject={businessObject} isTask={false} />
-        <CustomDivider />
-        <ElementListener businessObject={businessObject} isTask={true} />
-        <CustomDivider />
-        {/*<ExtensionProperties businessObject={businessObject} />*/}
-        <CustomDivider />
-        <ElementOtherInfo businessObject={businessObject} />
-        <CustomDivider />
-
         <Collapse
           bordered={false}
           expandIconPosition={'right'}
@@ -168,44 +369,17 @@ export default function CustomPanel(props: IProps) {
           defaultActiveKey={['1']}
           destroyInactivePanel={true}
         >
-          <Collapse.Panel
-            header={
-              <Typography style={{ color: '#1890ff', fontWeight: 'bold' }}>
-                <PushpinTwoTone />
-                &nbsp;常规
-              </Typography>
-            }
-            key={1}
-            style={{ backgroundColor: '#FFF' }}
-            showArrow={true}
-            forceRender={false}
-          >
-            <ElementBaseInfo businessObject={businessObject} />
-          </Collapse.Panel>
-          <Collapse.Panel
-            header={
-              <Typography style={{ color: '#1890ff', fontWeight: 'bold' }}>
-                <PushpinTwoTone />
-                &nbsp;扩展属性
-              </Typography>
-            }
-            key={2}
-            style={{ backgroundColor: '#FFF' }}
-            showArrow={true}
-            forceRender={false}
-          >
-            <ExtensionProperties businessObject={businessObject} />
-          </Collapse.Panel>
+          {renderElementBaseInfo()}
+          {renderSignalMessage()}
+          {renderElementForm()}
+          {renderElementTask()}
+          {renderMultiInstance()}
+          {renderElementListener()}
+          {renderElementListenerOfTask()}
+          {renderExtensionProperties()}
+          {renderElementOtherInfo()}
         </Collapse>
       </Space>
-    </>
-  );
-}
-
-function CustomDivider() {
-  return (
-    <>
-      <Divider type={'horizontal'} style={{ margin: 0 }} />
     </>
   );
 }

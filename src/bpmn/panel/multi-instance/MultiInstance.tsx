@@ -322,52 +322,38 @@ export default function MultiInstance(props: IProps) {
 
   return (
     <>
-      <Collapse bordered={false} expandIconPosition={'right'}>
-        <Panel
-          header={
-            <Typography style={{ color: '#1890ff', fontWeight: 'bold' }}>
-              <PushpinTwoTone />
-              &nbsp;多实例
-            </Typography>
-          }
-          key="1"
-          style={{ backgroundColor: '#FFF' }}
-          showArrow={true}
-        >
-          <Form
-            form={multiInstanceForm}
-            labelCol={{ span: 5 }}
-            wrapperCol={{ span: 18 }}
+      <Form
+        form={multiInstanceForm}
+        labelCol={{ span: 5 }}
+        wrapperCol={{ span: 18 }}
+      >
+        <Form.Item name="loopCharacteristics" label="回路特性">
+          <Select
+            placeholder={'请选择'}
+            onChange={(value) => {
+              updateLoopCharacteristics(value);
+            }}
           >
-            <Form.Item name="loopCharacteristics" label="回路特性">
-              <Select
-                placeholder={'请选择'}
-                onChange={(value) => {
-                  updateLoopCharacteristics(value);
-                }}
-              >
-                {loop_characteristics_type_options.map((e) => {
-                  return (
-                    <Select.Option key={e.value} value={e.value}>
-                      {e.name}
-                    </Select.Option>
-                  );
-                })}
-              </Select>
-            </Form.Item>
-            {(loopCharacteristics ===
-              loop_characteristics_type.parallelMultiInstance ||
-              loopCharacteristics ===
-                loop_characteristics_type.sequentialMultiInstance) &&
-              renderMultiInstanceForm()}
-          </Form>
-          {(loopCharacteristics ===
-            loop_characteristics_type.parallelMultiInstance ||
-            loopCharacteristics ===
-              loop_characteristics_type.sequentialMultiInstance) &&
-            renderAsyncStatusForm()}
-        </Panel>
-      </Collapse>
+            {loop_characteristics_type_options.map((e) => {
+              return (
+                <Select.Option key={e.value} value={e.value}>
+                  {e.name}
+                </Select.Option>
+              );
+            })}
+          </Select>
+        </Form.Item>
+        {(loopCharacteristics ===
+          loop_characteristics_type.parallelMultiInstance ||
+          loopCharacteristics ===
+            loop_characteristics_type.sequentialMultiInstance) &&
+          renderMultiInstanceForm()}
+      </Form>
+      {(loopCharacteristics ===
+        loop_characteristics_type.parallelMultiInstance ||
+        loopCharacteristics ===
+          loop_characteristics_type.sequentialMultiInstance) &&
+        renderAsyncStatusForm()}
     </>
   );
 }

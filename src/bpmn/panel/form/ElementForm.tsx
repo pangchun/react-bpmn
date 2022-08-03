@@ -275,79 +275,65 @@ export default function ElementForm(props: IProps) {
 
   return (
     <>
-      <Collapse bordered={false} expandIconPosition={'right'}>
-        <Panel
-          header={
-            <Typography style={{ color: '#1890ff', fontWeight: 'bold' }}>
-              <PushpinTwoTone />
-              &nbsp;表单
-            </Typography>
-          }
-          key="1"
-          style={{ backgroundColor: '#FFF' }}
-          showArrow={true}
-        >
-          <Form form={form} labelCol={{ span: 5 }} wrapperCol={{ span: 18 }}>
-            <Form.Item name="formKey" label="表单标识">
-              <Input
-                placeholder={'请输入'}
-                onChange={(event) => {
-                  updateFormKey(event.currentTarget.value);
-                }}
-              />
-            </Form.Item>
-            <Form.Item name="businessKey" label="业务标识">
-              <Select
-                placeholder={'请选择'}
-                onChange={(value, option) => updateBusinessKey(value)}
-              >
-                {businessKeyOptions?.map((e) => {
-                  return (
-                    <Select.Option key={e.value} value={e.value}>
-                      {e.name}
-                    </Select.Option>
-                  );
-                })}
-                <Select.Option key={'no'} value={'no'}>
-                  {'无'}
-                </Select.Option>
-              </Select>
-            </Form.Item>
-          </Form>
-          <Typography.Paragraph
-            style={{
-              textAlign: 'center',
-              fontWeight: 'bold',
-              marginBottom: '1rem',
+      <Form form={form} labelCol={{ span: 5 }} wrapperCol={{ span: 18 }}>
+        <Form.Item name="formKey" label="表单标识">
+          <Input
+            placeholder={'请输入'}
+            onChange={(event) => {
+              updateFormKey(event.currentTarget.value);
             }}
-          >
-            {
-              '-------------------------------- 表单字段 --------------------------------'
-            }
-          </Typography.Paragraph>
-          <Table
-            columns={columns}
-            dataSource={formFields}
-            pagination={false}
-            bordered
-            size={'small'}
           />
-          <Button
-            type="primary"
-            // size={"small"}
-            style={{
-              width: '100%',
-              marginTop: 8,
-            }}
-            onClick={() => {
-              editFormFieldRef.current.showEditDrawer();
-            }}
+        </Form.Item>
+        <Form.Item name="businessKey" label="业务标识">
+          <Select
+            placeholder={'请选择'}
+            onChange={(value, option) => updateBusinessKey(value)}
           >
-            <PlusOutlined />
-            <span style={{ marginLeft: 0 }}>添加属性</span>
-          </Button>
-        </Panel>
-      </Collapse>
+            {businessKeyOptions?.map((e) => {
+              return (
+                <Select.Option key={e.value} value={e.value}>
+                  {e.name}
+                </Select.Option>
+              );
+            })}
+            <Select.Option key={'no'} value={'no'}>
+              {'无'}
+            </Select.Option>
+          </Select>
+        </Form.Item>
+      </Form>
+      <Typography.Paragraph
+        style={{
+          textAlign: 'center',
+          fontWeight: 'bold',
+          marginBottom: '1rem',
+        }}
+      >
+        {
+          '-------------------------------- 表单字段 --------------------------------'
+        }
+      </Typography.Paragraph>
+      <Table
+        columns={columns}
+        dataSource={formFields}
+        pagination={false}
+        bordered
+        size={'small'}
+      />
+      <Button
+        type="primary"
+        // size={"small"}
+        style={{
+          width: '100%',
+          marginTop: 8,
+        }}
+        onClick={() => {
+          editFormFieldRef.current.showEditDrawer();
+        }}
+      >
+        <PlusOutlined />
+        <span style={{ marginLeft: 0 }}>添加属性</span>
+      </Button>
       <EditFormField
         onRef={editFormFieldRef}
         reFreshParent={createOrUpdateFormFields}

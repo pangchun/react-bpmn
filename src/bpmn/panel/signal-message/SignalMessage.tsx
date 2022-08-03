@@ -100,39 +100,25 @@ export default function SignalMessage(props: IProps) {
 
   return (
     <>
-      <Collapse bordered={false} expandIconPosition={'right'}>
-        <Panel
-          header={
-            <Typography style={{ color: '#1890ff', fontWeight: 'bold' }}>
-              <MessageOutlined />
-              &nbsp;消息与信号
-            </Typography>
-          }
-          key="1"
-          style={{ backgroundColor: '#FFF' }}
-          showArrow={true}
-        >
-          <Space direction="vertical" size={4} style={{ display: 'flex' }}>
-            <CreateSignalMessage createType={'message'} reInitRows={initRows} />
-            <Table
-              columns={messageColumns}
-              dataSource={messageRows}
-              pagination={false}
-              bordered
-              size={'small'}
-            />
+      <Space direction="vertical" size={4} style={{ display: 'flex' }}>
+        <CreateSignalMessage createType={'message'} reInitRows={initRows} />
+        <Table
+          columns={messageColumns}
+          dataSource={messageRows}
+          pagination={false}
+          bordered
+          size={'small'}
+        />
 
-            <CreateSignalMessage createType={'signal'} reInitRows={initRows} />
-            <Table
-              columns={signalColumns}
-              dataSource={signalRows}
-              pagination={false}
-              bordered
-              size={'small'}
-            />
-          </Space>
-        </Panel>
-      </Collapse>
+        <CreateSignalMessage createType={'signal'} reInitRows={initRows} />
+        <Table
+          columns={signalColumns}
+          dataSource={signalRows}
+          pagination={false}
+          bordered
+          size={'small'}
+        />
+      </Space>
     </>
   );
 }

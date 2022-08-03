@@ -65,49 +65,35 @@ export default function ElementTask(props: IProps) {
 
   return (
     <>
-      <Collapse bordered={false} expandIconPosition={'right'}>
-        <Panel
-          header={
-            <Typography style={{ color: '#1890ff', fontWeight: 'bold' }}>
-              <PushpinTwoTone />
-              &nbsp;任务
-            </Typography>
-          }
-          key="1"
-          style={{ backgroundColor: '#FFF' }}
-          showArrow={true}
+      <Form form={form} layout="inline">
+        <Form.Item
+          label={'异步延续'}
+          name="asyncBefore"
+          valuePropName="checked"
+          style={{ marginLeft: 22, marginBottom: 20 }}
         >
-          <Form form={form} layout="inline">
-            <Form.Item
-              label={'异步延续'}
-              name="asyncBefore"
-              valuePropName="checked"
-              style={{ marginLeft: 22, marginBottom: 20 }}
-            >
-              <Checkbox style={{ marginLeft: 5 }} onChange={updateTaskAsync}>
-                异步前
-              </Checkbox>
-            </Form.Item>
-            <Form.Item name="asyncAfter" valuePropName="checked">
-              <Checkbox onChange={updateTaskAsync}>异步后</Checkbox>
-            </Form.Item>
-            {(asyncBefore || asyncAfter) && (
-              <Form.Item name="exclusive" valuePropName="checked">
-                <Checkbox onChange={updateTaskAsync}>是否排除</Checkbox>
-              </Form.Item>
-            )}
-          </Form>
-          {businessObject?.$type === 'bpmn:UserTask' && (
-            <UserTask businessObject={businessObject} />
-          )}
-          {businessObject?.$type === 'bpmn:ReceiveTask' && (
-            <ReceiveTask businessObject={businessObject} />
-          )}
-          {businessObject?.$type === 'bpmn:ScriptTask' && (
-            <ScriptTask businessObject={businessObject} />
-          )}
-        </Panel>
-      </Collapse>
+          <Checkbox style={{ marginLeft: 5 }} onChange={updateTaskAsync}>
+            异步前
+          </Checkbox>
+        </Form.Item>
+        <Form.Item name="asyncAfter" valuePropName="checked">
+          <Checkbox onChange={updateTaskAsync}>异步后</Checkbox>
+        </Form.Item>
+        {(asyncBefore || asyncAfter) && (
+          <Form.Item name="exclusive" valuePropName="checked">
+            <Checkbox onChange={updateTaskAsync}>是否排除</Checkbox>
+          </Form.Item>
+        )}
+      </Form>
+      {businessObject?.$type === 'bpmn:UserTask' && (
+        <UserTask businessObject={businessObject} />
+      )}
+      {businessObject?.$type === 'bpmn:ReceiveTask' && (
+        <ReceiveTask businessObject={businessObject} />
+      )}
+      {businessObject?.$type === 'bpmn:ScriptTask' && (
+        <ScriptTask businessObject={businessObject} />
+      )}
     </>
   );
 }

@@ -163,18 +163,6 @@ export default function ExtensionProperties(props: IProps) {
 
   return (
     <>
-      {/*<Collapse bordered={false} expandIconPosition={'right'}>*/}
-      {/*  <Panel*/}
-      {/*    header={*/}
-      {/*      <Typography style={{ color: '#1890ff', fontWeight: 'bold' }}>*/}
-      {/*        <PlusSquareTwoTone />*/}
-      {/*        &nbsp;扩展属性*/}
-      {/*      </Typography>*/}
-      {/*    }*/}
-      {/*    key="1"*/}
-      {/*    style={{ backgroundColor: '#FFF' }}*/}
-      {/*    showArrow={true}*/}
-      {/*  >*/}
       <Table
         columns={columns}
         dataSource={rows}

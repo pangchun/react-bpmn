@@ -267,41 +267,27 @@ export default function ElementListener(props: IProps) {
 
   return (
     <>
-      <Collapse bordered={false} expandIconPosition={'right'}>
-        <Panel
-          header={
-            <Typography style={{ color: '#1890ff', fontWeight: 'bold' }}>
-              <BellOutlined />
-              &nbsp;{isTask ? '任务监听器' : '执行监听器'}
-            </Typography>
-          }
-          key="1"
-          style={{ backgroundColor: '#FFF' }}
-          showArrow={true}
-        >
-          <Table
-            columns={columns}
-            dataSource={rows}
-            pagination={false}
-            bordered
-            size={'small'}
-          />
-          <Button
-            type="primary"
-            // size={"small"}
-            style={{
-              width: '100%',
-              marginTop: 8,
-            }}
-            onClick={() => {
-              editRef.current.showEditDrawer();
-            }}
-          >
-            <PlusOutlined />
-            <span style={{ marginLeft: 0 }}>添加属性</span>
-          </Button>
-        </Panel>
-      </Collapse>
+      <Table
+        columns={columns}
+        dataSource={rows}
+        pagination={false}
+        bordered
+        size={'small'}
+      />
+      <Button
+        type="primary"
+        // size={"small"}
+        style={{
+          width: '100%',
+          marginTop: 8,
+        }}
+        onClick={() => {
+          editRef.current.showEditDrawer();
+        }}
+      >
+        <PlusOutlined />
+        <span style={{ marginLeft: 0 }}>添加属性</span>
+      </Button>
 
       {/* 弹窗组件 */}
       <EditListener

@@ -53,32 +53,17 @@ export default function ElementOtherInfo(props: IProps) {
 
   return (
     <>
-      <Collapse bordered={false} expandIconPosition={'right'}>
-        <Panel
-          header={
-            <Typography style={{ color: '#1890ff', fontWeight: 'bold' }}>
-              <QuestionCircleTwoTone />
-              &nbsp;其它
-            </Typography>
-          }
-          key="1"
-          style={{ backgroundColor: '#FFF' }}
-          showArrow={true}
-          forceRender={true}
-        >
-          <Form form={form} labelCol={{ span: 5 }} wrapperCol={{ span: 18 }}>
-            <Form.Item label="元素文档" name="documentation">
-              <TextArea
-                rows={4}
-                placeholder={'请输入'}
-                onChange={(event) => {
-                  updateDocumentation(event.currentTarget.value);
-                }}
-              />
-            </Form.Item>
-          </Form>
-        </Panel>
-      </Collapse>
+      <Form form={form} labelCol={{ span: 5 }} wrapperCol={{ span: 18 }}>
+        <Form.Item label="元素文档" name="documentation">
+          <TextArea
+            rows={4}
+            placeholder={'请输入'}
+            onChange={(event) => {
+              updateDocumentation(event.currentTarget.value);
+            }}
+          />
+        </Form.Item>
+      </Form>
     </>
   );
 }
