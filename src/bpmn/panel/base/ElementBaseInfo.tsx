@@ -1,13 +1,5 @@
 import React, { useEffect } from 'react';
-import { Form, Input, message, Switch, Typography } from 'antd';
-import { Collapse } from 'antd';
-import { PushpinTwoTone } from '@ant-design/icons';
-
-const { Panel } = Collapse;
-
-interface IProps {
-  businessObject: any;
-}
+import { Form, Input, message, Switch } from 'antd';
 
 const keyOptions = {
   id: 'id',
@@ -15,6 +7,10 @@ const keyOptions = {
   isExecutable: 'isExecutable',
   versionTag: 'versionTag',
 };
+
+interface IProps {
+  businessObject: any;
+}
 
 export default function ElementBaseInfo(props: IProps) {
   // props属性
@@ -33,7 +29,6 @@ export default function ElementBaseInfo(props: IProps) {
   }, [businessObject?.id]);
 
   function initPageData() {
-    // todo 跟其它初始化form报错相比，这里是因为手风琴状态是展开状态，所以才没报错，后期优化可以设置在点击召开手风琴时才调用初始化方法，也能加快渲染速度
     form.setFieldsValue({
       id: businessObject?.id,
       name: businessObject?.name,
@@ -114,22 +109,6 @@ export default function ElementBaseInfo(props: IProps) {
 
   return (
     <>
-      {/*<Collapse*/}
-      {/*  bordered={false}*/}
-      {/*  expandIconPosition={'right'}*/}
-      {/*  defaultActiveKey={['1']}*/}
-      {/*>*/}
-      {/*  <Panel*/}
-      {/*    header={*/}
-      {/*      <Typography style={{ color: '#1890ff', fontWeight: 'bold' }}>*/}
-      {/*        <PushpinTwoTone />*/}
-      {/*        &nbsp;常规*/}
-      {/*      </Typography>*/}
-      {/*    }*/}
-      {/*    key="1"*/}
-      {/*    style={{ backgroundColor: '#FFF' }}*/}
-      {/*    showArrow={true}*/}
-      {/*  >*/}
       <Form form={form} labelCol={{ span: 5 }} wrapperCol={{ span: 18 }}>
         <Form.Item
           label="编号"
@@ -164,8 +143,6 @@ export default function ElementBaseInfo(props: IProps) {
         </Form.Item>
         {renderProcessExtension()}
       </Form>
-      {/*  </Panel>*/}
-      {/*</Collapse>*/}
     </>
   );
 }
