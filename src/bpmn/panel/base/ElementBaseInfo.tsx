@@ -15,8 +15,7 @@ interface IProps {
 export default function ElementBaseInfo(props: IProps) {
   // props属性
   const { businessObject } = props;
-
-  // 其它属性
+  // form表单属性
   const [form] = Form.useForm<{
     id: string;
     name: string;
@@ -39,6 +38,7 @@ export default function ElementBaseInfo(props: IProps) {
 
   function updateElementAttr(key: string, value: any) {
     if (key === keyOptions.id) {
+      // id为空时，不执行更新
       if (!value) {
         return;
       }
@@ -51,6 +51,7 @@ export default function ElementBaseInfo(props: IProps) {
           .then(() => console.log(e.message));
         return;
       }
+      // 更新id
       window.bpmnInstance.modeling.updateProperties(
         window.bpmnInstance.element,
         {
@@ -60,6 +61,7 @@ export default function ElementBaseInfo(props: IProps) {
       );
       return;
     }
+    // 更新其他属性
     window.bpmnInstance.modeling.updateProperties(window.bpmnInstance.element, {
       [key]: value || undefined,
     });
@@ -72,12 +74,14 @@ export default function ElementBaseInfo(props: IProps) {
         message: '编号中不能包含空格',
       };
     }
-
     return {
       status: true,
     };
   }
 
+  /**
+   * 渲染Process节点独有组件 (版本标签、是否可执行)
+   */
   function renderProcessExtension() {
     if (businessObject?.$type === 'bpmn:Process') {
       return (

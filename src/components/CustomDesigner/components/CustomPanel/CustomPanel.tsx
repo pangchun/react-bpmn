@@ -132,11 +132,12 @@ export default function CustomPanel(props: IProps) {
       );
       console.log(
         '当前选中的元素为: \n',
-        modeler.get('elementRegistry').get('Process_1')?.businessObject,
+        modeler.get('elementRegistry').get('Process_1')?.businessObject ||
+          '初始化还未选中Process节点',
       );
       return;
     }
-    console.log('当前选中的元素为: \n', element?.businessObject);
+    console.log('当前选中的元素为11: \n', element?.businessObject);
     window.bpmnInstance.element = element;
     setBusinessObject(JSON.parse(JSON.stringify(element.businessObject)));
     setElement(element);
