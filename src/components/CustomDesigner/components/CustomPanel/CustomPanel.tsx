@@ -16,6 +16,7 @@ import {
   PlusSquareTwoTone,
   PushpinTwoTone,
 } from '@ant-design/icons';
+import { FLOWABLE_PREFIX } from '@/bpmn/constant/moddle-constant';
 
 // todo 这个全局声明后面可以抽取到单独的ts文件中
 declare global {
@@ -29,6 +30,7 @@ declare global {
       moddle: any;
       rootElements: any[];
     };
+    bpmnPrefix: string;
   }
 }
 
@@ -42,6 +44,7 @@ function initBpmnInstance() {
     moddle: null,
     rootElements: [],
   };
+  window.bpmnPrefix = FLOWABLE_PREFIX;
 }
 
 interface IProps {
