@@ -23,6 +23,12 @@ export default function ElementBaseInfo(props: IProps) {
     versionTag: string;
   }>();
 
+  /**
+   * 只监听id的原因：
+   * 1、只有切换当前节点才重新执行初始化操作
+   * 2、当前节点属性变化时，不需要重新初始化操作
+   * 3、因为每个节点的id是必不相同的，所以可以用作依赖项
+   */
   useEffect(() => {
     initPageData();
   }, [businessObject?.id]);
