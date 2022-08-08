@@ -21,7 +21,7 @@ export default function ElementOtherInfo(props: IProps) {
 
   function initPageData() {
     form.setFieldsValue({
-      documentation: businessObject?.documentation?.at(0).text || '',
+      documentation: businessObject?.documentation?.at(0).text,
     });
   }
 

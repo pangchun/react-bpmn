@@ -19,11 +19,9 @@ interface IProps {
 export default function ExtensionProperties(props: IProps) {
   // props属性
   const { businessObject } = props;
-
-  // setState属性
+  // state属性
   const [rows, setRows] = useState<Array<any>>([]);
   const [propertyList, setPropertyList] = useState<Array<any>>([]);
-
   // ref
   const editRef = useRef<any>();
 

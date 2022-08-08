@@ -10,11 +10,9 @@ interface IProps {
 export default function EditProperty(props: IProps) {
   // props属性
   const { onRef, createOrUpdate } = props;
-
-  // setState属性
+  // state属性
   const [isModalVisible, setIsModalVisible] = useState(false);
-
-  // 其它属性
+  // form表单属性
   const [form] = Form.useForm<{
     key: number;
     propertyName: string;
@@ -26,11 +24,10 @@ export default function EditProperty(props: IProps) {
   }));
 
   function showModal(rowObj: any) {
-    // 通过传入的当前行对象初始化表单默认值
     form.setFieldsValue({
       key: rowObj?.key || -1,
-      propertyName: rowObj?.name || '',
-      propertyValue: rowObj?.value || '',
+      propertyName: rowObj?.name,
+      propertyValue: rowObj?.value,
     });
     setIsModalVisible(true);
   }
@@ -44,7 +41,6 @@ export default function EditProperty(props: IProps) {
     form
       .validateFields()
       .then((values) => {
-        // 调用新增编辑方法
         createOrUpdate({
           rowKey: form.getFieldValue('key'),
           ...values,
