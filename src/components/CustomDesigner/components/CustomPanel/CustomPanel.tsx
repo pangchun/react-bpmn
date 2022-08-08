@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Collapse, Divider, Form, Input, Space, Typography } from 'antd';
+import { Collapse, Space, Typography } from 'antd';
 import ElementBaseInfo from '@/bpmn/panel/base/ElementBaseInfo';
 
 import ElementOtherInfo from '@/bpmn/panel/other/ElementOtherInfo';
@@ -16,36 +16,7 @@ import {
   PlusSquareTwoTone,
   PushpinTwoTone,
 } from '@ant-design/icons';
-import { FLOWABLE_PREFIX } from '@/bpmn/constant/moddle-constant';
-
-// todo 这个全局声明后面可以抽取到单独的ts文件中
-declare global {
-  interface Window {
-    bpmnInstance: {
-      element: any;
-      modeler: any;
-      modeling: any;
-      elementRegistry: any;
-      bpmnFactory: any;
-      moddle: any;
-      rootElements: any[];
-    };
-    bpmnPrefix: string;
-  }
-}
-
-function initBpmnInstance() {
-  window.bpmnInstance = {
-    element: null,
-    modeler: null,
-    modeling: null,
-    elementRegistry: null,
-    bpmnFactory: null,
-    moddle: null,
-    rootElements: [],
-  };
-  window.bpmnPrefix = FLOWABLE_PREFIX;
-}
+import { initBpmnInstance } from '@/bpmn/util/global-variable-util';
 
 interface IProps {
   modeler: any;

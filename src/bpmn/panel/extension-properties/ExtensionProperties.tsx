@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Button, Collapse, notification, Space, Table, Typography } from 'antd';
-import { PlusOutlined, PlusSquareTwoTone } from '@ant-design/icons';
+import { Button, notification, Space, Table } from 'antd';
+import { PlusOutlined } from '@ant-design/icons';
 import EditProperty from '@/bpmn/panel/extension-properties/edit/EditProperty';
 import { FLOWABLE_PREFIX } from '@/bpmn/constant/moddle-constant';
 import {
@@ -9,8 +9,6 @@ import {
   extractOtherExtensionList,
   updateElementExtensions,
 } from '@/bpmn/util/panel-util';
-
-const { Panel } = Collapse;
 
 interface IProps {
   businessObject: any;
@@ -31,7 +29,6 @@ export default function ExtensionProperties(props: IProps) {
 
   function initPageData() {
     initRows();
-    console.log(7888888);
   }
 
   function initRows() {
@@ -96,7 +93,6 @@ export default function ExtensionProperties(props: IProps) {
     updateElementExtensions(getOtherExtensionList().concat([properties]));
     // 刷新表格
     initRows();
-
     // 提示通知
     notification.open({
       message: <span style={{ color: 'red' }}>属性已删除</span>,
