@@ -1,7 +1,5 @@
 // ts: 全局变量定义工具
 
-import { FLOWABLE_PREFIX } from '@/bpmn/constant/moddle-constant';
-
 declare global {
   interface Window {
     bpmnInstance: {
@@ -13,7 +11,6 @@ declare global {
       moddle: any;
       rootElements: any[];
     };
-    bpmnPrefix: string;
   }
 }
 
@@ -27,5 +24,4 @@ export function initBpmnInstance() {
     moddle: null,
     rootElements: [],
   };
-  window.bpmnPrefix = FLOWABLE_PREFIX;
 }

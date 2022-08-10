@@ -24,14 +24,13 @@ import diagramExample from '@/bpmn/resource/diagram-example';
 // 引入当前组件样式
 import CustomPanel from '@/components/CustomDesigner/components/CustomPanel/CustomPanel';
 import { Button, Col, Row, Space } from 'antd';
-import { Layout } from 'antd';
 
-const { Header, Footer, Sider, Content } = Layout;
 import XmlPreview from '@/components/CustomDesigner/components/XmlPreview/XmlPreview';
 import { FolderOpenOutlined } from '@ant-design/icons';
+import DesignerConfig from '@/components/CustomDesigner/components/DesignerConfig/DesignerConfig';
 
 export default function CustomDesigner() {
-  // setState属性
+  // state属性
   const [bpmnModeler, setBpmnModeler] = useState<any>();
   const [xmlStr, setXmlStr] = useState<string>(diagramExample.xml);
 
@@ -108,6 +107,7 @@ export default function CustomDesigner() {
             {'打开'}
           </Button>
           <XmlPreview modeler={bpmnModeler} />
+          <DesignerConfig />
         </Space>
       </>
     );
