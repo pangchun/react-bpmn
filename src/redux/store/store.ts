@@ -1,5 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 import counterReducer from '@/redux/slice/counter-slice';
+import bpmnReducer from '@/redux/slice/bpmn-slice';
 
 /**
  * 创建一个 Redux 存储，并自动配置 Redux DevTools 扩展，并在开发时检查存储
@@ -8,6 +9,7 @@ export const store = configureStore({
   // 将Slice Reducers添加到Store中
   reducer: {
     counter: counterReducer,
+    bpmn: bpmnReducer,
   },
 });
 

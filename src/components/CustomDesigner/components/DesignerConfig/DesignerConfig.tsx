@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Drawer, Form, Radio, Space } from 'antd';
+import { Button, Drawer, Form, message, Radio, Space } from 'antd';
 import { SettingOutlined } from '@ant-design/icons';
 import {
   ACTIVITI_PREFIX,
@@ -8,6 +8,7 @@ import {
 } from '@/bpmn/constant/moddle-constant';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks/hooks';
 import { incrementByAmount } from '@/redux/slice/counter-slice';
+import { handlePrefix } from '@/redux/slice/bpmn-slice';
 
 interface IProps {}
 
@@ -15,7 +16,7 @@ export default function DesignerConfig(props: IProps) {
   // state
   const [visible, setVisible] = useState(false);
   // redux
-  const countValue = useAppSelector((state) => state.counter.value);
+  const bpmnPrefix = useAppSelector((state) => state.bpmn.prefix);
   const dispatch = useAppDispatch();
   // form
   const [form] = Form.useForm<{
@@ -30,16 +31,15 @@ export default function DesignerConfig(props: IProps) {
 
   function showDrawer() {
     setVisible(true);
-    console.log(countValue);
   }
 
   function onClose() {
     setVisible(false);
-    dispatch(incrementByAmount(12));
   }
 
   function changeEngineType(value: string) {
-    console.log(value);
+    dispatch(handlePrefix(value));
+    message.info('流程引擎已切换为 ' + value).then((r) => {});
   }
 
   return (
