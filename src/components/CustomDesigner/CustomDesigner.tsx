@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import BpmnModeler from 'bpmn-js/lib/Modeler';
 
 // 引入属性解析文件和对应的解析器
-import flowableDescriptor from '@/bpmn/descriptor/flowable-descriptor.json';
+import flowableDescriptor from '@/bpmn/descriptor/flowable.json';
 import { flowableExtension } from '@/bpmn/moddle/flowable';
 
 // 引入bpmn工作流绘图工具(bpmn-js)样式
@@ -77,7 +77,7 @@ export default function CustomDesigner() {
     try {
       bpmnModeler?.importXML(xmlString);
     } catch (e) {
-      console.error(e);
+      console.error('流程图绘制出错：createBpmnDiagram => ' + e);
     }
   }
 
