@@ -6,12 +6,17 @@ import {
   CAMUNDA_PREFIX,
   FLOWABLE_PREFIX,
 } from '@/bpmn/constant/moddle-constant';
+import { useAppDispatch, useAppSelector } from '@/redux/hooks/hooks';
+import { incrementByAmount } from '@/redux/slice/counter-slice';
 
 interface IProps {}
 
 export default function DesignerConfig(props: IProps) {
   // state
   const [visible, setVisible] = useState(false);
+  // redux
+  const countValue = useAppSelector((state) => state.counter.value);
+  const dispatch = useAppDispatch();
   // form
   const [form] = Form.useForm<{
     engineType: string;
@@ -25,10 +30,12 @@ export default function DesignerConfig(props: IProps) {
 
   function showDrawer() {
     setVisible(true);
+    console.log(countValue);
   }
 
   function onClose() {
     setVisible(false);
+    dispatch(incrementByAmount(12));
   }
 
   function changeEngineType(value: string) {
