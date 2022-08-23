@@ -6,6 +6,10 @@ import BpmnModeler from 'bpmn-js/lib/Modeler';
 // 引入属性解析文件和对应的解析器
 import flowableDescriptor from '@/bpmn/descriptor/flowable.json';
 import { flowableExtension } from '@/bpmn/moddle/flowable';
+import camundaDescriptor from '@/bpmn/descriptor/camunda.json';
+import { camundaExtension } from '@/bpmn/moddle/camunda';
+import activitiDescriptor from '@/bpmn/descriptor/activiti.json';
+import { activitiExtension } from '@/bpmn/moddle/activiti';
 
 // 引入bpmn工作流绘图工具(bpmn-js)样式
 import 'bpmn-js/dist/assets/bpmn-js.css';
@@ -28,18 +32,27 @@ import { Button, Col, Row, Space } from 'antd';
 import XmlPreview from '@/components/CustomDesigner/components/XmlPreview/XmlPreview';
 import { FolderOpenOutlined } from '@ant-design/icons';
 import DesignerConfig from '@/components/CustomDesigner/components/DesignerConfig/DesignerConfig';
+import { useAppDispatch, useAppSelector } from '@/redux/hooks/hooks';
+import {
+  ACTIVITI_PREFIX,
+  CAMUNDA_PREFIX,
+  FLOWABLE_PREFIX,
+} from '@/bpmn/constant/moddle-constant';
 
 export default function CustomDesigner() {
   // state属性
   const [bpmnModeler, setBpmnModeler] = useState<any>();
   const [xmlStr, setXmlStr] = useState<string>(diagramExample.xml);
+  // redux
+  const bpmnPrefix = useAppSelector((state) => state.bpmn.prefix);
+  const dispatch = useAppDispatch();
 
   /**
    * 初始化建模器
    */
   useEffect(() => {
     initBpmnModeler();
-  }, []);
+  }, [bpmnPrefix]);
 
   /**
    * 导入 xml，并添加监听器
@@ -60,12 +73,46 @@ export default function CustomDesigner() {
       new BpmnModeler({
         container: '#canvas',
         height: '96.5vh',
-        additionalModules: [flowableExtension],
-        moddleExtensions: {
-          flowable: flowableDescriptor,
-        },
+        additionalModules: getAdditionalModules(),
+        moddleExtensions: getModdleExtensions(),
       }),
     );
+  }
+
+  function getAdditionalModules() {
+    const modules = [];
+
+    console.log(bpmnPrefix + 112121);
+
+    // 添加解析器
+    if (bpmnPrefix === FLOWABLE_PREFIX) {
+      modules.push(flowableExtension);
+    }
+    if (bpmnPrefix === CAMUNDA_PREFIX) {
+      modules.push(camundaExtension);
+    }
+    if (bpmnPrefix === ACTIVITI_PREFIX) {
+      modules.push(activitiExtension);
+    }
+
+    return modules;
+  }
+
+  function getModdleExtensions() {
+    const extensions: any = {};
+
+    // 添加解析文件
+    if (bpmnPrefix === FLOWABLE_PREFIX) {
+      extensions.flowable = flowableDescriptor;
+    }
+    if (bpmnPrefix === CAMUNDA_PREFIX) {
+      extensions.camunda = camundaDescriptor;
+    }
+    if (bpmnPrefix === ACTIVITI_PREFIX) {
+      extensions.activiti = activitiDescriptor;
+    }
+
+    return extensions;
   }
 
   /**
