@@ -16,8 +16,13 @@ export const TYPE_TARGET = {
   flowable: 'http://flowable.org/bpmn',
 };
 
+/**
+ * 导出默认xml字符串
+ * @param key 流程id
+ * @param name 流程名称
+ * @param type 流程类型
+ */
 export default (key: string, name: string, type: string) => {
-  let processId: string = installProcessId(key);
   let type_target: string;
   if (type === MODDLE_TYPE.activiti) {
     type_target = TYPE_TARGET.activiti;
@@ -44,7 +49,3 @@ export default (key: string, name: string, type: string) => {
     </bpmndi:BPMNDiagram>
   </bpmn2:definitions>`;
 };
-
-export function installProcessId(key: string) {
-  return 'Process_' + key;
-}

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useAppDispatch, useAppSelector } from '@/redux/hooks/hooks';
 
 // 引入bpmn建模器
 import BpmnModeler from 'bpmn-js/lib/Modeler';
@@ -24,15 +25,18 @@ import 'bpmn-js-properties-panel/dist/assets/properties-panel.css';
 
 // 引入流程图文件
 import diagramExample from '@/bpmn/resource/diagram-example';
+import DefaultEmptyXML from '@/bpmn/constant/moddle-constant';
 
 // 引入当前组件样式
 import CustomPanel from '@/components/CustomDesigner/components/CustomPanel/CustomPanel';
 import { Button, Col, Row, Space } from 'antd';
 
+// 组件引入
 import XmlPreview from '@/components/CustomDesigner/components/XmlPreview/XmlPreview';
 import { FolderOpenOutlined } from '@ant-design/icons';
 import DesignerConfig from '@/components/CustomDesigner/components/DesignerConfig/DesignerConfig';
-import { useAppDispatch, useAppSelector } from '@/redux/hooks/hooks';
+
+// 常量引入
 import {
   ACTIVITI_PREFIX,
   CAMUNDA_PREFIX,
@@ -43,6 +47,7 @@ export default function CustomDesigner() {
   // state属性
   const [bpmnModeler, setBpmnModeler] = useState<any>();
   const [xmlStr, setXmlStr] = useState<string>(diagramExample.xml);
+  const [processId, setProcessId] = useState<string>('');
   // redux
   const bpmnPrefix = useAppSelector((state) => state.bpmn.prefix);
   const dispatch = useAppDispatch();
@@ -82,8 +87,6 @@ export default function CustomDesigner() {
   function getAdditionalModules() {
     const modules = [];
 
-    console.log(bpmnPrefix + 112121);
-
     // 添加解析器
     if (bpmnPrefix === FLOWABLE_PREFIX) {
       modules.push(flowableExtension);
@@ -118,11 +121,15 @@ export default function CustomDesigner() {
   /**
    * 绘制流程图
    * 1、调用 modeler 的 importXML 方法，将 xml 字符串转为图像；
-   * @param xmlString
+   * @param xml
    */
-  function createBpmnDiagram(xmlString: string) {
+  function createBpmnDiagram(xml: string) {
+    let newId = xml ? '' : `Process_${new Date().getTime()}`;
+    let newName = xml ? '' : `业务流程_${new Date().getTime()}`;
+    let newXML = xml ? xml : DefaultEmptyXML(newId, newName, bpmnPrefix);
+    setProcessId(newId);
     try {
-      bpmnModeler?.importXML(xmlString);
+      bpmnModeler?.importXML(newXML);
     } catch (e) {
       console.error('流程图绘制出错：createBpmnDiagram => ' + e);
     }
@@ -185,7 +192,7 @@ export default function CustomDesigner() {
             boxShadow: '0 0 8px #ccc',
           }}
         >
-          <CustomPanel modeler={bpmnModeler} />
+          <CustomPanel modeler={bpmnModeler} processId={processId} />
         </Col>
       </Row>
     </>

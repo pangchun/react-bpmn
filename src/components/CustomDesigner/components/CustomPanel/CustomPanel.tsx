@@ -20,11 +20,12 @@ import { initBpmnInstance } from '@/bpmn/util/global-variable-util';
 
 interface IProps {
   modeler: any;
+  processId: string;
 }
 
 export default function CustomPanel(props: IProps) {
   // props属性
-  const { modeler } = props;
+  const { modeler, processId } = props;
 
   // setState属性
   const [element, setElement] = useState<any>();
