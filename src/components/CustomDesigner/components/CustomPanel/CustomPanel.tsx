@@ -42,7 +42,7 @@ export default function CustomPanel(props: IProps) {
       return;
     }
     init();
-  }, [modeler]);
+  }, [modeler, processId]);
 
   function init() {
     // 设置window的bpmnInstance对象属性
@@ -74,7 +74,6 @@ export default function CustomPanel(props: IProps) {
 
     // 设置监听器，监听当前节点属性变化
     modeler?.on('element.changed', ({ element }: any) => {
-      // setState 这一步是成功的，但是这个state没有被子组件响应，原因可能是对象的hash地址相同，react认为state没改变，所以未刷新
       if (
         element &&
         element.id === window.bpmnInstance.element.businessObject.id
@@ -96,7 +95,8 @@ export default function CustomPanel(props: IProps) {
       function getProcess$1(element) {
         return is$3(element, 'bpmn:Process') ? getBusinessObject(element) : getBusinessObject(element).get('processRef');
       }*/
-      let processElement: any = modeler.get('elementRegistry').get('Process_1');
+      console.log(processId);
+      let processElement: any = modeler.get('elementRegistry').get(processId);
       setElement(processElement);
       window.bpmnInstance.element = processElement;
       setBusinessObject(
@@ -104,7 +104,7 @@ export default function CustomPanel(props: IProps) {
       );
       console.log(
         '当前选中的元素为: \n',
-        modeler.get('elementRegistry').get('Process_1')?.businessObject ||
+        modeler.get('elementRegistry').get(processId)?.businessObject ||
           '初始化还未选中Process节点',
       );
       return;

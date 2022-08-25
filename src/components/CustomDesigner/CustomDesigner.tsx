@@ -65,7 +65,8 @@ export default function CustomDesigner() {
    */
   useEffect(() => {
     (async () => {
-      await createBpmnDiagram(xmlStr);
+      await createBpmnDiagram();
+      // await createBpmnDiagram(xmlStr);
       addPropertiesListener();
     })();
   }, [bpmnModeler]);
@@ -123,7 +124,7 @@ export default function CustomDesigner() {
    * 1、调用 modeler 的 importXML 方法，将 xml 字符串转为图像；
    * @param xml
    */
-  function createBpmnDiagram(xml: string) {
+  function createBpmnDiagram(xml?: string) {
     // 定义流程信息
     let definitionsInfo: any = null;
     let processInfo: any = null;
@@ -135,13 +136,13 @@ export default function CustomDesigner() {
         processInfo = result[`bpmn2:definitions`][`bpmn2:process`][0][`$`];
       }
     });
-    console.log('definitionsInfo', definitionsInfo);
-    console.log('processInfo', processInfo);
-    // 设置流程基本信息
-    let newId = processInfo?.id || `Process_${new Date().getTime()}`;
-    let newName = processInfo?.name || `业务流程_${new Date().getTime()}`;
+    // 设置流程基本信息 todo 要保证id的传递不会改变, 这里用变量传递会导致更改不能穿到子组件
+    let newId = processInfo?.id || 'Process_' + new Date().getTime();
+    let newName = processInfo?.name || '新建业务流程';
     let newXML = xml ? xml : DefaultEmptyXML(newId, newName, bpmnPrefix);
+    // 更新流程id
     setProcessId(newId);
+    // 执行importXML方法
     try {
       bpmnModeler?.importXML(newXML);
     } catch (e) {
