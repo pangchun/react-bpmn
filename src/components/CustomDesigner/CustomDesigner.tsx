@@ -124,8 +124,22 @@ export default function CustomDesigner() {
    * @param xml
    */
   function createBpmnDiagram(xml: string) {
-    let newId = xml ? '' : `Process_${new Date().getTime()}`;
-    let newName = xml ? '' : `业务流程_${new Date().getTime()}`;
+    // 定义流程信息
+    let definitionsInfo: any = null;
+    let processInfo: any = null;
+    // 使用xml2js解析xml获取流程对象
+    const parseString = require('xml2js').parseString;
+    parseString(xml, function (err: any, result: any) {
+      if (result) {
+        definitionsInfo = result[`bpmn2:definitions`];
+        processInfo = result[`bpmn2:definitions`][`bpmn2:process`][0][`$`];
+      }
+    });
+    console.log('definitionsInfo', definitionsInfo);
+    console.log('processInfo', processInfo);
+    // 设置流程基本信息
+    let newId = processInfo?.id || `Process_${new Date().getTime()}`;
+    let newName = processInfo?.name || `业务流程_${new Date().getTime()}`;
     let newXML = xml ? xml : DefaultEmptyXML(newId, newName, bpmnPrefix);
     setProcessId(newId);
     try {
