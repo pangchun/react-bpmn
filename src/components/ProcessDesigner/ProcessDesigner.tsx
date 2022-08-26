@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useAppDispatch, useAppSelector } from '@/redux/hooks/hooks';
+import { useAppDispatch, useAppSelector } from '@/redux/hook/hooks';
 
 // 引入bpmn建模器
 import BpmnModeler from 'bpmn-js/lib/Modeler';
@@ -24,29 +24,29 @@ import 'bpmn-js-properties-panel/dist/assets/element-templates.css';
 import 'bpmn-js-properties-panel/dist/assets/properties-panel.css';
 
 // 引入流程图文件
-import diagramExample from '@/bpmn/resource/diagram-example';
-import DefaultEmptyXML from '@/bpmn/constant/moddle-constant';
+import testXML from '@/bpmn/constant/testXML';
+import DefaultEmptyXML from '@/bpmn/constant/emptyXML';
 
 // 引入当前组件样式
 import { Button, Col, Row, Space } from 'antd';
 
 // 组件引入
-import PropertyPanel from '@/components/CustomDesigner/components/PropertyPanel/PropertyPanel';
-import TextViewer from '@/components/CustomDesigner/components/TextViewer/TextViewer';
+import PropertyPanel from '@/components/ProcessDesigner/components/PropertyPanel/PropertyPanel';
+import TextViewer from '@/components/ProcessDesigner/components/TextViewer/TextViewer';
 import { FolderOpenOutlined } from '@ant-design/icons';
-import ConfigServer from '@/components/CustomDesigner/components/ConfigServer/ConfigServer';
+import ConfigServer from '@/components/ProcessDesigner/components/ConfigServer/ConfigServer';
 
 // 常量引入
 import {
   ACTIVITI_PREFIX,
   CAMUNDA_PREFIX,
   FLOWABLE_PREFIX,
-} from '@/bpmn/constant/moddle-constant';
+} from '@/bpmn/constant/constants';
 
 export default function ProcessDesigner() {
   // state属性
   const [bpmnModeler, setBpmnModeler] = useState<any>();
-  const [xmlStr, setXmlStr] = useState<string>(diagramExample.xml);
+  const [xmlStr, setXmlStr] = useState<string>(testXML.xml);
   const [processId, setProcessId] = useState<string>();
   // redux
   const bpmnPrefix = useAppSelector((state) => state.bpmn.prefix);

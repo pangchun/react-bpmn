@@ -1,4 +1,4 @@
-import ProcessDesigner from '@/components/CustomDesigner/ProcessDesigner';
+import ProcessDesigner from '@/components/ProcessDesigner/ProcessDesigner';
 import { Provider } from 'react-redux';
 import { store } from '@/redux/store/store';
 

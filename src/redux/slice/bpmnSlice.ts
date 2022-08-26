@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { FLOWABLE_PREFIX } from '@/bpmn/constant/moddle-constant';
+import { FLOWABLE_PREFIX } from '@/bpmn/constant/constants';
 
 // 为切片状态定义一个类型
 export interface BpmnState {

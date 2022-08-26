@@ -14,7 +14,7 @@ const initialState: CounterState = {
  * 创建 redux 分片
  * 导出 action 和 reducer
  */
-export const counterSlice = createSlice({
+export const counterSliceExample = createSlice({
   name: 'counter',
   initialState,
   reducers: {
@@ -35,6 +35,7 @@ export const counterSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const { increment, decrement, incrementByAmount } = counterSlice.actions;
+export const { increment, decrement, incrementByAmount } =
+  counterSliceExample.actions;
 
-export default counterSlice.reducer;
+export default counterSliceExample.reducer;

@@ -1,6 +1,6 @@
 // ts: 属性面板通用方法
 
-import { FLOWABLE_PREFIX } from '@/bpmn/constant/moddle-constant';
+import { FLOWABLE_PREFIX } from '@/bpmn/constant/constants';
 
 /**
  * 创建 Property实例

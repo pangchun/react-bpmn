@@ -2,5 +2,5 @@
 
 module.exports = {
   __init__: ['camundaExtension'],
-  camundaExtension: ['type', require('./CamundaExtension')],
+  camundaExtension: ['type', require('./camundaExtension')],
 };

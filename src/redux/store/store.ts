@@ -1,6 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
-import counterReducer from '@/redux/slice/counter-slice';
-import bpmnReducer from '@/redux/slice/bpmn-slice';
+import counterReducer from '@/redux/slice/counterSliceExample';
+import bpmnReducer from '@/redux/slice/bpmnSlice';
 
 /**
  * 创建一个 Redux 存储，并自动配置 Redux DevTools 扩展，并在开发时检查存储

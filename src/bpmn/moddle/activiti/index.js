@@ -5,5 +5,5 @@
 
 module.exports = {
   __init__: ['activitiExtension'],
-  activitiExtension: ['type', require('./ActivitiExtension')],
+  activitiExtension: ['type', require('./activitiExtension')],
 };

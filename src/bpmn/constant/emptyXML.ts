@@ -1,32 +1,16 @@
-// 常量池
-
-export const MODDLE_TYPE = {
-  flowable: 'flowable',
-  activiti: 'activiti',
-  camunda: 'camunda',
-};
-
-export const FLOWABLE_PREFIX: string = MODDLE_TYPE.flowable;
-export const ACTIVITI_PREFIX: string = MODDLE_TYPE.activiti;
-export const CAMUNDA_PREFIX: string = MODDLE_TYPE.camunda;
-
-export const TYPE_TARGET = {
-  activiti: 'http://activiti.org/bpmn',
-  camunda: 'http://bpmn.io/schema/bpmn',
-  flowable: 'http://flowable.org/bpmn',
-};
+import { PROCESS_TYPE, TYPE_TARGET } from '@/bpmn/constant/constants';
 
 /**
- * 导出默认xml字符串
+ * 新建空流程
  * @param key 流程id
  * @param name 流程名称
  * @param type 流程类型
  */
 export default (key: string, name: string, type: string) => {
   let type_target: string;
-  if (type === MODDLE_TYPE.activiti) {
+  if (type === PROCESS_TYPE.activiti) {
     type_target = TYPE_TARGET.activiti;
-  } else if (type === MODDLE_TYPE.flowable) {
+  } else if (type === PROCESS_TYPE.flowable) {
     type_target = TYPE_TARGET.flowable;
   } else {
     type_target = TYPE_TARGET.camunda;

@@ -3,13 +3,13 @@ import { Button, Form, Input, Select, Space, Table, Typography } from 'antd';
 import { Collapse } from 'antd';
 import { PlusOutlined, PushpinTwoTone } from '@ant-design/icons';
 import EditFormField from '@/bpmn/panel/form/edit/EditFormField';
-import { FLOWABLE_PREFIX } from '@/bpmn/constant/moddle-constant';
+import { FLOWABLE_PREFIX } from '@/bpmn/constant/constants';
 import { getFormFieldNameByType } from '@/bpmn/panel/form/data-self';
 import {
   createProperties,
   createProperty,
   updateElementExtensions,
-} from '@/bpmn/util/panel-util';
+} from '@/bpmn/util/panelUtil';
 
 const { Panel } = Collapse;
 

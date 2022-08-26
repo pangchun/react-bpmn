@@ -1,3 +1,6 @@
+/**
+ * 开发测试使用的流程示例
+ */
 const xml: string =
   '' +
   '<?xml version="1.0" encoding="UTF-8"?>\n' +
@@ -216,8 +219,8 @@ const xml2: string =
 /**
  * 初始化流程图示例 请假流程
  */
-const diagramExample = {
+const testXML = {
   xml: xml,
 };
 
-export default diagramExample;
+export default testXML;

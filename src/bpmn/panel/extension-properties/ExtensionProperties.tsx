@@ -1,14 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Button, notification, Space, Table } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
-import EditProperty from '@/bpmn/panel/extension-properties/edit/EditProperty';
-import { FLOWABLE_PREFIX } from '@/bpmn/constant/moddle-constant';
+import EditProperty from '@/bpmn/panel/extension-properties/components/EditProperty/EditProperty';
+import { FLOWABLE_PREFIX } from '@/bpmn/constant/constants';
 import {
   createProperties,
   createProperty,
   extractOtherExtensionList,
   updateElementExtensions,
-} from '@/bpmn/util/panel-util';
+} from '@/bpmn/util/panelUtil';
 
 interface IProps {
   businessObject: any;

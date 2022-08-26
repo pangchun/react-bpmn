@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { Collapse, Space, Typography } from 'antd';
-import ElementBaseInfo from '@/bpmn/panel/base/ElementBaseInfo';
+import ElementBaseInfo from '@/bpmn/panel/ElementBaseInfo/ElementBaseInfo';
 
-import ElementOtherInfo from '@/bpmn/panel/other/ElementOtherInfo';
+import ElementOtherInfo from '@/bpmn/panel/ElementOtherInfo/ElementOtherInfo';
 import ExtensionProperties from '@/bpmn/panel/extension-properties/ExtensionProperties';
 import SignalMessage from '@/bpmn/panel/signal-message/SignalMessage';
 import ElementListener from '@/bpmn/panel/element-listener/ElementListener';
 import ElementTask from '@/bpmn/panel/task/ElementTask';
-import MultiInstance from '@/bpmn/panel/multi-instance/MultiInstance';
+import MultiInstance from '@/bpmn/panel/MultiInstance/MultiInstance';
 import ElementForm from '@/bpmn/panel/form/ElementForm';
 import {
   BellOutlined,
@@ -16,7 +16,7 @@ import {
   PlusSquareTwoTone,
   PushpinTwoTone,
 } from '@ant-design/icons';
-import { initBpmnInstance } from '@/bpmn/util/global-variable-util';
+import { initBpmnInstance } from '@/bpmn/util/windowUtil';
 
 interface IProps {
   modeler: any;

@@ -5,9 +5,9 @@ import {
   ACTIVITI_PREFIX,
   CAMUNDA_PREFIX,
   FLOWABLE_PREFIX,
-} from '@/bpmn/constant/moddle-constant';
-import { useAppDispatch, useAppSelector } from '@/redux/hooks/hooks';
-import { handlePrefix } from '@/redux/slice/bpmn-slice';
+} from '@/bpmn/constant/constants';
+import { useAppDispatch, useAppSelector } from '@/redux/hook/hooks';
+import { handlePrefix } from '@/redux/slice/bpmnSlice';
 
 interface IProps {}
 

@@ -5,8 +5,8 @@ import { PushpinTwoTone } from '@ant-design/icons';
 import {
   loop_characteristics_type,
   loop_characteristics_type_options,
-} from '@/bpmn/panel/multi-instance/data-self';
-import { FLOWABLE_PREFIX } from '@/bpmn/constant/moddle-constant';
+} from '@/bpmn/panel/MultiInstance/data-self';
+import { FLOWABLE_PREFIX } from '@/bpmn/constant/constants';
 
 const { Panel } = Collapse;
 
