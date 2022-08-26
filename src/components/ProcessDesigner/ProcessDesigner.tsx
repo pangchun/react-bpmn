@@ -79,15 +79,14 @@ export default function ProcessDesigner() {
    * 初始化建模器
    */
   function initBpmnModeler() {
-    setBpmnModeler(
-      new BpmnModeler({
-        container: '#canvas',
-        height: '96.5vh',
-        additionalModules: getAdditionalModules(),
-        moddleExtensions: getModdleExtensions(),
-      }),
-    );
-    console.log('初始化建模器完成...');
+    const modeler = new BpmnModeler({
+      container: '#canvas',
+      height: '96.5vh',
+      additionalModules: getAdditionalModules(),
+      moddleExtensions: getModdleExtensions(),
+    });
+    setBpmnModeler(modeler);
+    console.log('初始化建模器完成...', modeler);
   }
 
   function getAdditionalModules() {
