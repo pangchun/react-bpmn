@@ -68,8 +68,8 @@ export default function CustomDesigner() {
   useEffect(() => {
     if (bpmnModeler) {
       (async () => {
-        // await createBpmnDiagram();
-        await createBpmnDiagram(xmlStr);
+        await createBpmnDiagram();
+        // await createBpmnDiagram(xmlStr);
         addPropertiesListener();
       })();
     }
@@ -91,7 +91,7 @@ export default function CustomDesigner() {
   }
 
   function getAdditionalModules() {
-    const modules = [];
+    const modules: Array<any> = [];
 
     // 添加解析器
     if (bpmnPrefix === FLOWABLE_PREFIX) {

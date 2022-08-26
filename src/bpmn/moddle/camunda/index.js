@@ -1,6 +1,6 @@
 'use strict';
 
 module.exports = {
-  __init__: ['camundaModdleExtension'],
-  camundaModdleExtension: ['type', require('./CamundaExtension')],
+  __init__: ['camundaExtension'],
+  camundaExtension: ['type', require('./CamundaExtension')],
 };
