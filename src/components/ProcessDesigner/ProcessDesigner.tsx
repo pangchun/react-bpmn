@@ -68,8 +68,8 @@ export default function ProcessDesigner() {
   useEffect(() => {
     if (bpmnModeler) {
       (async () => {
-        await createBpmnDiagram();
-        // await createBpmnDiagram(xmlStr);
+        // await createBpmnDiagram();
+        await createBpmnDiagram(xmlStr);
         addPropertiesListener();
       })();
     }

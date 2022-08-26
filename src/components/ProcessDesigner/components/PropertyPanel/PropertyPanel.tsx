@@ -43,10 +43,10 @@ export default function PropertyPanel(props: IProps) {
   useEffect(() => {
     initBpmnInstance();
     // 避免初始化，流程图未加载完导致出错
-    if (modeler && processId) {
+    if (modeler) {
       init();
     }
-  }, [modeler, processId]);
+  }, [modeler]);
 
   function init() {
     // 设置window的bpmnInstance对象属性
@@ -71,7 +71,7 @@ export default function PropertyPanel(props: IProps) {
       window.bpmnInstance.rootElements = modeler.getDefinitions().rootElements;
     });
 
-    // 设置监听器，监听选中节点变化
+    // 设置监听器，监听选中节点变化 (特别注意：监听器只能设置一次，如果执行多次，会设置多个监听器)
     modeler?.on('selection.changed', (e: any) => {
       confirmCurrentElement(e.newSelection[0] || null);
     });
@@ -113,6 +113,7 @@ export default function PropertyPanel(props: IProps) {
       );
       return;
     }
+    debugger;
     console.log('当前选中的元素为11: \n', element?.businessObject);
     window.bpmnInstance.element = element;
     setBusinessObject(JSON.parse(JSON.stringify(element.businessObject)));
