@@ -12,9 +12,9 @@ import { Collapse } from 'antd';
 import { PushpinTwoTone } from '@ant-design/icons';
 import { useInterval } from 'ahooks';
 import { useWatch } from 'antd/es/form/Form';
-import UserTask from '@/bpmn/panel/task/task-components/UserTask';
-import ReceiveTask from '@/bpmn/panel/task/task-components/ReceiveTask';
-import ScriptTask from '@/bpmn/panel/task/task-components/ScriptTask';
+import UserTask from '@/bpmn/panel/ElementTask/UserTask/UserTask';
+import ReceiveTask from '@/bpmn/panel/ElementTask/ReceiveTask/ReceiveTask';
+import ScriptTask from '@/bpmn/panel/ElementTask/ScriptTask/ScriptTask';
 
 const { Panel } = Collapse;
 

@@ -3,7 +3,7 @@ import { Space, Typography, Table } from 'antd';
 
 import { Collapse } from 'antd';
 import { MessageOutlined } from '@ant-design/icons';
-import CreateSignalMessage from '@/bpmn/panel/signal-message/create/CreateSignalMessage';
+import CreateSignalMessage from '@/bpmn/panel/SignalMessage/CreateSignalMessage/CreateSignalMessage';
 
 const { Panel } = Collapse;
 

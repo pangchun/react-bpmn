@@ -1,15 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Button, Form, Input, Select, Space, Table, Typography } from 'antd';
 import { Collapse } from 'antd';
-import { PlusOutlined, PushpinTwoTone } from '@ant-design/icons';
-import EditFormField from '@/bpmn/panel/form/edit/EditFormField';
+import { PlusOutlined } from '@ant-design/icons';
+import EditFormField from '@/bpmn/panel/ElementForm/EditFormField/EditFormField';
 import { FLOWABLE_PREFIX } from '@/bpmn/constant/constants';
-import { getFormFieldNameByType } from '@/bpmn/panel/form/data-self';
-import {
-  createProperties,
-  createProperty,
-  updateElementExtensions,
-} from '@/bpmn/util/panelUtil';
+import { getFormFieldNameByType } from '@/bpmn/panel/ElementForm/data-self';
 
 const { Panel } = Collapse;
 

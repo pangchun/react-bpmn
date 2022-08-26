@@ -15,10 +15,10 @@ import { AppstoreOutlined } from '@ant-design/icons';
 import {
   form_field_type,
   form_field_type_options,
-} from '@/bpmn/panel/form/data-self';
-import EditConstraint from '@/bpmn/panel/form/edit/EditConstraint';
-import EditProperty from '@/bpmn/panel/form/edit/EditProperty';
-import EditEnumValues from '@/bpmn/panel/form/edit/EditEnumValues';
+} from '@/bpmn/panel/ElementForm/data-self';
+import EditConstraint from '@/bpmn/panel/ElementForm/EditConstraint/EditConstraint';
+import EditProperty from '@/bpmn/panel/ElementForm/EditProperty/EditProperty';
+import EditEnumValues from '@/bpmn/panel/ElementForm/EditEnumValues/EditEnumValues';
 
 const { Option } = Select;
 
@@ -474,7 +474,7 @@ export default function EditFormField(props: IProps) {
           </Form.Item>
           <Form.Item label="类型" name="type" rules={[{ required: true }]}>
             <Select placeholder={'请选择'}>
-              {form_field_type_options.map((e) => {
+              {form_field_type_options.map((e: any) => {
                 return (
                   <Option key={e.value} value={e.value}>
                     {e.name}

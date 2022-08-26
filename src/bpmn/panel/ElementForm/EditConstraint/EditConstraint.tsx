@@ -1,14 +1,13 @@
 import React, { Ref, useImperativeHandle, useState } from 'react';
-import { Form, Input, Modal, Select, Typography } from 'antd';
+import { Form, Input, Modal, Typography } from 'antd';
 import { EditOutlined } from '@ant-design/icons';
-import { field_type_options } from '@/bpmn/panel/element-listener/data-self';
 
 interface IProps {
   onRef: Ref<any>;
   reFreshParent: (rowsData: any) => any;
 }
 
-export default function EditField(props: IProps) {
+export default function EditConstraint(props: IProps) {
   // props属性
   const { onRef, reFreshParent } = props;
 
@@ -18,10 +17,8 @@ export default function EditField(props: IProps) {
   // 其它属性
   const [form] = Form.useForm<{
     key: number;
-    fieldName: string;
-    fieldType: string;
-    fieldTypeValue: string;
-    fieldValue: string;
+    name: string;
+    config: string;
   }>();
 
   useImperativeHandle(onRef, () => ({
@@ -32,10 +29,8 @@ export default function EditField(props: IProps) {
     form.setFieldsValue({
       // -1表示当前是新增
       key: rowObj?.key || -1,
-      fieldName: rowObj?.fieldName || '',
-      fieldType: rowObj?.fieldType || '',
-      fieldTypeValue: rowObj?.fieldTypeValue || '',
-      fieldValue: rowObj?.fieldValue || '',
+      name: rowObj?.name || undefined,
+      config: rowObj?.config || undefined,
     });
     setIsModalVisible(true);
   }
@@ -51,13 +46,10 @@ export default function EditField(props: IProps) {
       .then((values) => {
         let rowObj: any = Object.create(null);
         rowObj.key = form.getFieldValue('key');
-        rowObj.fieldName = values.fieldName;
-        rowObj.fieldType = field_type_options.find(
-          (el) => el.value === values.fieldTypeValue,
-        )?.name;
-        rowObj.fieldTypeValue = values.fieldTypeValue;
-        rowObj.fieldValue = values.fieldValue;
+        rowObj.name = values.name;
+        rowObj.config = values.config;
         // 更新父组件表格数据
+        console.log(rowObj);
         reFreshParent(rowObj);
         setIsModalVisible(false);
       })
@@ -85,31 +77,16 @@ export default function EditField(props: IProps) {
       >
         <Form form={form} labelCol={{ span: 5 }} wrapperCol={{ span: 18 }}>
           <Form.Item
-            label="字段名称"
-            name="fieldName"
-            rules={[{ required: true, message: '字段名称不能为空哦!' }]}
+            label="名称"
+            name="name"
+            rules={[{ required: true, message: '名称不能为空哦!' }]}
           >
             <Input placeholder={'请输入'} />
           </Form.Item>
           <Form.Item
-            name="fieldTypeValue"
-            label="字段类型"
-            rules={[{ required: true }]}
-          >
-            <Select>
-              {field_type_options.map((e) => {
-                return (
-                  <Select.Option key={e.value} value={e.value}>
-                    {e.name}
-                  </Select.Option>
-                );
-              })}
-            </Select>
-          </Form.Item>
-          <Form.Item
-            label="字段值"
-            name="fieldValue"
-            rules={[{ required: true, message: '字段值不能为空哦!' }]}
+            label="配置"
+            name="config"
+            rules={[{ required: true, message: '配置不能为空哦!' }]}
           >
             <Input placeholder={'请输入'} />
           </Form.Item>

@@ -22,9 +22,9 @@ import {
   task_event_type_options,
   timer_type,
   timer_type_options,
-} from '@/bpmn/panel/element-listener/data-self';
+} from '@/bpmn/panel/ElementListener/data-self';
 import { AppstoreOutlined } from '@ant-design/icons';
-import EditField from '@/bpmn/panel/element-listener/edit/EditField';
+import EditField from '@/bpmn/panel/ElementListener/EditListener/EditField/EditField';
 
 const { Option } = Select;
 

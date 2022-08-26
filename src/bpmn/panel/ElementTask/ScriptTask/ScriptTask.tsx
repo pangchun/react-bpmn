@@ -4,12 +4,12 @@ import {
   assignee_mock,
   candidateGroups_mock,
   candidateUsers_mock,
-} from '@/bpmn/panel/task/mock-data';
+} from '@/bpmn/panel/ElementTask/mock-data';
 import moment from 'moment';
 import {
   script_type,
   script_type_options,
-} from '@/bpmn/panel/element-listener/data-self';
+} from '@/bpmn/panel/ElementListener/data-self';
 
 const keyOptions = {
   scriptFormat: 'scriptFormat',

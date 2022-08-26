@@ -2,9 +2,9 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Button, Collapse, notification, Space, Table, Typography } from 'antd';
 import { BellOutlined, PlusOutlined } from '@ant-design/icons';
 import { FLOWABLE_PREFIX } from '@/bpmn/constant/constants';
-import { encapsulateListener } from '@/bpmn/panel/element-listener/data-self';
-import EditListener from '@/bpmn/panel/element-listener/edit/EditListener';
-import { createListenerObject } from '@/bpmn/panel/element-listener/listener-util';
+import { encapsulateListener } from '@/bpmn/panel/ElementListener/data-self';
+import EditListener from '@/bpmn/panel/ElementListener/EditListener/EditListener';
+import { createListenerObject } from '@/bpmn/panel/ElementListener/listener-util';
 import { updateElementExtensions } from '@/bpmn/util/panelUtil';
 
 const { Panel } = Collapse;

@@ -3,12 +3,12 @@ import { Collapse, Space, Typography } from 'antd';
 import ElementBaseInfo from '@/bpmn/panel/ElementBaseInfo/ElementBaseInfo';
 
 import ElementOtherInfo from '@/bpmn/panel/ElementOtherInfo/ElementOtherInfo';
-import ExtensionProperties from '@/bpmn/panel/extension-properties/ExtensionProperties';
-import SignalMessage from '@/bpmn/panel/signal-message/SignalMessage';
-import ElementListener from '@/bpmn/panel/element-listener/ElementListener';
-import ElementTask from '@/bpmn/panel/task/ElementTask';
+import ExtensionProperties from '@/bpmn/panel/ExtensionProperties/ExtensionProperties';
+import SignalMessage from '@/bpmn/panel/SignalMessage/SignalMessage';
+import ElementListener from '@/bpmn/panel/ElementListener/ElementListener';
+import ElementTask from '@/bpmn/panel/ElementTask/ElementTask';
 import MultiInstance from '@/bpmn/panel/MultiInstance/MultiInstance';
-import ElementForm from '@/bpmn/panel/form/ElementForm';
+import ElementForm from '@/bpmn/panel/ElementForm/ElementForm';
 import {
   BellOutlined,
   MessageOutlined,
