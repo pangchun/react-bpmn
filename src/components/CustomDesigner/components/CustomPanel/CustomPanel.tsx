@@ -20,7 +20,7 @@ import { initBpmnInstance } from '@/bpmn/util/global-variable-util';
 
 interface IProps {
   modeler: any;
-  processId: string;
+  processId?: string;
 }
 
 export default function CustomPanel(props: IProps) {
@@ -38,10 +38,9 @@ export default function CustomPanel(props: IProps) {
   useEffect(() => {
     initBpmnInstance();
     // 避免初始化，流程图未加载完导致出错
-    if (!modeler) {
-      return;
+    if (modeler && processId) {
+      init();
     }
-    init();
   }, [modeler, processId]);
 
   function init() {

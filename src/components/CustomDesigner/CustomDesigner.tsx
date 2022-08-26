@@ -28,10 +28,10 @@ import diagramExample from '@/bpmn/resource/diagram-example';
 import DefaultEmptyXML from '@/bpmn/constant/moddle-constant';
 
 // 引入当前组件样式
-import CustomPanel from '@/components/CustomDesigner/components/CustomPanel/CustomPanel';
 import { Button, Col, Row, Space } from 'antd';
 
 // 组件引入
+import CustomPanel from '@/components/CustomDesigner/components/CustomPanel/CustomPanel';
 import XmlPreview from '@/components/CustomDesigner/components/XmlPreview/XmlPreview';
 import { FolderOpenOutlined } from '@ant-design/icons';
 import DesignerConfig from '@/components/CustomDesigner/components/DesignerConfig/DesignerConfig';
@@ -47,7 +47,7 @@ export default function CustomDesigner() {
   // state属性
   const [bpmnModeler, setBpmnModeler] = useState<any>();
   const [xmlStr, setXmlStr] = useState<string>(diagramExample.xml);
-  const [processId, setProcessId] = useState<string>('');
+  const [processId, setProcessId] = useState<string>();
   // redux
   const bpmnPrefix = useAppSelector((state) => state.bpmn.prefix);
   const dispatch = useAppDispatch();
@@ -57,18 +57,22 @@ export default function CustomDesigner() {
    */
   useEffect(() => {
     initBpmnModeler();
+    // todo 考虑将解析流程信息放在这一步，抽取一个方法解析xml并设置流程信息
   }, [bpmnPrefix]);
 
   /**
    * 导入 xml，并添加监听器
    * 1、监听面板变化，有变化时立即更新到 xml 中；
+   * 2、如果 bpmnModeler 还未初始化，不能导入流程图；
    */
   useEffect(() => {
-    (async () => {
-      await createBpmnDiagram();
-      // await createBpmnDiagram(xmlStr);
-      addPropertiesListener();
-    })();
+    if (bpmnModeler) {
+      (async () => {
+        // await createBpmnDiagram();
+        await createBpmnDiagram(xmlStr);
+        addPropertiesListener();
+      })();
+    }
   }, [bpmnModeler]);
 
   /**
@@ -83,6 +87,7 @@ export default function CustomDesigner() {
         moddleExtensions: getModdleExtensions(),
       }),
     );
+    console.log('初始化建模器完成...');
   }
 
   function getAdditionalModules() {
@@ -125,6 +130,7 @@ export default function CustomDesigner() {
    * @param xml
    */
   function createBpmnDiagram(xml?: string) {
+    console.log('createBpmnDiagram执行了1次...');
     // 定义流程信息
     let definitionsInfo: any = null;
     let processInfo: any = null;
@@ -148,6 +154,7 @@ export default function CustomDesigner() {
     } catch (e) {
       console.error('流程图绘制出错：createBpmnDiagram => ' + e);
     }
+    console.log('绘制流程图完成...');
   }
 
   /**
@@ -157,6 +164,7 @@ export default function CustomDesigner() {
     bpmnModeler?.on('commandStack.changed', async () => {
       // 你可以尝试在这里执行一些操作
     });
+    console.log('添加监听面板属性变化完成...');
   }
 
   function renderToolBar() {
@@ -176,6 +184,14 @@ export default function CustomDesigner() {
             {'打开'}
           </Button>
           <XmlPreview modeler={bpmnModeler} />
+          <Button
+            type="primary"
+            size={'small'}
+            icon={<FolderOpenOutlined />}
+            onClick={() => createBpmnDiagram()}
+          >
+            {'重置'}
+          </Button>
           <DesignerConfig />
         </Space>
       </>
