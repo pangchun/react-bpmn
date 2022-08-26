@@ -6,7 +6,12 @@ interface IProps {
   modeler: any;
 }
 
-export default function XmlPreview(props: IProps) {
+/**
+ * 文本查看器
+ * @param props
+ * @constructor
+ */
+export default function TextViewer(props: IProps) {
   const { modeler } = props;
 
   const [xml, setXml] = useState<string>('');

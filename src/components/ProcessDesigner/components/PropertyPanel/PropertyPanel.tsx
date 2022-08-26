@@ -23,7 +23,12 @@ interface IProps {
   processId?: string;
 }
 
-export default function CustomPanel(props: IProps) {
+/**
+ * 属性面板
+ * @param props
+ * @constructor
+ */
+export default function PropertyPanel(props: IProps) {
   // props属性
   const { modeler, processId } = props;
 

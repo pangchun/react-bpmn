@@ -7,12 +7,16 @@ import {
   FLOWABLE_PREFIX,
 } from '@/bpmn/constant/moddle-constant';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks/hooks';
-import { incrementByAmount } from '@/redux/slice/counter-slice';
 import { handlePrefix } from '@/redux/slice/bpmn-slice';
 
 interface IProps {}
 
-export default function DesignerConfig(props: IProps) {
+/**
+ * 配置中心
+ * @param props
+ * @constructor
+ */
+export default function ConfigServer(props: IProps) {
   // state
   const [visible, setVisible] = useState(false);
   // redux

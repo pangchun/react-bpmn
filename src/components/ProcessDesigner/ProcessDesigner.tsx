@@ -31,10 +31,10 @@ import DefaultEmptyXML from '@/bpmn/constant/moddle-constant';
 import { Button, Col, Row, Space } from 'antd';
 
 // 组件引入
-import CustomPanel from '@/components/CustomDesigner/components/CustomPanel/CustomPanel';
-import XmlPreview from '@/components/CustomDesigner/components/XmlPreview/XmlPreview';
+import PropertyPanel from '@/components/CustomDesigner/components/PropertyPanel/PropertyPanel';
+import TextViewer from '@/components/CustomDesigner/components/TextViewer/TextViewer';
 import { FolderOpenOutlined } from '@ant-design/icons';
-import DesignerConfig from '@/components/CustomDesigner/components/DesignerConfig/DesignerConfig';
+import ConfigServer from '@/components/CustomDesigner/components/ConfigServer/ConfigServer';
 
 // 常量引入
 import {
@@ -43,7 +43,7 @@ import {
   FLOWABLE_PREFIX,
 } from '@/bpmn/constant/moddle-constant';
 
-export default function CustomDesigner() {
+export default function ProcessDesigner() {
   // state属性
   const [bpmnModeler, setBpmnModeler] = useState<any>();
   const [xmlStr, setXmlStr] = useState<string>(diagramExample.xml);
@@ -183,7 +183,7 @@ export default function CustomDesigner() {
           >
             {'打开'}
           </Button>
-          <XmlPreview modeler={bpmnModeler} />
+          <TextViewer modeler={bpmnModeler} />
           <Button
             type="primary"
             size={'small'}
@@ -192,7 +192,7 @@ export default function CustomDesigner() {
           >
             {'重置'}
           </Button>
-          <DesignerConfig />
+          <ConfigServer />
         </Space>
       </>
     );
@@ -223,7 +223,7 @@ export default function CustomDesigner() {
             boxShadow: '0 0 8px #ccc',
           }}
         >
-          <CustomPanel modeler={bpmnModeler} processId={processId} />
+          <PropertyPanel modeler={bpmnModeler} processId={processId} />
         </Col>
       </Row>
     </>
