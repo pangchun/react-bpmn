@@ -4,7 +4,7 @@ import { Collapse } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import EditFormField from '@/bpmn/panel/ElementForm/EditFormField/EditFormField';
 import { FLOWABLE_PREFIX } from '@/bpmn/constant/constants';
-import { getFormFieldNameByType } from '@/bpmn/panel/ElementForm/data-self';
+import { getFormFieldNameByType } from '@/bpmn/panel/ElementForm/dataSelf';
 
 const { Panel } = Collapse;
 

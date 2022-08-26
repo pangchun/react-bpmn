@@ -1,7 +1,7 @@
 import React, { Ref, useImperativeHandle, useState } from 'react';
 import { Form, Input, Modal, Select, Typography } from 'antd';
 import { EditOutlined } from '@ant-design/icons';
-import { field_type_options } from '@/bpmn/panel/ElementListener/data-self';
+import { field_type_options } from '@/bpmn/panel/ElementListener/dataSelf';
 
 interface IProps {
   onRef: Ref<any>;

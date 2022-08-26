@@ -15,7 +15,7 @@ import { AppstoreOutlined } from '@ant-design/icons';
 import {
   form_field_type,
   form_field_type_options,
-} from '@/bpmn/panel/ElementForm/data-self';
+} from '@/bpmn/panel/ElementForm/dataSelf';
 import EditConstraint from '@/bpmn/panel/ElementForm/EditConstraint/EditConstraint';
 import EditProperty from '@/bpmn/panel/ElementForm/EditProperty/EditProperty';
 import EditEnumValues from '@/bpmn/panel/ElementForm/EditEnumValues/EditEnumValues';

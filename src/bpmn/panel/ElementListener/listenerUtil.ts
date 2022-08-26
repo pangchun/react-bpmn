@@ -5,7 +5,7 @@ import {
   listener_type,
   script_type,
   task_event_type,
-} from '@/bpmn/panel/ElementListener/data-self';
+} from '@/bpmn/panel/ElementListener/dataSelf';
 import { IdGenerator } from '@/bpmn/util/idUtil';
 
 /**

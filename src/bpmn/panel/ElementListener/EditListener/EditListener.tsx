@@ -22,7 +22,7 @@ import {
   task_event_type_options,
   timer_type,
   timer_type_options,
-} from '@/bpmn/panel/ElementListener/data-self';
+} from '@/bpmn/panel/ElementListener/dataSelf';
 import { AppstoreOutlined } from '@ant-design/icons';
 import EditField from '@/bpmn/panel/ElementListener/EditListener/EditField/EditField';
 

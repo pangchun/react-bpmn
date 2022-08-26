@@ -4,7 +4,7 @@ import {
   assignee_mock,
   candidateGroups_mock,
   candidateUsers_mock,
-} from '@/bpmn/panel/ElementTask/mock-data';
+} from '@/bpmn/panel/ElementTask/mockData';
 import moment from 'moment';
 
 const keyOptions = {
