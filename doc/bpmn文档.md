@@ -975,6 +975,311 @@ EventBus.on("foo", function(event, payload) {
 })
 ```
 
+# Bpmn.js 中文文档（二）
+
+关于 `bpmn.js` 的简单使用，我在 [Bpmn.js 中文文档（一）](https://juejin.cn/post/6900793894263488519) 中做了简单描述，并对其中几个核心模块的 api 做了说明，本文将继上文继续对 `bpmn.js` 的功能模块 api 做简单说明。
+
+## 四. Modules
+
+### 7. Modeling 基本建模方法
+
+`Diagram.js` 提供的基础建模工厂 `BaseModeling`，注入了 `EventBus, ElementFactory, CommandStack` 模块。`Bpmn.js` 继承了 `BaseModeling` 并提供了新的方法。
+
+```javascript
+export default function Modeling(
+    eventBus, elementFactory, commandStack,
+    bpmnRules) {
+
+  BaseModeling.call(this, eventBus, elementFactory, commandStack);
+
+  this._bpmnRules = bpmnRules;
+}
+
+inherits(Modeling, BaseModeling);
+```
+
+**该模块在自定义节点属性等方面经常使用**
+
+#### **使用方式**
+
+```javascript
+const Modeling = this.bpmnModeler.get("modeling");
+```
+
+`Modeling` 初始化时会向 `CommandStack` 命令堆栈中注册对应的处理程序，以确保操作可恢复和取消。
+
+`Modeling` 提供的方法主要是根据 `handlers` 来定义的，每个方法会触发对应的事件：
+
+```javascript
+// BaseModeling (diagram.js)
+BaseModeling.prototype.getHandlers = function () {
+    var BaseModelingHandlers = {
+        'shape.append': AppendShapeHandler, // 形状可逆添加到源形状的处理程序
+        'shape.create': CreateShapeHandler, // 形状可逆创建、添加到流程中的处理程序
+        'shape.delete': DeleteShapeHandler, // 形状可逆移除的处理程序
+        'shape.move': MoveShapeHandler, // 形状可逆移动的处理程序
+        'shape.resize': ResizeShapeHandler, // 形状可逆变换大小的处理程序
+        'shape.replace': ReplaceShapeHandler, // 通过添加新形状并删除旧形状来替换形状。 如果可能，将保持传入和传出连接
+        'shape.toggleCollapse': ToggleShapeCollapseHandler, // 切换元素的折叠状态及其所有子元素的可见性
+        'spaceTool': SpaceToolHandler, // 通过移动和调整形状、大小、连线锚点(巡航点)来添加或者删除空间
+        'label.create': CreateLabelHandler, // 创建标签并附加到特定的模型元素上
+        'connection.create': CreateConnectionHandler, // 创建连线，并显示到画布上
+        'connection.delete': DeleteConnectionHandler, // 移除连线
+        'connection.move': MoveConnectionHandler, // 实现连接的可逆移动的处理程序。 该处理程序与布局连接处理程序的不同之处在于它保留了连接布局
+        'connection.layout': LayoutConnectionHandler, // 实现形状的可逆移动的处理程序
+        'connection.updateWaypoints': UpdateWaypointsHandler, // 更新锚点(巡航点)
+        'connection.reconnect': ReconnectConnectionHandler, // 重新建立连接关系
+        'elements.create': CreateElementsHandler, // 元素可逆创建的处理程序
+        'elements.move': MoveElementsHandler, // 元素可逆移动的处理程序
+        'elements.delete': DeleteElementsHandler, // 元素可逆移除的处理程序
+        'elements.distribute': DistributeElementsHandler, // 均匀分配元素布局的处理程序
+        'elements.align': AlignElementsHandler, // 以某种方式对齐元素
+        'element.updateAttachment': UpdateAttachmentHandler // 实现形状的可逆附着/分离的处理程序。
+    }
+    return BaseModelingHandlers;
+}
+
+// Modeling (bpmn.js)
+var ModelingHandlers = BaseModeling.prototype.getHandlers.call(this);
+
+ModelingHandlers['element.updateModdleProperties'] = UpdateModdlePropertiesHandler; // 实现元素上的扩展属性的可逆修改
+ModelingHandlers['element.updateProperties'] = UpdatePropertiesHandler; // 实现元素上的属性的可逆修改
+ModelingHandlers['canvas.updateRoot'] = UpdateCanvasRootHandler; // 可逆更新画布挂载节点
+ModelingHandlers['lane.add'] = AddLaneHandler; // 可逆通道添加
+ModelingHandlers['lane.resize'] = ResizeLaneHandler; // 通道可逆resize
+ModelingHandlers['lane.split'] = SplitLaneHandler; // 通道可逆分隔
+ModelingHandlers['lane.updateRefs'] = UpdateFlowNodeRefsHandler; // 可逆更新通道引用
+ModelingHandlers['id.updateClaim'] = IdClaimHandler;
+ModelingHandlers['element.setColor'] = SetColorHandler; // 可逆更新元素颜色
+ModelingHandlers['element.updateLabel'] = UpdateLabelHandler; // 可逆更新元素label
+```
+
+#### **提供方法**
+
+```javascript
+const Modeling = this.bpmnModeler.get("modeling");
+
+
+// 获取当前拥有的处理程序
+Modeling.getHandlers()
+
+/**
+ * 更新元素的label标签，同时触发 element.updateLabel 事件
+ * @param element: ModdleElement
+ * @param newLabel: ModdleElement 新的标签元素
+ * @param newBounds: {x: number；y: number; width: number; height: number} 位置及大小
+ * @param hints?：{} 提示信息
+ */
+Modeling.updateLabel(element, newLabel, newBounds, hints);
+
+/**
+ * 创建新的连接线，触发 connection.create 事件
+ * 会在内部调用 createConnection() 方法（Modeling.prototype.createConnection -- in diagram.js）
+ * @param source：ModdleElement 源元素
+ * @param target：ModdleElement 目标元素
+ * @param attrs?: {} 属性，未传时会根据规则替换成对应的对象，主要包含连线类型 type
+ * @param hints?: {} 
+ * @return Connection 连线实例
+ */
+Modeling.connect(source, target, attrs, hints)
+
+/**
+ * 更新元素扩展属性，同时触发 element.updateModdleProperties
+ * @param element 目标元素
+ * @param moddleElement 元素扩展属性对应的实例
+ * @param properties 属性
+ */
+Modeling.updateModdleProperties(element, moddleElement, properties)
+
+/**
+ * 更新元素属性，同时触发 element.updateProperties
+ * @param element 目标元素
+ * @param properties 属性
+ */
+Modeling.connect(element, properties)
+
+/**
+ * 泳道(通道)事件，会触发对应的事件 lane.resize
+ */
+Modeling.resizeLane(laneShape, newBounds, balanced)
+
+/**
+ * 泳道(通道)事件，会触发对应的事件 lane.add
+ */
+Modeling.addLane(targetLaneShape, location)
+
+/**
+ * 泳道(通道)事件，会触发对应的事件 lane.split
+ */
+Modeling.splitLane(targetLane, count)
+
+/**
+ * 将当前图转换为协作图
+ * @return Root
+ */
+Modeling.makeCollaboration()
+
+/**
+ * 将当前图转换为一个过程
+ * @return Root
+ */
+Modeling.makeProcess()
+
+/**
+ * 修改目标元素color，同时触发 element.setColor 事件
+ * @param elements: ModdleElment || ModdleElement[] 目标元素
+ * @param colors：{[key: string]: string} svg对应的css颜色属性对象
+ */
+Modeling.setColor(elements, colors)
+```
+
+#### `BaseModeling` 提供方法
+
+`BaseModeling` 为 `diagram.js` 提供的基础方法，也可以直接调用未被 `bpmn.js` 覆盖的方法。
+
+```javascript
+// 向命令堆栈注册处理程序
+Modeling.registerHandlers(commandStack)
+
+// 移动 Shape 元素到新元素下， 触发shape.move
+Modeling.moveShape(shape, delta, newParent, newParentIndex, hints)
+
+// 移动多个 Shape 元素到新元素下， 触发 elements.move
+Modeling.moveElements(shapes, delta, target, hints)
+
+// 移动 Connection 元素到新元素下， 触发 connection.move
+Modeling.moveConnection(connection, delta, newParent, newParentIndex, hints)
+
+// 移动 Connection 元素到新元素下， 触发 connection.move
+Modeling.layoutConnection(connection, hints)
+
+
+/**
+ * 创建新的连线实例，触发 connection.create
+ * @param source: ModdleElement
+ * @param target: ModdleElement
+ * @param parentIndex?: number
+ * @param connection: ModdleElement | Object 连线实例或者配置的属性对象
+ * @param parent：ModdleElement 所在的元素的父元素 通常为 Root
+ * @param hints: {}
+ * @return Connection 新的连线实例
+ */
+Modeling.createConnection(source, target, parentIndex, connection, parent, hints)
+
+/**
+ * 创建新的图形实例，触发 shape.create
+ * @param shape
+ * @param position
+ * @param target
+ * @param parentIndex
+ * @param hints
+ * @return Shape 新的图形实例
+ */
+Modeling.createShape(shape, position, target, parentIndex, hints)
+
+/**
+ * 创建多个元素实例，触发 elements.create
+ * @param
+ * @param
+ * @return Elements 实例数组
+ */
+Modeling.createElements(elements, position, parent, parentIndex, hints)
+
+/**
+ * 为元素创建 label 实例， 触发 label.create
+ * @param labelTarget: ModdleElement 目标元素
+ * @param position: { x: number; y: number }
+ * @param label：ModdleElement label 实例
+ * @param parent: ModdleElement
+ * @return Label
+ */
+Modeling.createLabel(labelTarget, position, label, parent)
+
+/**
+ * 将形状附加到给定的源，在源和新创建的形状之间绘制连接。触发 shape.append
+ * @param source: ModdleElement
+ * @param shape: ModdleElement | Object
+ * @param position: { x: number; y: number }
+ * @param target: ModdleElement
+ * @param hints
+ * @return Shape 形状实例
+ */
+Modeling.appendShape(source, shape, position, target, hints)
+
+/**
+ * 移除元素，触发 elements.delete
+ * @param elements: ModdleElement[]
+ */
+Modeling.removeElements(elements)
+
+/**
+ * 不太了解
+ */
+Modeling.distributeElements(groups, axis, dimension)
+
+/**
+ * 移除元素, 触发 shape.delete
+ * @param shape： ModdleElement
+ * @param hints?: object
+ */
+Modeling.removeShape(shape, hints)
+
+/**
+ * 移除连线, 触发 connection.delete
+ * @param connection： ModdleElement
+ * @param hints?: object
+ */
+Modeling.removeConnection(connection, hints)
+
+/**
+ * 更改元素类型(替换元素)，触发 shape.replace
+ * @param oldShape：ModdleElement
+ * @param newShape：ModdleElement
+ * @param hints?: object
+ * @return Shape 替换后的新元素实例
+ */
+Modeling.replaceShape(oldShape, newShape, hints)
+
+/**
+ * 对其选中元素，触发 shape.replace
+ * @param elements: ModdleElement[]
+ * @param alignment: Alignment
+ * @return
+ */
+Modeling.alignElements(elements, alignment)
+
+/**
+ * 调整形状元素大小，触发 shape.resize
+ * @param shape: ModdleElement
+ * @param newBounds
+ * @param minBounds
+ * @param hints?: object
+ */
+Modeling.resizeShape(shape, newBounds, minBounds, hints)
+
+/**
+ * 切换元素展开/收缩模式，触发 shape.toggleCollapse
+ * @param shape?: ModdleElement
+ * @param hints?: object=
+ */
+Modeling.toggleCollapse(shape, hints)
+
+// 连线调整的方法
+Modeling.reconnect(connection, source, target, dockingOrPoints, hints)
+
+Modeling.reconnectStart(connection, newSource, dockingOrPoints, hints)
+
+Modeling.reconnectEnd(connection, newTarget, dockingOrPoints, hints)
+
+Modeling.connect(source, target, attrs, hints)
+```
+
+### 8. Draw 绘制模块
+
+
+
+
+
 # Bpmn-js自定义描述文件说明
 
 ## 前言
@@ -1322,6 +1627,46 @@ bpmnModeler.on("element.click", function (event, eventObj) {
     <bpmn2:sequenceFlow id="Flow_1h7pp7l" sourceRef="Activity_0ahhdt5" targetRef="Event_1eofx2i" />
 </bpmn2:process>
 ```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
