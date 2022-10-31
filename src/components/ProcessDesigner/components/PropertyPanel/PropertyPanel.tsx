@@ -113,7 +113,6 @@ export default function PropertyPanel(props: IProps) {
       );
       return;
     }
-    debugger;
     console.log('当前选中的元素为11: \n', element?.businessObject);
     window.bpmnInstance.element = element;
     setBusinessObject(JSON.parse(JSON.stringify(element.businessObject)));

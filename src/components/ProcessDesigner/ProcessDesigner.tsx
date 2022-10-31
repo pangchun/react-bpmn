@@ -54,31 +54,20 @@ export default function ProcessDesigner() {
 
   /**
    * 初始化建模器
+   * 1、这一步在绘制流程图之前进行，且随流程前缀改变而改变；
+   * 2、因为解析器和解析文件与流程引擎类型(也就是前缀)有关，因此这里依赖的变量是放在redux里的流程前缀名
    */
   useEffect(() => {
     initBpmnModeler();
-    // todo 考虑将解析流程信息放在这一步，抽取一个方法解析xml并设置流程信息
   }, [bpmnPrefix]);
-
-  /**
-   * 导入 xml，并添加监听器
-   * 1、监听面板变化，有变化时立即更新到 xml 中；
-   * 2、如果 bpmnModeler 还未初始化，不能导入流程图；
-   */
-  useEffect(() => {
-    if (bpmnModeler) {
-      (async () => {
-        // await createBpmnDiagram();
-        await createBpmnDiagram(xmlStr);
-        addPropertiesListener();
-      })();
-    }
-  }, [bpmnModeler]);
 
   /**
    * 初始化建模器
    */
   function initBpmnModeler() {
+    console.log(
+      '===============================【初始化建模器】1、初始化建模器开始===================================',
+    );
     const modeler = new BpmnModeler({
       container: '#canvas',
       height: '96.5vh',
@@ -86,13 +75,19 @@ export default function ProcessDesigner() {
       moddleExtensions: getModdleExtensions(),
     });
     setBpmnModeler(modeler);
-    console.log('初始化建模器完成...', modeler);
+    console.log(
+      '===============================【初始化建模器】4、初始化建模器结束===================================',
+    );
   }
 
+  /**
+   * 添加解析器
+   */
   function getAdditionalModules() {
+    console.log(
+      '===============================【初始化建模器】2、添加解析器===================================',
+    );
     const modules: Array<any> = [];
-
-    // 添加解析器
     if (bpmnPrefix === FLOWABLE_PREFIX) {
       modules.push(flowableExtension);
     }
@@ -102,14 +97,17 @@ export default function ProcessDesigner() {
     if (bpmnPrefix === ACTIVITI_PREFIX) {
       modules.push(activitiExtension);
     }
-
     return modules;
   }
 
+  /**
+   * 添加解析文件
+   */
   function getModdleExtensions() {
+    console.log(
+      '===============================【初始化建模器】3、添加解析文件===================================',
+    );
     const extensions: any = {};
-
-    // 添加解析文件
     if (bpmnPrefix === FLOWABLE_PREFIX) {
       extensions.flowable = flowableDescriptor;
     }
@@ -119,21 +117,33 @@ export default function ProcessDesigner() {
     if (bpmnPrefix === ACTIVITI_PREFIX) {
       extensions.activiti = activitiDescriptor;
     }
-
     return extensions;
   }
 
   /**
+   * 绘制流程图，并设置属性面板的监听器
+   * 1、建模器初始化完成后，开始绘制流程图，如果需要创建空白的流程图可以使用bpmnModeler.createDiagram()方法，但是这个流程的id是固定的，是bpmn内部默认的xml字符串；
+   */
+  useEffect(() => {
+    if (!bpmnModeler) return;
+    (async () => {
+      await createBpmnDiagram(xmlStr);
+      bindPropertiesListener();
+    })();
+  }, [bpmnModeler]);
+
+  /**
    * 绘制流程图
    * 1、调用 modeler 的 importXML 方法，将 xml 字符串转为图像；
+   *
    * @param xml
    */
   function createBpmnDiagram(xml?: string) {
-    console.log('createBpmnDiagram执行了1次...');
+    console.log('++++++++++++++++++++++++++++++++++++');
     // 定义流程信息
     let definitionsInfo: any = null;
     let processInfo: any = null;
-    // 使用xml2js解析xml获取流程对象
+    // 使用xml2js解析xml获取流程对象 todo 这里的xml解析成js的方法要分解拆成多个方法来调用，代码会更清晰，写成工具类
     const parseString = require('xml2js').parseString;
     parseString(xml, function (err: any, result: any) {
       if (result) {
@@ -141,6 +151,8 @@ export default function ProcessDesigner() {
         processInfo = result[`bpmn2:definitions`][`bpmn2:process`][0][`$`];
       }
     });
+    console.log(definitionsInfo);
+    console.log(processInfo);
     // 设置流程基本信息 todo 要保证id的传递不会改变, 这里用变量传递会导致更改不能穿到子组件
     let newId = processInfo?.id || 'Process_' + new Date().getTime();
     let newName = processInfo?.name || '新建业务流程';
@@ -151,21 +163,32 @@ export default function ProcessDesigner() {
     try {
       bpmnModeler?.importXML(newXML);
     } catch (e) {
-      console.error('流程图绘制出错：createBpmnDiagram => ' + e);
+      console.error('流程图绘制出错：' + e);
     }
-    console.log('绘制流程图完成...');
+    // 获取流程的信息
+    setTimeout(() => {
+      const canvas = bpmnModeler.get('canvas');
+      const rootElement = canvas.getRootElement();
+      console.log('Process Id:' + rootElement.id);
+      console.log('Process Name:' + rootElement.businessObject.name);
+    }, 10);
   }
 
   /**
-   * 监听面板属性变化
+   * 属性面板监听器
+   * 1、属性面板监听器，当监听到属性面板的属性发生变化，会同步更新到xml字符串中；
+   * 2、监听器要等到流程图绘制结束后才能添加；
    */
-  function addPropertiesListener() {
+  function bindPropertiesListener() {
+    console.log('-----------------------');
     bpmnModeler?.on('commandStack.changed', async () => {
-      // 你可以尝试在这里执行一些操作
+      // 这里可以执行一些其他操作
     });
-    console.log('添加监听面板属性变化完成...');
   }
 
+  /**
+   * 渲染顶部工具栏
+   */
   function renderToolBar() {
     return (
       <>
@@ -180,14 +203,22 @@ export default function ProcessDesigner() {
             icon={<FolderOpenOutlined />}
             onClick={() => {}}
           >
-            {'打开'}
+            {'打开文件'}
+          </Button>
+          <Button
+            type="primary"
+            size={'small'}
+            icon={<FolderOpenOutlined />}
+            onClick={() => {}}
+          >
+            {'下载文件'}
           </Button>
           <TextViewer modeler={bpmnModeler} />
           <Button
             type="primary"
             size={'small'}
             icon={<FolderOpenOutlined />}
-            onClick={() => createBpmnDiagram()}
+            // onClick={() => createBpmnDiagram()}
           >
             {'重置'}
           </Button>
@@ -200,7 +231,9 @@ export default function ProcessDesigner() {
   return (
     <>
       <Row gutter={0}>
-        <Col span={1}>{/*快捷工具栏*/}</Col>
+        <Col span={1}>
+          {/*todo 2022/10/31 快捷工具栏，暂时留空，后面补充功能和界面*/}
+        </Col>
         <Col span={17}>
           {renderToolBar()}
           <div
@@ -222,7 +255,7 @@ export default function ProcessDesigner() {
             boxShadow: '0 0 8px #ccc',
           }}
         >
-          <PropertyPanel modeler={bpmnModeler} processId={processId} />
+          {/*<PropertyPanel modeler={bpmnModeler} processId={processId}/>*/}
         </Col>
       </Row>
     </>
