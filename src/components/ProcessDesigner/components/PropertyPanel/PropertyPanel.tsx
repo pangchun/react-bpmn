@@ -16,7 +16,7 @@ import {
   PlusSquareTwoTone,
   PushpinTwoTone,
 } from '@ant-design/icons';
-import { initBpmnInstance } from '@/bpmn/util/windowUtil';
+import { initBpmnInstance } from '@/util/windowUtil';
 
 interface IProps {
   modeler: any;

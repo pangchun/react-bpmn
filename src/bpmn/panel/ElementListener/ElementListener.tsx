@@ -5,7 +5,7 @@ import { FLOWABLE_PREFIX } from '@/bpmn/constant/constants';
 import { encapsulateListener } from '@/bpmn/panel/ElementListener/dataSelf';
 import EditListener from '@/bpmn/panel/ElementListener/EditListener/EditListener';
 import { createListenerObject } from '@/bpmn/panel/ElementListener/listenerUtil';
-import { updateElementExtensions } from '@/bpmn/util/panelUtil';
+import { updateElementExtensions } from '@/util/panelUtil';
 
 const { Panel } = Collapse;
 

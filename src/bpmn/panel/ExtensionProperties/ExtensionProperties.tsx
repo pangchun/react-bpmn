@@ -8,7 +8,7 @@ import {
   createProperty,
   extractOtherExtensionList,
   updateElementExtensions,
-} from '@/bpmn/util/panelUtil';
+} from '@/util/panelUtil';
 
 interface IProps {
   businessObject: any;

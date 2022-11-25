@@ -6,7 +6,7 @@ import {
   script_type,
   task_event_type,
 } from '@/bpmn/panel/ElementListener/dataSelf';
-import { UUIdGenerator } from '@/bpmn/util/idUtil';
+import { UUIdGenerator } from '@/util/idUtil';
 
 /**
  * 创建 监听器实例
