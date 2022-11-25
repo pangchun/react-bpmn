@@ -219,8 +219,8 @@ const xml2: string =
 /**
  * 初始化流程图示例 请假流程
  */
-const testXML = {
+const testXml = {
   xml: xml,
 };
 
-export default testXML;
+export default testXml;

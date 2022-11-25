@@ -6,7 +6,7 @@ import {
   script_type,
   task_event_type,
 } from '@/bpmn/panel/ElementListener/dataSelf';
-import { IdGenerator } from '@/bpmn/util/idUtil';
+import { UUIdGenerator } from '@/bpmn/util/idUtil';
 
 /**
  * 创建 监听器实例
@@ -56,7 +56,7 @@ export function createListenerObject(
     const timerEventDefinition = window.bpmnInstance?.moddle.create(
       'bpmn:TimerEventDefinition',
       {
-        id: `TimerEventDefinition_${IdGenerator('', 8)}`,
+        id: `TimerEventDefinition_${UUIdGenerator('', 8)}`,
         [options.timerType]: timeDefinition,
       },
     );

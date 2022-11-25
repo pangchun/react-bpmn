@@ -24,8 +24,8 @@ import 'bpmn-js-properties-panel/dist/assets/element-templates.css';
 import 'bpmn-js-properties-panel/dist/assets/properties-panel.css';
 
 // 引入流程图文件
-import testXML from '@/bpmn/constant/testXML';
-import DefaultEmptyXML from '@/bpmn/constant/emptyXML';
+import testXml from '@/bpmn/constant/testXml';
+import DefaultEmptyXML from '@/bpmn/constant/emptyXml';
 
 // 引入当前组件样式
 import { Button, Col, Row, Space } from 'antd';
@@ -46,7 +46,7 @@ import {
 export default function ProcessDesigner() {
   // state属性
   const [bpmnModeler, setBpmnModeler] = useState<any>();
-  const [xmlStr, setXmlStr] = useState<string>(testXML.xml);
+  const [xmlStr, setXmlStr] = useState<string>(testXml.xml);
   const [processId, setProcessId] = useState<string>();
   // redux
   const bpmnPrefix = useAppSelector((state) => state.bpmn.prefix);
