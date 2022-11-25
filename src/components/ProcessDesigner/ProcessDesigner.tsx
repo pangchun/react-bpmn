@@ -47,7 +47,7 @@ import { Ref } from '@bpmn-io/properties-panel/preact/compat';
 export default function ProcessDesigner() {
   // state属性
   const [bpmnModeler, setBpmnModeler] = useState<any>();
-  const [xmlStr, setXmlStr] = useState<string>(testXml.xml);
+  const [xmlStr, setXmlStr] = useState<string>();
   const [processId, setProcessId] = useState<string>();
   const [processName, setProcessName] = useState<string>();
   // redux
@@ -62,10 +62,16 @@ export default function ProcessDesigner() {
    * 2、因为解析器和解析文件与流程引擎类型(也就是前缀)有关，因此这里依赖的变量是放在redux里的流程前缀名
    */
   useEffect(() => {
+    // 重新加载前需要销毁之前的modeler，否则页面上会加载出多个建模器
+    if (bpmnModeler) {
+      bpmnModeler.destroy();
+      setBpmnModeler(undefined);
+    }
     (async () => {
       // 每次重新加载前需要先消除之前的流程信息
       await setProcessId(undefined);
       await setProcessName(undefined);
+      await setXmlStr(undefined);
       initBpmnModeler();
     })();
   }, [bpmnPrefix]);
