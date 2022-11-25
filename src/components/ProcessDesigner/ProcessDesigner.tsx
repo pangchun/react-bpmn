@@ -42,6 +42,7 @@ import {
   CAMUNDA_PREFIX,
   FLOWABLE_PREFIX,
 } from '@/bpmn/constant/constants';
+import { Ref } from '@bpmn-io/properties-panel/preact/compat';
 
 export default function ProcessDesigner() {
   // state属性
@@ -52,6 +53,8 @@ export default function ProcessDesigner() {
   // redux
   const bpmnPrefix = useAppSelector((state) => state.bpmn.prefix);
   const dispatch = useAppDispatch();
+  // ref
+  const refFile = React.useRef<any>();
 
   /**
    * 初始化建模器
@@ -84,15 +87,6 @@ export default function ProcessDesigner() {
     console.log(
       '===============================【初始化建模器】4、初始化建模器结束===================================',
     );
-    // 获取流程的信息，初始化建模器后，有了modeler，通过modeler获取到canvas，就能拿到rootElement，从而获取到流程的初始信息
-    setTimeout(() => {
-      const canvas = modeler.get('canvas');
-      const rootElement = canvas.getRootElement();
-      setProcessId(rootElement.id);
-      setProcessName(rootElement.businessObject.name);
-      console.log('Process Id:' + rootElement.id);
-      console.log('Process Name:' + rootElement.businessObject.name);
-    }, 10);
   }
 
   /**
@@ -160,16 +154,20 @@ export default function ProcessDesigner() {
     let newId = processId || 'Process_' + new Date().getTime();
     let newName = processName || '业务流程_' + new Date().getTime();
     let newXML = xml ? xml : DefaultEmptyXML(newId, newName, bpmnPrefix);
-    // 更新流程信息
-    setProcessId(newId);
-    setProcessName(newName);
-    setXmlStr(newXML);
     // 执行importXML方法
     try {
       bpmnModeler?.importXML(newXML);
     } catch (e) {
       console.error('流程图绘制出错：' + e);
     }
+    // 更新流程信息，初始化建模器后，有了modeler，通过modeler获取到canvas，就能拿到rootElement，从而获取到流程的初始信息
+    setTimeout(() => {
+      const canvas = bpmnModeler.get('canvas');
+      const rootElement = canvas.getRootElement();
+      setProcessId(rootElement.id);
+      setProcessName(rootElement.businessObject.name);
+      setXmlStr(newXML);
+    }, 10);
   }
 
   /**
@@ -181,6 +179,21 @@ export default function ProcessDesigner() {
     bpmnModeler?.on('commandStack.changed', async () => {
       // 这里可以执行一些其他操作
     });
+  }
+
+  /**
+   * 加载本地文件
+   */
+  function importLocalFile() {
+    console.log(refFile);
+    const file = refFile.current.files[0];
+    let reader = new FileReader();
+    reader.readAsText(file);
+    reader.onload = function (this) {
+      let xmlStr: any = this.result || undefined;
+      console.log(xmlStr);
+      createBpmnDiagram(xmlStr);
+    };
   }
 
   /**
@@ -210,10 +223,21 @@ export default function ProcessDesigner() {
             type="primary"
             size={'small'}
             icon={<FolderOpenOutlined />}
-            onClick={() => {}}
+            onClick={() => {
+              refFile.current.click();
+            }}
           >
             {'打开文件'}
           </Button>
+          {/*加载本地文件*/}
+          <input
+            type={'file'}
+            id="files"
+            ref={refFile}
+            accept=".xml, .bpmn"
+            style={{ display: 'none' }}
+            onChange={importLocalFile}
+          />
           <Button
             type="primary"
             size={'small'}
