@@ -33,7 +33,7 @@ import { Button, Col, Row, Space } from 'antd';
 // 组件引入
 import PropertyPanel from '@/components/ProcessDesigner/components/PropertyPanel/PropertyPanel';
 import TextViewer from '@/components/ProcessDesigner/components/TextViewer/TextViewer';
-import { FolderOpenOutlined } from '@ant-design/icons';
+import { EditOutlined, FolderOpenOutlined } from '@ant-design/icons';
 import ConfigServer from '@/components/ProcessDesigner/components/ConfigServer/ConfigServer';
 
 // 常量引入
@@ -48,6 +48,7 @@ export default function ProcessDesigner() {
   const [bpmnModeler, setBpmnModeler] = useState<any>();
   const [xmlStr, setXmlStr] = useState<string>(testXml.xml);
   const [processId, setProcessId] = useState<string>();
+  const [processName, setProcessName] = useState<string>();
   // redux
   const bpmnPrefix = useAppSelector((state) => state.bpmn.prefix);
   const dispatch = useAppDispatch();
@@ -58,7 +59,12 @@ export default function ProcessDesigner() {
    * 2、因为解析器和解析文件与流程引擎类型(也就是前缀)有关，因此这里依赖的变量是放在redux里的流程前缀名
    */
   useEffect(() => {
-    initBpmnModeler();
+    (async () => {
+      // 每次重新加载前需要先消除之前的流程信息
+      await setProcessId(undefined);
+      await setProcessName(undefined);
+      initBpmnModeler();
+    })();
   }, [bpmnPrefix]);
 
   /**
@@ -78,6 +84,15 @@ export default function ProcessDesigner() {
     console.log(
       '===============================【初始化建模器】4、初始化建模器结束===================================',
     );
+    // 获取流程的信息，初始化建模器后，有了modeler，通过modeler获取到canvas，就能拿到rootElement，从而获取到流程的初始信息
+    setTimeout(() => {
+      const canvas = modeler.get('canvas');
+      const rootElement = canvas.getRootElement();
+      setProcessId(rootElement.id);
+      setProcessName(rootElement.businessObject.name);
+      console.log('Process Id:' + rootElement.id);
+      console.log('Process Name:' + rootElement.businessObject.name);
+    }, 10);
   }
 
   /**
@@ -127,7 +142,10 @@ export default function ProcessDesigner() {
   useEffect(() => {
     if (!bpmnModeler) return;
     (async () => {
-      await createBpmnDiagram(xmlStr);
+      // 绘制流程图
+      // await createBpmnDiagram(xmlStr);
+      await createBpmnDiagram();
+      // 之后绑定属性面板监听器
       bindPropertiesListener();
     })();
   }, [bpmnModeler]);
@@ -139,39 +157,19 @@ export default function ProcessDesigner() {
    * @param xml
    */
   function createBpmnDiagram(xml?: string) {
-    console.log('++++++++++++++++++++++++++++++++++++');
-    // 定义流程信息
-    let definitionsInfo: any = null;
-    let processInfo: any = null;
-    // 使用xml2js解析xml获取流程对象 todo 这里的xml解析成js的方法要分解拆成多个方法来调用，代码会更清晰，写成工具类
-    const parseString = require('xml2js').parseString;
-    parseString(xml, function (err: any, result: any) {
-      if (result) {
-        definitionsInfo = result[`bpmn2:definitions`];
-        processInfo = result[`bpmn2:definitions`][`bpmn2:process`][0][`$`];
-      }
-    });
-    console.log(definitionsInfo);
-    console.log(processInfo);
-    // 设置流程基本信息 todo 要保证id的传递不会改变, 这里用变量传递会导致更改不能穿到子组件
-    let newId = processInfo?.id || 'Process_' + new Date().getTime();
-    let newName = processInfo?.name || '新建业务流程';
+    let newId = processId || 'Process_' + new Date().getTime();
+    let newName = processName || '业务流程_' + new Date().getTime();
     let newXML = xml ? xml : DefaultEmptyXML(newId, newName, bpmnPrefix);
-    // 更新流程id
+    // 更新流程信息
     setProcessId(newId);
+    setProcessName(newName);
+    setXmlStr(newXML);
     // 执行importXML方法
     try {
       bpmnModeler?.importXML(newXML);
     } catch (e) {
       console.error('流程图绘制出错：' + e);
     }
-    // 获取流程的信息
-    setTimeout(() => {
-      const canvas = bpmnModeler.get('canvas');
-      const rootElement = canvas.getRootElement();
-      console.log('Process Id:' + rootElement.id);
-      console.log('Process Name:' + rootElement.businessObject.name);
-    }, 10);
   }
 
   /**
@@ -180,7 +178,6 @@ export default function ProcessDesigner() {
    * 2、监听器要等到流程图绘制结束后才能添加；
    */
   function bindPropertiesListener() {
-    console.log('-----------------------');
     bpmnModeler?.on('commandStack.changed', async () => {
       // 这里可以执行一些其他操作
     });
@@ -197,6 +194,18 @@ export default function ProcessDesigner() {
           size={1}
           style={{ marginTop: 3, marginBottom: 3 }}
         >
+          <Button
+            type="primary"
+            size={'small'}
+            icon={<EditOutlined />}
+            onClick={() => {
+              console.log('processId:' + processId);
+              console.log('processName:' + processName);
+              console.log('xmlStr:' + xmlStr);
+            }}
+          >
+            {'输出流程信息'}
+          </Button>
           <Button
             type="primary"
             size={'small'}
