@@ -24,20 +24,10 @@ import 'bpmn-js-properties-panel/dist/assets/element-templates.css';
 import 'bpmn-js-properties-panel/dist/assets/properties-panel.css';
 
 // 引入流程图文件
-import testXml from '@/bpmn/constant/testXml';
 import DefaultEmptyXML from '@/bpmn/constant/emptyXml';
 
 // 引入当前组件样式
-import {
-  Button,
-  Col,
-  Dropdown,
-  Menu,
-  MenuProps,
-  message,
-  Row,
-  Space,
-} from 'antd';
+import { Button, Col, Dropdown, MenuProps, message, Row, Space } from 'antd';
 
 // 组件引入
 import PropertyPanel from '@/components/ProcessDesigner/components/PropertyPanel/PropertyPanel';
@@ -46,8 +36,6 @@ import {
   DownloadOutlined,
   EditOutlined,
   FolderOpenOutlined,
-  LineOutlined,
-  UserOutlined,
 } from '@ant-design/icons';
 import ConfigServer from '@/components/ProcessDesigner/components/ConfigServer/ConfigServer';
 
@@ -57,7 +45,6 @@ import {
   CAMUNDA_PREFIX,
   FLOWABLE_PREFIX,
 } from '@/bpmn/constant/constants';
-import { Ref } from '@bpmn-io/properties-panel/preact/compat';
 
 export default function ProcessDesigner() {
   // state属性
@@ -203,28 +190,62 @@ export default function ProcessDesigner() {
   }
 
   /**
-   * 渲染顶部工具栏
+   * 渲染导入按钮
    */
-  function renderToolBar() {
+  function renderImportButton() {
+    function importLocalFile() {
+      console.log(refFile);
+      const file = refFile.current.files[0];
+      let reader = new FileReader();
+      reader.readAsText(file);
+      reader.onload = function (this) {
+        let xmlStr: any = this.result || undefined;
+        console.log(xmlStr);
+        createBpmnDiagram(xmlStr);
+      };
+    }
+
+    return (
+      <>
+        <Button
+          type="primary"
+          size={'small'}
+          icon={<FolderOpenOutlined />}
+          onClick={() => {
+            refFile.current.click();
+          }}
+        >
+          {'打开本地文件'}
+        </Button>
+        <input
+          type={'file'}
+          id="files"
+          ref={refFile}
+          accept=".xml, .bpmn"
+          style={{ display: 'none' }}
+          onChange={importLocalFile}
+        />
+      </>
+    );
+  }
+
+  /**
+   * 渲染下载按钮
+   */
+  function renderDownloadButton() {
     // 下载菜单
-    const downloadMenuItems: MenuProps['items'] = [
+    const items: MenuProps['items'] = [
       {
-        label: 'XML文件',
+        label: <a onClick={downloadProcessAsXml}>{'XML文件'}</a>,
         key: '1',
-        icon: <LineOutlined />,
-        onClick: downloadProcessAsXml,
       },
       {
-        label: 'SVG图像',
+        label: <a onClick={downloadProcessAsSvg}>{'SVG图像'}</a>,
         key: '2',
-        icon: <LineOutlined />,
-        onClick: downloadProcessAsSvg,
       },
       {
-        label: 'BPMN文件',
+        label: <a onClick={downloadProcessAsBpmn}>{'BPMN文件'}</a>,
         key: '3',
-        icon: <LineOutlined />,
-        onClick: downloadProcessAsBpmn,
       },
     ];
 
@@ -295,41 +316,48 @@ export default function ProcessDesigner() {
     }
 
     /**
-     * 加载本地文件
-     */
-    function importLocalFile() {
-      console.log(refFile);
-      const file = refFile.current.files[0];
-      let reader = new FileReader();
-      reader.readAsText(file);
-      reader.onload = function (this) {
-        let xmlStr: any = this.result || undefined;
-        console.log(xmlStr);
-        createBpmnDiagram(xmlStr);
-      };
-    }
-
-    /**
      * 另存为xml文件
      */
     function downloadProcessAsXml() {
-      downloadProcess('xml');
+      downloadProcess('xml').then(() => message.info('成功另存为xml文件'));
     }
 
     /**
      * 另存为bpmn文件
      */
     function downloadProcessAsBpmn() {
-      downloadProcess('bpmn');
+      downloadProcess('bpmn').then(() => message.info('成功另存为bpmn文件'));
     }
 
     /**
      * 另存为svg文件
      */
     function downloadProcessAsSvg() {
-      downloadProcess('svg');
+      downloadProcess('svg').then(() => message.info('成功另存为svg文件'));
     }
 
+    return (
+      <>
+        <Dropdown menu={{ items }} trigger={['click']}>
+          <Button
+            type="primary"
+            size={'small'}
+            onClick={(e) => e.preventDefault()}
+          >
+            <Space>
+              <DownloadOutlined />
+              {'下载文件'}
+            </Space>
+          </Button>
+        </Dropdown>
+      </>
+    );
+  }
+
+  /**
+   * 渲染顶部工具栏
+   */
+  function renderToolBar() {
     return (
       <>
         <Space
@@ -349,33 +377,8 @@ export default function ProcessDesigner() {
           >
             {'打印流程信息'}
           </Button>
-          <Button
-            type="primary"
-            size={'small'}
-            icon={<FolderOpenOutlined />}
-            onClick={() => {
-              refFile.current.click();
-            }}
-          >
-            {'加载本地文件'}
-          </Button>
-          {/*加载本地文件*/}
-          <input
-            type={'file'}
-            id="files"
-            ref={refFile}
-            accept=".xml, .bpmn"
-            style={{ display: 'none' }}
-            onChange={importLocalFile}
-          />
-          <Dropdown overlay={<Menu items={downloadMenuItems} />}>
-            <Button type="primary" size={'small'}>
-              <Space>
-                <DownloadOutlined />
-                {'另存为'}
-              </Space>
-            </Button>
-          </Dropdown>
+          {renderImportButton()}
+          {renderDownloadButton()}
           <TextViewer modeler={bpmnModeler} />
           <Button
             type="primary"

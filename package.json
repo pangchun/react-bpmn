@@ -25,7 +25,7 @@
     "@bpmn-io/properties-panel": "^0.13.2",
     "@reduxjs/toolkit": "^1.8.5",
     "ahooks": "^3.4.0",
-    "antd": "^4.20.0",
+    "antd": "5.x",
     "bpmn-js": "^9.0.3",
     "bpmn-js-properties-panel": "^1.0.0",
     "camunda-bpmn-moddle": "^6.1.2",
