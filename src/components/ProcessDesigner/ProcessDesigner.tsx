@@ -212,21 +212,87 @@ export default function ProcessDesigner() {
         label: 'XML文件',
         key: '1',
         icon: <LineOutlined />,
-        onClick: () => {
-          alert(123);
-        },
+        onClick: downloadProcessAsXml,
       },
       {
         label: 'SVG图像',
         key: '2',
         icon: <LineOutlined />,
+        onClick: downloadProcessAsSvg,
       },
       {
         label: 'BPMN文件',
         key: '3',
         icon: <LineOutlined />,
+        onClick: downloadProcessAsBpmn,
       },
     ];
+
+    /**
+     * 下载流程图
+     * @param type
+     * @param name
+     */
+    async function downloadProcess(type: string, name?: string) {
+      try {
+        // 按需要类型创建文件并下载
+        if (type === 'xml' || type === 'bpmn') {
+          const { err, xml } = await bpmnModeler.saveXML();
+          // 读取异常时抛出异常
+          if (err) {
+            console.error(`[Process Designer Warn ]: ${err.message || err}`);
+          }
+          let { href, filename } = setEncoded(type.toUpperCase(), name, xml);
+          downloadFunc(href, filename);
+        } else {
+          const { err, svg } = await bpmnModeler.saveSVG();
+          // 读取异常时抛出异常
+          if (err) {
+            return console.error(err);
+          }
+          let { href, filename } = setEncoded('SVG', name, svg);
+          downloadFunc(href, filename);
+        }
+      } catch (e: any) {
+        console.error(`[Process Designer Warn ]: ${e.message || e}`);
+      }
+
+      /**
+       * 根据所需类型进行转码并返回下载地址
+       * @param type
+       * @param filename
+       * @param data
+       */
+      function setEncoded(
+        type: string,
+        filename = processId || 'diagram',
+        data: any,
+      ) {
+        const encodedData = encodeURIComponent(data);
+        return {
+          filename: `${filename}.${type}`,
+          href: `data:application/${
+            type === 'svg' ? 'text/xml' : 'bpmn20-xml'
+          };charset=UTF-8,${encodedData}`,
+          data: data,
+        };
+      }
+
+      /**
+       * 文件下载方法
+       * @param href
+       * @param filename
+       */
+      function downloadFunc(href: string, filename: string) {
+        if (href && filename) {
+          let a = document.createElement('a');
+          a.download = filename; //指定下载的文件名
+          a.href = href; //  URL对象
+          a.click(); // 模拟点击
+          URL.revokeObjectURL(a.href); // 释放URL 对象
+        }
+      }
+    }
 
     /**
      * 加载本地文件
@@ -241,6 +307,27 @@ export default function ProcessDesigner() {
         console.log(xmlStr);
         createBpmnDiagram(xmlStr);
       };
+    }
+
+    /**
+     * 另存为xml文件
+     */
+    function downloadProcessAsXml() {
+      downloadProcess('xml');
+    }
+
+    /**
+     * 另存为bpmn文件
+     */
+    function downloadProcessAsBpmn() {
+      downloadProcess('bpmn');
+    }
+
+    /**
+     * 另存为svg文件
+     */
+    function downloadProcessAsSvg() {
+      downloadProcess('svg');
     }
 
     return (
@@ -315,7 +402,7 @@ export default function ProcessDesigner() {
           <div
             id="canvas"
             style={{
-              backgroundColor: '#fff',
+              backgroundColor: '#cccccc',
               backgroundImage:
                 'linear-gradient(rgba(24,144,255, .5) 1px, transparent 0), linear-gradient(90deg,rgba(24,144,255, .5) 1px, transparent 0)',
               backgroundSize: '20px 20px',
