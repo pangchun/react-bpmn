@@ -28,12 +28,27 @@ import testXml from '@/bpmn/constant/testXml';
 import DefaultEmptyXML from '@/bpmn/constant/emptyXml';
 
 // 引入当前组件样式
-import { Button, Col, Row, Space } from 'antd';
+import {
+  Button,
+  Col,
+  Dropdown,
+  Menu,
+  MenuProps,
+  message,
+  Row,
+  Space,
+} from 'antd';
 
 // 组件引入
 import PropertyPanel from '@/components/ProcessDesigner/components/PropertyPanel/PropertyPanel';
 import TextViewer from '@/components/ProcessDesigner/components/TextViewer/TextViewer';
-import { EditOutlined, FolderOpenOutlined } from '@ant-design/icons';
+import {
+  DownloadOutlined,
+  EditOutlined,
+  FolderOpenOutlined,
+  LineOutlined,
+  UserOutlined,
+} from '@ant-design/icons';
 import ConfigServer from '@/components/ProcessDesigner/components/ConfigServer/ConfigServer';
 
 // 常量引入
@@ -188,24 +203,46 @@ export default function ProcessDesigner() {
   }
 
   /**
-   * 加载本地文件
-   */
-  function importLocalFile() {
-    console.log(refFile);
-    const file = refFile.current.files[0];
-    let reader = new FileReader();
-    reader.readAsText(file);
-    reader.onload = function (this) {
-      let xmlStr: any = this.result || undefined;
-      console.log(xmlStr);
-      createBpmnDiagram(xmlStr);
-    };
-  }
-
-  /**
    * 渲染顶部工具栏
    */
   function renderToolBar() {
+    // 下载菜单
+    const downloadMenuItems: MenuProps['items'] = [
+      {
+        label: 'XML文件',
+        key: '1',
+        icon: <LineOutlined />,
+        onClick: () => {
+          alert(123);
+        },
+      },
+      {
+        label: 'SVG图像',
+        key: '2',
+        icon: <LineOutlined />,
+      },
+      {
+        label: 'BPMN文件',
+        key: '3',
+        icon: <LineOutlined />,
+      },
+    ];
+
+    /**
+     * 加载本地文件
+     */
+    function importLocalFile() {
+      console.log(refFile);
+      const file = refFile.current.files[0];
+      let reader = new FileReader();
+      reader.readAsText(file);
+      reader.onload = function (this) {
+        let xmlStr: any = this.result || undefined;
+        console.log(xmlStr);
+        createBpmnDiagram(xmlStr);
+      };
+    }
+
     return (
       <>
         <Space
@@ -223,7 +260,7 @@ export default function ProcessDesigner() {
               console.log('xmlStr:' + xmlStr);
             }}
           >
-            {'输出流程信息'}
+            {'打印流程信息'}
           </Button>
           <Button
             type="primary"
@@ -233,7 +270,7 @@ export default function ProcessDesigner() {
               refFile.current.click();
             }}
           >
-            {'打开文件'}
+            {'加载本地文件'}
           </Button>
           {/*加载本地文件*/}
           <input
@@ -244,14 +281,14 @@ export default function ProcessDesigner() {
             style={{ display: 'none' }}
             onChange={importLocalFile}
           />
-          <Button
-            type="primary"
-            size={'small'}
-            icon={<FolderOpenOutlined />}
-            onClick={() => {}}
-          >
-            {'下载文件'}
-          </Button>
+          <Dropdown overlay={<Menu items={downloadMenuItems} />}>
+            <Button type="primary" size={'small'}>
+              <Space>
+                <DownloadOutlined />
+                {'另存为'}
+              </Space>
+            </Button>
+          </Dropdown>
           <TextViewer modeler={bpmnModeler} />
           <Button
             type="primary"
