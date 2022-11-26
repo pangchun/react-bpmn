@@ -35,6 +35,7 @@ import TextViewer from '@/components/ProcessDesigner/components/TextViewer/TextV
 import {
   DownloadOutlined,
   EditOutlined,
+  EyeOutlined,
   FolderOpenOutlined,
 } from '@ant-design/icons';
 import ConfigServer from '@/components/ProcessDesigner/components/ConfigServer/ConfigServer';
@@ -356,6 +357,40 @@ export default function ProcessDesigner() {
   }
 
   /**
+   * 渲染预览按钮
+   */
+  function renderPreviewButton() {
+    // 预览菜单
+    const items: MenuProps['items'] = [
+      {
+        label: <TextViewer modeler={bpmnModeler} type={'xml'} />,
+        key: '1',
+      },
+      {
+        label: <TextViewer modeler={bpmnModeler} type={'json'} />,
+        key: '2',
+      },
+    ];
+
+    return (
+      <>
+        <Dropdown menu={{ items }} trigger={['click']}>
+          <Button
+            type="primary"
+            size={'small'}
+            onClick={(e) => e.preventDefault()}
+          >
+            <Space>
+              <EyeOutlined />
+              {'预览'}
+            </Space>
+          </Button>
+        </Dropdown>
+      </>
+    );
+  }
+
+  /**
    * 渲染顶部工具栏
    */
   function renderToolBar() {
@@ -378,10 +413,11 @@ export default function ProcessDesigner() {
           >
             {'打印流程信息'}
           </Button>
+          {/*按钮组：打开、下载、预览*/}
           <ButtonGroup>
             {renderImportButton()}
             {renderDownloadButton()}
-            <TextViewer modeler={bpmnModeler} />
+            {renderPreviewButton()}
           </ButtonGroup>
           <Button
             type="primary"

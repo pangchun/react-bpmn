@@ -1,9 +1,14 @@
 import React, { useState } from 'react';
-import { Modal, Button, message } from 'antd';
-import { EyeOutlined } from '@ant-design/icons';
+import { Modal, message } from 'antd';
+
+// 引入代码高亮插件和样式
+import SyntaxHighlighter from 'react-syntax-highlighter';
+import { obsidian } from 'react-syntax-highlighter/dist/esm/styles/hljs';
+import { xml2json } from '@/util/xmlUtil';
 
 interface IProps {
   modeler: any;
+  type: 'xml' | 'json';
 }
 
 /**
@@ -12,22 +17,26 @@ interface IProps {
  * @constructor
  */
 export default function TextViewer(props: IProps) {
-  const { modeler } = props;
-
+  // props
+  const { modeler, type } = props;
+  // states
   const [xml, setXml] = useState<string>('');
-  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [open, setOpen] = useState(false);
 
   const showModal = async () => {
-    setIsModalVisible(true);
-
+    setOpen(true);
     let result = await modeler.saveXML({ format: true });
     const { xml } = result;
-    console.log(xml);
-    setXml(xml);
+    if (type == 'xml') {
+      setXml(xml);
+    } else {
+      const jsonStr: string = xml2json(xml);
+      setXml(jsonStr);
+    }
   };
 
   const handleCancel = () => {
-    setIsModalVisible(false);
+    setOpen(false);
   };
 
   const handleCopy = () => {
@@ -40,27 +49,24 @@ export default function TextViewer(props: IProps) {
 
   return (
     <>
-      <Button
-        type="primary"
-        size={'small'}
-        icon={<EyeOutlined />}
-        onClick={showModal}
-      >
-        预览
-      </Button>
+      <a type="primary" onClick={showModal}>
+        {'预览' + type.toUpperCase()}
+      </a>
       <Modal
         width={1200}
         bodyStyle={{ maxHeight: '50%' }}
-        title="正在预览"
-        visible={isModalVisible}
+        title="预览"
+        open={open}
         okText={'复制'}
         cancelText={'关闭'}
         onOk={handleCopy}
         onCancel={handleCancel}
       >
         {/* todo 此处可以设置字符串过长时显示 展开、收缩 按钮，以便查看 */}
-        <div style={{ maxHeight: 400, overflowY: 'scroll' }}>
-          <pre>{xml}</pre>
+        <div style={{ maxHeight: 600, overflowY: 'scroll', maxWidth: 1200 }}>
+          <SyntaxHighlighter language={type} style={obsidian}>
+            {xml}
+          </SyntaxHighlighter>
         </div>
       </Modal>
     </>
