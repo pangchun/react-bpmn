@@ -45,6 +45,7 @@ import {
   CAMUNDA_PREFIX,
   FLOWABLE_PREFIX,
 } from '@/bpmn/constant/constants';
+import ButtonGroup from 'antd/es/button/button-group';
 
 export default function ProcessDesigner() {
   // state属性
@@ -362,7 +363,7 @@ export default function ProcessDesigner() {
       <>
         <Space
           direction={'horizontal'}
-          size={1}
+          size={3}
           style={{ marginTop: 3, marginBottom: 3 }}
         >
           <Button
@@ -377,9 +378,11 @@ export default function ProcessDesigner() {
           >
             {'打印流程信息'}
           </Button>
-          {renderImportButton()}
-          {renderDownloadButton()}
-          <TextViewer modeler={bpmnModeler} />
+          <ButtonGroup>
+            {renderImportButton()}
+            {renderDownloadButton()}
+            <TextViewer modeler={bpmnModeler} />
+          </ButtonGroup>
           <Button
             type="primary"
             size={'small'}

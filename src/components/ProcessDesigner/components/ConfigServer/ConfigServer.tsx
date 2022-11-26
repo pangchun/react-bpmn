@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Drawer, Form, message, Radio, Space } from 'antd';
-import { SettingOutlined } from '@ant-design/icons';
+import { Button, Drawer, FloatButton, Form, message, Radio, Space } from 'antd';
+import {
+  EditOutlined,
+  QuestionOutlined,
+  SettingOutlined,
+} from '@ant-design/icons';
 import {
   ACTIVITI_PREFIX,
   CAMUNDA_PREFIX,
@@ -18,7 +22,7 @@ interface IProps {}
  */
 export default function ConfigServer(props: IProps) {
   // state
-  const [visible, setVisible] = useState(false);
+  const [open, setOpen] = useState(false);
   // redux
   const bpmnPrefix = useAppSelector((state) => state.bpmn.prefix);
   const dispatch = useAppDispatch();
@@ -34,34 +38,33 @@ export default function ConfigServer(props: IProps) {
   }, []);
 
   function showDrawer() {
-    setVisible(true);
+    setOpen(true);
   }
 
   function onClose() {
-    setVisible(false);
+    setOpen(false);
   }
 
   function changeEngineType(value: string) {
     dispatch(handlePrefix(value));
-    message.info('流程引擎已切换为 ' + value).then((r) => {});
+    message.info('流程引擎已切换为 ' + value).then(() => {});
   }
 
   return (
     <>
-      <Button
-        type="primary"
-        size={'small'}
-        icon={<SettingOutlined />}
-        onClick={showDrawer}
-      >
-        {'配置编辑器'}
-      </Button>
+      <FloatButton.Group icon={<EditOutlined />} type="primary" trigger="hover">
+        <FloatButton icon={<SettingOutlined />} onClick={showDrawer} />
+        <FloatButton
+          icon={<QuestionOutlined />}
+          onClick={() => message.info('暂未开发')}
+        />
+      </FloatButton.Group>
       <Drawer
         title="Basic Drawer"
         placement={'left'}
         closable={false}
         onClose={onClose}
-        visible={visible}
+        open={open}
         key={'left'}
         forceRender={true}
         destroyOnClose
