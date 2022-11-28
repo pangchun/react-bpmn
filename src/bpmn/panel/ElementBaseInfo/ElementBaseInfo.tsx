@@ -137,7 +137,7 @@ export default function ElementBaseInfo(props: IProps) {
         >
           <Input
             placeholder={'请输入'}
-            readOnly={businessObject?.$type === 'bpmn:Process'}
+            // readOnly={businessObject?.$type === 'bpmn:Process'}
             onChange={(event) => {
               updateElementAttr(keyOptions.id, event.currentTarget.value);
             }}

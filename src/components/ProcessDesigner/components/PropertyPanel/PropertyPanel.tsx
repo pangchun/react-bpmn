@@ -45,8 +45,10 @@ export default function PropertyPanel(props: IProps) {
     // 避免初始化，流程图未加载完导致出错
     if (modeler) {
       init();
+      console.log(processId);
+      console.dir(modeler);
     }
-  }, [modeler]);
+  }, [modeler, processId]);
 
   function init() {
     // 设置window的bpmnInstance对象属性
@@ -95,25 +97,21 @@ export default function PropertyPanel(props: IProps) {
     // 如果element为空，则设置流程节点为当前节点，否则设置选中节点为当前节点 (点击canvas空白处默认指流程节点)
     if (!element) {
       // todo 目前是通过流程id获取，但是这个id固定不好，后面要修改
-      /* todo 获取流程节点可以通过这个方法获取
-      function getProcess$1(element) {
-        return is$3(element, 'bpmn:Process') ? getBusinessObject(element) : getBusinessObject(element).get('processRef');
-      }*/
-      console.log(processId);
+      // console.log(processId);
       let processElement: any = modeler.get('elementRegistry').get(processId);
       setElement(processElement);
       window.bpmnInstance.element = processElement;
       setBusinessObject(
         JSON.parse(JSON.stringify(processElement?.businessObject || null)),
       );
-      console.log(
-        '当前选中的元素为: \n',
-        modeler.get('elementRegistry').get(processId)?.businessObject ||
-          '初始化还未选中Process节点',
-      );
+      // console.log(
+      //   '当前选中的元素为: \n',
+      //   modeler.get('elementRegistry').get(processId)?.businessObject ||
+      //     '初始化还未选中Process节点',
+      // );
       return;
     }
-    console.log('当前选中的元素为11: \n', element?.businessObject);
+    // console.log('当前选中的元素为11: \n', element?.businessObject);
     window.bpmnInstance.element = element;
     setBusinessObject(JSON.parse(JSON.stringify(element.businessObject)));
     setElement(element);
@@ -344,20 +342,20 @@ export default function PropertyPanel(props: IProps) {
       <Space direction="vertical" size={0} style={{ display: 'flex' }}>
         <Collapse
           bordered={false}
-          expandIconPosition={'right'}
+          expandIconPosition={'end'}
           accordion
           defaultActiveKey={['1']}
           destroyInactivePanel={true}
         >
           {renderElementBaseInfo()}
-          {renderSignalMessage()}
-          {renderElementForm()}
-          {renderElementTask()}
-          {renderMultiInstance()}
-          {renderElementListener()}
-          {renderElementListenerOfTask()}
-          {renderExtensionProperties()}
-          {renderElementOtherInfo()}
+          {/*{renderSignalMessage()}*/}
+          {/*{renderElementForm()}*/}
+          {/*{renderElementTask()}*/}
+          {/*{renderMultiInstance()}*/}
+          {/*{renderElementListener()}*/}
+          {/*{renderElementListenerOfTask()}*/}
+          {/*{renderExtensionProperties()}*/}
+          {/*{renderElementOtherInfo()}*/}
         </Collapse>
       </Space>
     </>

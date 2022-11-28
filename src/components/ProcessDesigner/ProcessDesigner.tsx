@@ -419,14 +419,6 @@ export default function ProcessDesigner() {
             {renderDownloadButton()}
             {renderPreviewButton()}
           </ButtonGroup>
-          <Button
-            type="primary"
-            size={'small'}
-            icon={<FolderOpenOutlined />}
-            // onClick={() => createBpmnDiagram()}
-          >
-            {'重置'}
-          </Button>
           <ConfigServer />
         </Space>
       </>
@@ -460,7 +452,7 @@ export default function ProcessDesigner() {
             boxShadow: '0 0 8px #ccc',
           }}
         >
-          {/*<PropertyPanel modeler={bpmnModeler} processId={processId}/>*/}
+          <PropertyPanel modeler={bpmnModeler} processId={processId} />
         </Col>
       </Row>
     </>
