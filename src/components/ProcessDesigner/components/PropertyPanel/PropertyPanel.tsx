@@ -20,6 +20,7 @@ import { initBpmnInstance } from '@/util/windowUtil';
 
 interface IProps {
   modeler: any;
+  // 流程id,这个id只会在第一次加载时才能取到正确的值,后面取到的值可能已经被修改了,应该通过 modeler.getDefinitions().rootElements[0].id 来获取
   processId?: string;
 }
 
@@ -64,8 +65,10 @@ export default function PropertyPanel(props: IProps) {
     setBpmnFactory(modeler.get('bpmnFactory', true));
     // 获取moddle
     setModdel(modeler.get('moddle', true));
+    //设置默认选中流程process节点
+    confirmCurrentElement(null);
 
-    // 设置监听器，监听所有工作就绪后，要做的事
+    // 设置监听器，监听所有工作就绪后，默认选中process节点 (TODO 2022/12/4 注意:没有找到关于 import.done 事件,目前这段代码是没有执行到的,先放这里吧)
     modeler?.on('import.done', (e: any) => {
       confirmCurrentElement(null);
       // 获取rootElements
@@ -97,8 +100,10 @@ export default function PropertyPanel(props: IProps) {
     // 如果element为空，则设置流程节点为当前节点，否则设置选中节点为当前节点 (点击canvas空白处默认指流程节点)
     if (!element) {
       // todo 目前是通过流程id获取，但是这个id固定不好，后面要修改
-      // console.log(processId);
-      let processElement: any = modeler.get('elementRegistry').get(processId);
+      // console.log(processId); todo 是因为这个processid没有更新导致的选到为空
+      // 查询流程节点的id,并通过id获取流程节点
+      const newId = modeler.getDefinitions().rootElements[0].id;
+      let processElement: any = modeler.get('elementRegistry').get(newId);
       setElement(processElement);
       window.bpmnInstance.element = processElement;
       setBusinessObject(

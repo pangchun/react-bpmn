@@ -162,7 +162,8 @@ export default function ProcessDesigner() {
     try {
       bpmnModeler?.importXML(newXML);
     } catch (e) {
-      console.error('流程图绘制出错：' + e);
+      console.error('【流程图绘制出错】错误日志如下: ↓↓↓');
+      console.error(e);
     }
     // 更新流程信息，初始化建模器后，有了modeler，通过modeler获取到canvas，就能拿到rootElement，从而获取到流程的初始信息
     console.log('【绘制流程图】2、更新流程节点信息');
@@ -261,7 +262,7 @@ export default function ProcessDesigner() {
           const { err, xml } = await bpmnModeler.saveXML();
           // 读取异常时抛出异常
           if (err) {
-            console.error(`[Process Designer Warn ]: ${err.message || err}`);
+            console.error(`【下载流程图出错】: ${err.message || err}`);
           }
           let { href, filename } = setEncoded(type.toUpperCase(), name, xml);
           downloadFunc(href, filename);
@@ -275,7 +276,7 @@ export default function ProcessDesigner() {
           downloadFunc(href, filename);
         }
       } catch (e: any) {
-        console.error(`[Process Designer Warn ]: ${e.message || e}`);
+        console.error(`【下载流程图出错】: ${e.message || e}`);
       }
 
       /**

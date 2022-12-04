@@ -30,10 +30,13 @@ export default function ElementBaseInfo(props: IProps) {
    * 3、因为每个节点的id是必不相同的，所以可以用作依赖项
    */
   useEffect(() => {
-    initPageData();
+    if (businessObject) {
+      initPageData();
+    }
   }, [businessObject?.id]);
 
   function initPageData() {
+    console.log('123123', businessObject);
     form.setFieldsValue({
       id: businessObject?.id,
       name: businessObject?.name,
@@ -44,7 +47,7 @@ export default function ElementBaseInfo(props: IProps) {
 
   function updateElementAttr(key: string, value: any) {
     if (key === keyOptions.id) {
-      // id为空时，不执行更新
+      // id为空时，不执行更新 todo 并提示
       if (!value) {
         return;
       }
