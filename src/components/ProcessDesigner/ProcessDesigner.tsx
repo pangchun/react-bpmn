@@ -448,8 +448,7 @@ export default function ProcessDesigner() {
           style={{
             height: '100vh',
             overflowY: 'auto',
-            borderLeft: '1px solid #eee',
-            boxShadow: '0 0 8px #ccc',
+            borderLeft: '1px solid #eee ',
           }}
         >
           <PropertyPanel modeler={bpmnModeler} processId={processId} />
