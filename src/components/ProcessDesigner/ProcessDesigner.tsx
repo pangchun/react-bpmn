@@ -47,15 +47,15 @@ import {
   FLOWABLE_PREFIX,
 } from '@/bpmn/constant/constants';
 import ButtonGroup from 'antd/es/button/button-group';
+import { handleProcessId, handleProcessName } from '@/redux/slice/bpmnSlice';
 
 export default function ProcessDesigner() {
-  // state属性
+  // state
   const [bpmnModeler, setBpmnModeler] = useState<any>();
-  const [xmlStr, setXmlStr] = useState<string>();
-  const [processId, setProcessId] = useState<string>();
-  const [processName, setProcessName] = useState<string>();
   // redux
   const bpmnPrefix = useAppSelector((state) => state.bpmn.prefix);
+  const processId = useAppSelector((state) => state.bpmn.processId);
+  const processName = useAppSelector((state) => state.bpmn.processName);
   const dispatch = useAppDispatch();
   // ref
   const refFile = React.useRef<any>();
@@ -73,9 +73,8 @@ export default function ProcessDesigner() {
     }
     (async () => {
       // 每次重新加载前需要先消除之前的流程信息
-      await setProcessId(undefined);
-      await setProcessName(undefined);
-      await setXmlStr(undefined);
+      dispatch(handleProcessId(undefined));
+      await dispatch(handleProcessName(undefined));
       initBpmnModeler();
     })();
   }, [bpmnPrefix]);
@@ -140,7 +139,7 @@ export default function ProcessDesigner() {
     if (!bpmnModeler) return;
     (async () => {
       // 绘制流程图
-      // await createBpmnDiagram(xmlStr);
+      // await createBpmnDiagram(xxx);
       await createBpmnDiagram();
       // 之后绑定属性面板监听器
       bindPropertiesListener();
@@ -170,9 +169,11 @@ export default function ProcessDesigner() {
     setTimeout(() => {
       const canvas = bpmnModeler.get('canvas');
       const rootElement = canvas.getRootElement();
-      setProcessId(rootElement.id);
-      setProcessName(rootElement.businessObject.name);
-      setXmlStr(newXML);
+      // 获取流程id和name
+      const id: string = rootElement.id;
+      const name: string = rootElement.businessObject.name;
+      dispatch(handleProcessId(id));
+      dispatch(handleProcessName(name));
     }, 10);
     console.log('【绘制流程图】3、流程图绘制完成');
   }
@@ -186,6 +187,7 @@ export default function ProcessDesigner() {
     console.log('【绑定属性面板监听器】1、开始绑定');
     bpmnModeler?.on('commandStack.changed', async () => {
       // 这里可以执行一些其他操作
+      console.log(888888888888);
     });
     console.log('【绑定属性面板监听器】2、绑定成功');
   }
@@ -400,18 +402,6 @@ export default function ProcessDesigner() {
           size={3}
           style={{ marginTop: 3, marginBottom: 3 }}
         >
-          <Button
-            type="primary"
-            size={'small'}
-            icon={<EditOutlined />}
-            onClick={() => {
-              console.log('processId:' + processId);
-              console.log('processName:' + processName);
-              console.log('xmlStr:' + xmlStr);
-            }}
-          >
-            {'打印流程信息'}
-          </Button>
           {/*按钮组：打开、下载、预览*/}
           <ButtonGroup>
             {renderImportButton()}
@@ -450,7 +440,7 @@ export default function ProcessDesigner() {
             borderLeft: '1px solid #eee ',
           }}
         >
-          <PropertyPanel modeler={bpmnModeler} processId={processId} />
+          <PropertyPanel modeler={bpmnModeler} />
         </Col>
       </Row>
     </>

@@ -1,20 +1,25 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { FLOWABLE_PREFIX } from '@/bpmn/constant/constants';
 
-// 为切片状态定义一个类型
+// 定义redux属性的名称和类型
 export interface BpmnState {
+  // 流程引擎前缀
   prefix: string;
+  // 流程id
+  processId: string | undefined;
+  // 流程名称
+  processName: string | undefined;
 }
 
-// 使用该类型定义初始状态
+// 定义redux属性的默认值
 const initialState: BpmnState = {
-  // 流程引擎前缀，默认flowable
   prefix: FLOWABLE_PREFIX,
+  processId: undefined,
+  processName: undefined,
 };
 
 /**
- * 创建 redux 分片
- * 导出 action 和 reducer
+ * 定义修改redux属性的方法
  */
 export const bpmnSlice = createSlice({
   name: 'bpmn',
@@ -23,9 +28,19 @@ export const bpmnSlice = createSlice({
     handlePrefix: (state, action: PayloadAction<string>) => {
       state.prefix = action.payload;
     },
+    handleProcessId: (state, action: PayloadAction<string | undefined>) => {
+      state.processId = action.payload || undefined;
+    },
+    handleProcessName: (state, action: PayloadAction<string | undefined>) => {
+      state.processName = action.payload || undefined;
+    },
   },
 });
 
-export const { handlePrefix } = bpmnSlice.actions;
+export const {
+  handlePrefix,
+  handleProcessId,
+  handleProcessName,
+} = bpmnSlice.actions;
 
 export default bpmnSlice.reducer;

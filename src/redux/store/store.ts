@@ -1,5 +1,4 @@
 import { configureStore } from '@reduxjs/toolkit';
-import counterReducer from '@/redux/slice/counterSliceExample';
 import bpmnReducer from '@/redux/slice/bpmnSlice';
 
 /**
@@ -8,7 +7,6 @@ import bpmnReducer from '@/redux/slice/bpmnSlice';
 export const store = configureStore({
   // 将Slice Reducers添加到Store中
   reducer: {
-    counter: counterReducer,
     bpmn: bpmnReducer,
   },
 });

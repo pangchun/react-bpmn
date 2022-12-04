@@ -1,5 +1,7 @@
 import React, { useEffect } from 'react';
 import { Form, Input, message, Switch } from 'antd';
+import { useAppDispatch } from '@/redux/hook/hooks';
+import { handleProcessId } from '@/redux/slice/bpmnSlice';
 
 const keyOptions = {
   id: 'id',
@@ -22,6 +24,8 @@ export default function ElementBaseInfo(props: IProps) {
     isExecutable: boolean;
     versionTag: string;
   }>();
+  // redux
+  const dispatch = useAppDispatch();
 
   /**
    * 只监听id的原因：
@@ -68,6 +72,8 @@ export default function ElementBaseInfo(props: IProps) {
           di: { id: `${businessObject[key]}_di` },
         },
       );
+      // 如果当前是process节点,则需要更新redux的processId todo 更新流程名称和id需要检查type
+      dispatch(handleProcessId(value));
       return;
     }
     // 更新其他属性
