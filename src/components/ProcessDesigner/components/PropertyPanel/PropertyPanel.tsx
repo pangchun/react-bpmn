@@ -67,7 +67,8 @@ export default function PropertyPanel(props: IProps) {
         confirmCurrentElement(null);
         // 获取rootElements
         setRootElements(modeler.getDefinitions().rootElements);
-        window.bpmnInstance.rootElements = modeler.getDefinitions().rootElements;
+        window.bpmnInstance.rootElements =
+          modeler.getDefinitions().rootElements;
       });
       // 设置监听器，监听选中节点变化 (特别注意：监听器只能设置一次，如果执行多次，会设置多个监听器)
       modeler?.on('selection.changed', (e: any) => {
@@ -354,7 +355,8 @@ export default function PropertyPanel(props: IProps) {
         <Collapse
           bordered={false}
           expandIconPosition={'end'}
-          accordion
+          /* accordion为true时只展示一个面板 */
+          accordion={false}
           defaultActiveKey={['1']}
           destroyInactivePanel={true}
         >
@@ -366,7 +368,7 @@ export default function PropertyPanel(props: IProps) {
           {/*{renderElementListener()}*/}
           {/*{renderElementListenerOfTask()}*/}
           {/*{renderExtensionProperties()}*/}
-          {/*{renderElementOtherInfo()}*/}
+          {renderElementOtherInfo()}
         </Collapse>
       </Space>
     </>

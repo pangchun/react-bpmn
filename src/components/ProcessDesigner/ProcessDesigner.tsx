@@ -424,7 +424,7 @@ export default function ProcessDesigner() {
           <div
             id="canvas"
             style={{
-              backgroundColor: '#d9d9d9',
+              backgroundColor: 'transparent',
               backgroundImage:
                 'linear-gradient(rgba(230, 153, 255, .5) 1px, transparent 0), linear-gradient(90deg,rgba(230, 153, 255, .5) 1px, transparent 0)',
               backgroundSize: '20px 20px',

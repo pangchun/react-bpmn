@@ -8,9 +8,9 @@ interface IProps {
 }
 
 export default function ElementOtherInfo(props: IProps) {
-  // props属性
+  // props
   const { businessObject } = props;
-  // form表单属性
+  // form
   const [form] = Form.useForm<{
     documentation: string;
   }>();
