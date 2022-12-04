@@ -31,7 +31,7 @@ import { Button, Col, Dropdown, MenuProps, message, Row, Space } from 'antd';
 
 // 组件引入
 import PropertyPanel from '@/components/ProcessDesigner/components/PropertyPanel/PropertyPanel';
-import TextViewer from '@/components/ProcessDesigner/components/TextViewer/TextViewer';
+import Previewer from '@/components/ProcessDesigner/components/Previewer/Previewer';
 import {
   DownloadOutlined,
   EditOutlined,
@@ -363,11 +363,11 @@ export default function ProcessDesigner() {
     // 预览菜单
     const items: MenuProps['items'] = [
       {
-        label: <TextViewer modeler={bpmnModeler} type={'xml'} />,
+        label: <Previewer modeler={bpmnModeler} type={'xml'} />,
         key: '1',
       },
       {
-        label: <TextViewer modeler={bpmnModeler} type={'json'} />,
+        label: <Previewer modeler={bpmnModeler} type={'json'} />,
         key: '2',
       },
     ];

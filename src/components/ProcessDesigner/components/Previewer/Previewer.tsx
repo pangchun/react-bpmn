@@ -12,11 +12,11 @@ interface IProps {
 }
 
 /**
- * 文本查看器
+ * 流程预览
  * @param props
  * @constructor
  */
-export default function TextViewer(props: IProps) {
+export default function Previewer(props: IProps) {
   // props
   const { modeler, type } = props;
   // states
