@@ -84,9 +84,7 @@ export default function ProcessDesigner() {
    * 初始化建模器
    */
   function initBpmnModeler() {
-    console.log(
-      '===============================【初始化建模器】1、初始化建模器开始===================================',
-    );
+    console.log('【初始化建模器】1、初始化建模器开始');
     const modeler = new BpmnModeler({
       container: '#canvas',
       height: '96.5vh',
@@ -94,49 +92,44 @@ export default function ProcessDesigner() {
       moddleExtensions: getModdleExtensions(),
     });
     setBpmnModeler(modeler);
-    console.log(
-      '===============================【初始化建模器】4、初始化建模器结束===================================',
-    );
-  }
 
-  /**
-   * 添加解析器
-   */
-  function getAdditionalModules() {
-    console.log(
-      '===============================【初始化建模器】2、添加解析器===================================',
-    );
-    const modules: Array<any> = [];
-    if (bpmnPrefix === FLOWABLE_PREFIX) {
-      modules.push(flowableExtension);
+    /**
+     * 添加解析器
+     */
+    function getAdditionalModules() {
+      console.log('【初始化建模器】2、添加解析器');
+      const modules: Array<any> = [];
+      if (bpmnPrefix === FLOWABLE_PREFIX) {
+        modules.push(flowableExtension);
+      }
+      if (bpmnPrefix === CAMUNDA_PREFIX) {
+        modules.push(camundaExtension);
+      }
+      if (bpmnPrefix === ACTIVITI_PREFIX) {
+        modules.push(activitiExtension);
+      }
+      return modules;
     }
-    if (bpmnPrefix === CAMUNDA_PREFIX) {
-      modules.push(camundaExtension);
-    }
-    if (bpmnPrefix === ACTIVITI_PREFIX) {
-      modules.push(activitiExtension);
-    }
-    return modules;
-  }
 
-  /**
-   * 添加解析文件
-   */
-  function getModdleExtensions() {
-    console.log(
-      '===============================【初始化建模器】3、添加解析文件===================================',
-    );
-    const extensions: any = {};
-    if (bpmnPrefix === FLOWABLE_PREFIX) {
-      extensions.flowable = flowableDescriptor;
+    /**
+     * 添加解析文件
+     */
+    function getModdleExtensions() {
+      console.log('【初始化建模器】3、添加解析文件');
+      const extensions: any = {};
+      if (bpmnPrefix === FLOWABLE_PREFIX) {
+        extensions.flowable = flowableDescriptor;
+      }
+      if (bpmnPrefix === CAMUNDA_PREFIX) {
+        extensions.camunda = camundaDescriptor;
+      }
+      if (bpmnPrefix === ACTIVITI_PREFIX) {
+        extensions.activiti = activitiDescriptor;
+      }
+      return extensions;
     }
-    if (bpmnPrefix === CAMUNDA_PREFIX) {
-      extensions.camunda = camundaDescriptor;
-    }
-    if (bpmnPrefix === ACTIVITI_PREFIX) {
-      extensions.activiti = activitiDescriptor;
-    }
-    return extensions;
+
+    console.log('【初始化建模器】4、初始化建模器结束');
   }
 
   /**
@@ -161,6 +154,7 @@ export default function ProcessDesigner() {
    * @param xml
    */
   function createBpmnDiagram(xml?: string) {
+    console.log('【绘制流程图】1、开始绘制流程图');
     let newId = processId || 'Process_' + new Date().getTime();
     let newName = processName || '业务流程_' + new Date().getTime();
     let newXML = xml ? xml : DefaultEmptyXML(newId, newName, bpmnPrefix);
@@ -171,6 +165,7 @@ export default function ProcessDesigner() {
       console.error('流程图绘制出错：' + e);
     }
     // 更新流程信息，初始化建模器后，有了modeler，通过modeler获取到canvas，就能拿到rootElement，从而获取到流程的初始信息
+    console.log('【绘制流程图】2、更新流程节点信息');
     setTimeout(() => {
       const canvas = bpmnModeler.get('canvas');
       const rootElement = canvas.getRootElement();
@@ -178,6 +173,7 @@ export default function ProcessDesigner() {
       setProcessName(rootElement.businessObject.name);
       setXmlStr(newXML);
     }, 10);
+    console.log('【绘制流程图】3、流程图绘制完成');
   }
 
   /**
@@ -186,9 +182,11 @@ export default function ProcessDesigner() {
    * 2、监听器要等到流程图绘制结束后才能添加；
    */
   function bindPropertiesListener() {
+    console.log('【绑定属性面板监听器】1、开始绑定');
     bpmnModeler?.on('commandStack.changed', async () => {
       // 这里可以执行一些其他操作
     });
+    console.log('【绑定属性面板监听器】2、绑定成功');
   }
 
   /**
@@ -196,12 +194,12 @@ export default function ProcessDesigner() {
    */
   function renderImportButton() {
     function importLocalFile() {
-      console.log(refFile);
       const file = refFile.current.files[0];
       let reader = new FileReader();
       reader.readAsText(file);
       reader.onload = function (this) {
         let xmlStr: any = this.result || undefined;
+        console.log('【正在打开本地文件】文件内容如下: ↓↓↓');
         console.log(xmlStr);
         createBpmnDiagram(xmlStr);
       };

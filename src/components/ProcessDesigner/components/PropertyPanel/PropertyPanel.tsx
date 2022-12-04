@@ -48,7 +48,7 @@ export default function PropertyPanel(props: IProps) {
       console.log(processId);
       console.dir(modeler);
     }
-  }, [modeler, processId]);
+  }, [processId]);
 
   function init() {
     // 设置window的bpmnInstance对象属性
