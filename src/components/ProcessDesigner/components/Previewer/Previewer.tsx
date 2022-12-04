@@ -6,6 +6,9 @@ import SyntaxHighlighter from 'react-syntax-highlighter';
 import { obsidian } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import { xml2json } from '@/util/xmlUtil';
 
+// 样式
+import styles from './index.less';
+
 interface IProps {
   modeler: any;
   type: 'xml' | 'json';
@@ -62,8 +65,10 @@ export default function Previewer(props: IProps) {
         onOk={handleCopy}
         onCancel={handleCancel}
       >
-        {/* todo 此处可以设置字符串过长时显示 展开、收缩 按钮，以便查看 */}
-        <div style={{ maxHeight: 600, overflowY: 'scroll', maxWidth: 1200 }}>
+        <div
+          className={styles.codePreWrap}
+          style={{ maxHeight: 600, overflowY: 'scroll', maxWidth: 1200 }}
+        >
           <SyntaxHighlighter language={type} style={obsidian}>
             {xml}
           </SyntaxHighlighter>
