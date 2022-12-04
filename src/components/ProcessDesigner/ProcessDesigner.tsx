@@ -187,7 +187,6 @@ export default function ProcessDesigner() {
     console.log('【绑定属性面板监听器】1、开始绑定');
     bpmnModeler?.on('commandStack.changed', async () => {
       // 这里可以执行一些其他操作
-      console.log(888888888888);
     });
     console.log('【绑定属性面板监听器】2、绑定成功');
   }

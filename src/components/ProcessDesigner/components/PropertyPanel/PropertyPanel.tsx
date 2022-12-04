@@ -71,7 +71,6 @@ export default function PropertyPanel(props: IProps) {
       });
       // 设置监听器，监听选中节点变化 (特别注意：监听器只能设置一次，如果执行多次，会设置多个监听器)
       modeler?.on('selection.changed', (e: any) => {
-        console.log(87878787);
         confirmCurrentElement(e.newSelection[0] || null);
       });
       // 设置监听器，监听当前节点属性变化
@@ -114,7 +113,6 @@ export default function PropertyPanel(props: IProps) {
   function confirmCurrentElement(element: any) {
     // 如果element为空，则设置流程节点为当前节点，否则设置选中节点为当前节点 (点击canvas空白处默认指流程节点)
     if (!element) {
-      // console.log(processId); todo 是因为这个processid没有更新导致的选到为空
       // 查询流程节点的id,并通过id获取流程节点
       const newId = modeler.getDefinitions().rootElements[0].id;
       let processElement: any = modeler.get('elementRegistry').get(newId);

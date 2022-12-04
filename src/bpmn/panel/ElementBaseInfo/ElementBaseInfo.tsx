@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Form, Input, message, Switch } from 'antd';
 import { useAppDispatch } from '@/redux/hook/hooks';
-import { handleProcessId } from '@/redux/slice/bpmnSlice';
+import { handleProcessId, handleProcessName } from '@/redux/slice/bpmnSlice';
 
 const keyOptions = {
   id: 'id',
@@ -28,10 +28,10 @@ export default function ElementBaseInfo(props: IProps) {
   const dispatch = useAppDispatch();
 
   /**
-   * 只监听id的原因：
+   * 只监听id的原因:
    * 1、只有切换当前节点才重新执行初始化操作
-   * 2、当前节点属性变化时，不需要重新初始化操作
-   * 3、因为每个节点的id是必不相同的，所以可以用作依赖项
+   * 2、当前节点属性变化时,不需要重新初始化操作
+   * 3、因为每个节点的id是必不相同的,所以可以用作依赖项
    */
   useEffect(() => {
     if (businessObject) {
@@ -40,7 +40,6 @@ export default function ElementBaseInfo(props: IProps) {
   }, [businessObject?.id]);
 
   function initPageData() {
-    console.log('123123', businessObject);
     form.setFieldsValue({
       id: businessObject?.id,
       name: businessObject?.name,
@@ -51,18 +50,19 @@ export default function ElementBaseInfo(props: IProps) {
 
   function updateElementAttr(key: string, value: any) {
     if (key === keyOptions.id) {
-      // id为空时，不执行更新 todo 并提示
-      if (!value) {
+      // id校验, 这里做一次校验是因为输入框监听的是change事件,输入框自带的校验无法拦截到,因此要在这里处理一下,防止将非法值更新到流程中
+      const { status: validateFlag } = validateId(value);
+      if (!validateFlag) {
         return;
-      }
-      // id不能相同
-      try {
-        window.bpmnInstance.elementRegistry._validateId(value);
-      } catch (e: any) {
-        message
-          .error('编号名称已存在，请修改编号')
-          .then(() => console.log(e.message));
-        return;
+      } else {
+        try {
+          window.bpmnInstance.elementRegistry._validateId(value);
+        } catch (e: any) {
+          message
+            .error('编号已存在,当前修改未生效')
+            .then(() => console.log(e.message));
+          return;
+        }
       }
       // 更新id
       window.bpmnInstance.modeling.updateProperties(
@@ -72,26 +72,46 @@ export default function ElementBaseInfo(props: IProps) {
           di: { id: `${businessObject[key]}_di` },
         },
       );
-      // 如果当前是process节点,则需要更新redux的processId todo 更新流程名称和id需要检查type
-      dispatch(handleProcessId(value));
-      return;
+    } else {
+      // 更新其他属性
+      window.bpmnInstance.modeling.updateProperties(
+        window.bpmnInstance.element,
+        {
+          [key]: value || undefined,
+        },
+      );
     }
-    // 更新其他属性
-    window.bpmnInstance.modeling.updateProperties(window.bpmnInstance.element, {
-      [key]: value || undefined,
-    });
+    // 如果当前是process节点,则更新redux中的processId和processName
+    if (businessObject.$type === 'bpmn:Process') {
+      if (key === keyOptions.id) {
+        dispatch(handleProcessId(value));
+      } else if (key === keyOptions.name) {
+        dispatch(handleProcessName(value));
+      }
+    }
   }
 
+  /**
+   * 校验id
+   * @param value
+   */
   function validateId(value: string) {
-    if (value.includes(' ')) {
+    if (!value) {
       return {
         status: false,
-        message: '编号中不能包含空格',
+        message: '编号为空',
+      };
+    } else if (value.includes(' ')) {
+      return {
+        status: false,
+        message: '编号中包含空格',
+      };
+    } else {
+      return {
+        status: true,
+        message: 'ok',
       };
     }
-    return {
-      status: true,
-    };
   }
 
   /**
@@ -133,7 +153,6 @@ export default function ElementBaseInfo(props: IProps) {
           label="编号"
           name="id"
           rules={[
-            { required: true, message: '编号不能为空哦!' },
             {
               validator: (_, value) => {
                 const validateId$1 = validateId(value);
@@ -146,7 +165,6 @@ export default function ElementBaseInfo(props: IProps) {
         >
           <Input
             placeholder={'请输入'}
-            // readOnly={businessObject?.$type === 'bpmn:Process'}
             onChange={(event) => {
               updateElementAttr(keyOptions.id, event.currentTarget.value);
             }}
