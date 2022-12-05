@@ -1,14 +1,13 @@
 // ts: 属性面板通用方法
 
-import { FLOWABLE_PREFIX } from '@/bpmn/constant/constants';
-
 /**
  * 创建 Property实例
+ * @param prefix
  * @param options
  */
-export function createProperty(options: any) {
+export function createProperty(prefix: string, options: any) {
   const { name, value } = options;
-  return window.bpmnInstance.moddle?.create(`${FLOWABLE_PREFIX}:Property`, {
+  return window.bpmnInstance.moddle?.create(`${prefix}:Property`, {
     name,
     value,
   });
@@ -16,25 +15,27 @@ export function createProperty(options: any) {
 
 /**
  * 创建 Properties实例
+ * @param prefix
  * @param options
  */
-export function createProperties(options: any) {
+export function createProperties(prefix: string, options: any) {
   const { properties } = options;
-  return window.bpmnInstance.moddle?.create(`${FLOWABLE_PREFIX}:Properties`, {
+  return window.bpmnInstance.moddle?.create(`${prefix}:Properties`, {
     values: properties,
   });
 }
 
 /**
  * 获取 非suffix类型扩展属性
+ * @param prefix
  * @param suffix
  */
-export function extractOtherExtensionList(suffix: string) {
+export function extractOtherExtensionList(prefix: string, suffix: string) {
   let extensionElements: any =
     window.bpmnInstance?.element.businessObject.extensionElements;
   let otherExtensionList: any[] =
     extensionElements?.values?.filter((el: any) => {
-      return el.$type !== `${FLOWABLE_PREFIX}:${suffix}`;
+      return el.$type !== `${prefix}:${suffix}`;
     }) || [];
   return otherExtensionList;
 }

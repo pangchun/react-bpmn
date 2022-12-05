@@ -2,26 +2,28 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Button, notification, Space, Table } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import EditProperty from '@/bpmn/panel/ExtensionProperties/EditProperty/EditProperty';
-import { FLOWABLE_PREFIX } from '@/bpmn/constant/constants';
 import {
   createProperties,
   createProperty,
   extractOtherExtensionList,
   updateElementExtensions,
 } from '@/util/panelUtil';
+import { useAppSelector } from '@/redux/hook/hooks';
 
 interface IProps {
   businessObject: any;
 }
 
 export default function ExtensionProperties(props: IProps) {
-  // props属性
+  // props
   const { businessObject } = props;
-  // state属性
+  // state
   const [rows, setRows] = useState<Array<any>>([]);
   const [propertyList, setPropertyList] = useState<Array<any>>([]);
   // ref
   const editRef = useRef<any>();
+  // redux
+  const prefix = useAppSelector((state) => state.bpmn.prefix);
 
   useEffect(() => {
     initPageData();
@@ -40,7 +42,7 @@ export default function ExtensionProperties(props: IProps) {
     // 获取扩展属性
     let properties: any[] =
       businessObject.extensionElements?.values?.find(
-        (e: any) => e.$type === `${FLOWABLE_PREFIX}:Properties`,
+        (e: any) => e.$type === `${prefix}:Properties`,
       )?.values || [];
     setPropertyList(properties);
     // 初始化行数据源
@@ -56,13 +58,13 @@ export default function ExtensionProperties(props: IProps) {
   }
 
   function getOtherExtensionList() {
-    return extractOtherExtensionList('Properties');
+    return extractOtherExtensionList(prefix, 'Properties');
   }
 
   function createOrUpdate(options: any) {
     const { rowKey, propertyName, propertyValue } = options;
     // 创建属性实例
-    let property: any = createProperty({
+    let property: any = createProperty(prefix, {
       name: propertyName,
       value: propertyValue,
     });
@@ -73,7 +75,7 @@ export default function ExtensionProperties(props: IProps) {
       1,
       property,
     );
-    let properties: any = createProperties({
+    let properties: any = createProperties(prefix, {
       properties: newProperties,
     });
     // 更新扩展属性
@@ -86,7 +88,7 @@ export default function ExtensionProperties(props: IProps) {
     // 创建扩展属性列表实例
     let newProperties: Array<any> = [...propertyList];
     newProperties.splice(rowKey - 1, 1);
-    let properties: any = createProperties({
+    let properties: any = createProperties(prefix, {
       properties: newProperties,
     });
     // 更新扩展属性
@@ -177,8 +179,6 @@ export default function ExtensionProperties(props: IProps) {
         <PlusOutlined />
         <span style={{ marginLeft: 0 }}>添加属性</span>
       </Button>
-      {/*  </Panel>*/}
-      {/*</Collapse>*/}
       <EditProperty onRef={editRef} createOrUpdate={createOrUpdate} />
     </>
   );
