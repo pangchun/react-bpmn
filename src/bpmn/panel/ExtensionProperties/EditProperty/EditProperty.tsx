@@ -11,7 +11,7 @@ export default function EditProperty(props: IProps) {
   // props属性
   const { onRef, createOrUpdate } = props;
   // state属性
-  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   // form表单属性
   const [form] = Form.useForm<{
     key: number;
@@ -29,12 +29,12 @@ export default function EditProperty(props: IProps) {
       propertyName: rowObj?.name,
       propertyValue: rowObj?.value,
     });
-    setIsModalVisible(true);
+    setIsOpen(true);
   }
 
   function handleCancel() {
     form.resetFields();
-    setIsModalVisible(false);
+    setIsOpen(false);
   }
 
   function handleOK() {
@@ -45,7 +45,7 @@ export default function EditProperty(props: IProps) {
           rowKey: form.getFieldValue('key'),
           ...values,
         });
-        setIsModalVisible(false);
+        setIsOpen(false);
       })
       .catch((info) => {
         console.log('表单校验失败: ', info);
@@ -63,7 +63,7 @@ export default function EditProperty(props: IProps) {
             &nbsp;编辑属性
           </Typography>
         }
-        visible={isModalVisible}
+        open={isOpen}
         okText={'确认'}
         cancelText={'取消'}
         onOk={handleOK}
