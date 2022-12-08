@@ -1,10 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Button, notification, Space, Table } from 'antd';
-import { PlusOutlined } from '@ant-design/icons';
+import { InboxOutlined, PlusOutlined } from '@ant-design/icons';
 import EditProperty from '@/bpmn/panel/ExtensionProperties/EditProperty/EditProperty';
 import {
   createProperties,
   createProperty,
+  extractExtensionList,
   extractOtherExtensionList,
   updateElementExtensions,
 } from '@/util/panelUtil';
@@ -14,25 +15,42 @@ interface IProps {
   businessObject: any;
 }
 
+/**
+ * 扩展属性 组件
+ *
+ * @param props
+ * @constructor
+ */
 export default function ExtensionProperties(props: IProps) {
   // props
   const { businessObject } = props;
   // state
-  const [rows, setRows] = useState<Array<any>>([]);
+  const [dataSource, setDataSource] = useState<Array<any>>([]);
   const [propertyList, setPropertyList] = useState<Array<any>>([]);
   // ref
-  const editRef = useRef<any>();
+  const modalRef = useRef<any>();
   // redux
   const prefix = useAppSelector((state) => state.bpmn.prefix);
 
+  /**
+   * 初始化
+   */
   useEffect(() => {
-    initPageData();
+    if (businessObject) {
+      initPageData();
+    }
   }, [businessObject?.id]);
 
+  /**
+   * 初始化页面数据
+   */
   function initPageData() {
     initRows();
   }
 
+  /**
+   * 初始化表格行数据
+   */
   function initRows() {
     let businessObject =
       window.bpmnInstance?.element?.businessObject || props.businessObject;
@@ -40,10 +58,7 @@ export default function ExtensionProperties(props: IProps) {
       return;
     }
     // 获取扩展属性
-    let properties: any[] =
-      businessObject.extensionElements?.values?.find(
-        (e: any) => e.$type === `${prefix}:Properties`,
-      )?.values || [];
+    let properties: any[] = extractExtensionList(prefix, 'Properties');
     setPropertyList(properties);
     // 初始化行数据源
     let rows: any[] =
@@ -54,13 +69,17 @@ export default function ExtensionProperties(props: IProps) {
           value: e.value,
         };
       }) || [];
-    setRows(rows);
+    setDataSource(rows);
   }
 
+  /**
+   * 获取其它属性
+   */
   function getOtherExtensionList() {
     return extractOtherExtensionList(prefix, 'Properties');
   }
 
+  // todo 修改到这里
   function createOrUpdate(options: any) {
     const { rowKey, propertyName, propertyValue } = options;
     // 创建属性实例
@@ -104,6 +123,7 @@ export default function ExtensionProperties(props: IProps) {
     });
   }
 
+  // 列
   const columns = [
     {
       title: '序号',
@@ -137,7 +157,7 @@ export default function ExtensionProperties(props: IProps) {
             size={'small'}
             style={{ color: '#1890ff' }}
             onClick={() => {
-              editRef.current.showEditModal(record);
+              modalRef.current.showEditModal(record);
             }}
           >
             {'编辑'}
@@ -161,10 +181,18 @@ export default function ExtensionProperties(props: IProps) {
     <>
       <Table
         columns={columns}
-        dataSource={rows}
+        dataSource={dataSource}
         pagination={false}
         bordered
         size={'small'}
+        locale={{
+          emptyText: (
+            <div style={{ margin: 20 }}>
+              <InboxOutlined style={{ fontSize: '50px' }} />
+              <div>{'暂无'}</div>
+            </div>
+          ),
+        }}
       />
       <Button
         type="primary"
@@ -173,13 +201,13 @@ export default function ExtensionProperties(props: IProps) {
           marginTop: 8,
         }}
         onClick={() => {
-          editRef.current.showEditModal();
+          modalRef.current.showEditModal();
         }}
       >
         <PlusOutlined />
         <span style={{ marginLeft: 0 }}>添加属性</span>
       </Button>
-      <EditProperty onRef={editRef} createOrUpdate={createOrUpdate} />
+      <EditProperty onRef={modalRef} createOrUpdate={createOrUpdate} />
     </>
   );
 }

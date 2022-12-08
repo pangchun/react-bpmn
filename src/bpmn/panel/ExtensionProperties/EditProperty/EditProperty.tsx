@@ -19,7 +19,11 @@ export default function EditProperty(props: IProps) {
     propertyValue: string;
   }>();
 
+  /**
+   * 暴露方法给父组件
+   */
   useImperativeHandle(onRef, () => ({
+    // 打开弹窗
     showEditModal: (rowObj: any) => showModal(rowObj),
   }));
 

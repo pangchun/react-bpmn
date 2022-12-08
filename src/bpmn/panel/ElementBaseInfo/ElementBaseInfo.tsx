@@ -14,10 +14,16 @@ interface IProps {
   businessObject: any;
 }
 
+/**
+ * 常规信息 组件
+ *
+ * @param props
+ * @constructor
+ */
 export default function ElementBaseInfo(props: IProps) {
-  // props属性
+  // props
   const { businessObject } = props;
-  // form表单属性
+  // form
   const [form] = Form.useForm<{
     id: string;
     name: string;
@@ -39,6 +45,9 @@ export default function ElementBaseInfo(props: IProps) {
     }
   }, [businessObject?.id]);
 
+  /**
+   * 初始化页面数据
+   */
   function initPageData() {
     form.setFieldsValue({
       id: businessObject?.id,
@@ -48,6 +57,12 @@ export default function ElementBaseInfo(props: IProps) {
     });
   }
 
+  /**
+   * 更新常规信息
+   *
+   * @param key
+   * @param value
+   */
   function updateElementAttr(key: string, value: any) {
     if (key === keyOptions.id) {
       // id校验, 这里做一次校验是因为输入框监听的是change事件,输入框自带的校验无法拦截到,因此要在这里处理一下,防止将非法值更新到流程中
@@ -93,6 +108,7 @@ export default function ElementBaseInfo(props: IProps) {
 
   /**
    * 校验id
+   *
    * @param value
    */
   function validateId(value: string) {

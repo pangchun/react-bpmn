@@ -13,7 +13,7 @@ export default function EditField(props: IProps) {
   const { onRef, reFreshParent } = props;
 
   // setState属性
-  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [open, setOpen] = useState(false);
 
   // 其它属性
   const [form] = Form.useForm<{
@@ -37,12 +37,12 @@ export default function EditField(props: IProps) {
       fieldTypeValue: rowObj?.fieldTypeValue || '',
       fieldValue: rowObj?.fieldValue || '',
     });
-    setIsModalVisible(true);
+    setOpen(true);
   }
 
   function handleCancel() {
     form.resetFields();
-    setIsModalVisible(false);
+    setOpen(false);
   }
 
   function handleOK() {
@@ -59,7 +59,7 @@ export default function EditField(props: IProps) {
         rowObj.fieldValue = values.fieldValue;
         // 更新父组件表格数据
         reFreshParent(rowObj);
-        setIsModalVisible(false);
+        setOpen(false);
       })
       .catch((info) => {
         console.log('表单校验失败: ', info);
@@ -77,7 +77,7 @@ export default function EditField(props: IProps) {
             &nbsp;编辑属性
           </Typography>
         }
-        visible={isModalVisible}
+        visible={open}
         okText={'确认'}
         cancelText={'取消'}
         onOk={handleOK}

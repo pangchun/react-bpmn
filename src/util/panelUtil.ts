@@ -26,6 +26,21 @@ export function createProperties(prefix: string, options: any) {
 }
 
 /**
+ * 获取 指定suffix类型扩展属性
+ * @param prefix
+ * @param suffix
+ */
+export function extractExtensionList(prefix: string, suffix: string) {
+  let extensionElements: any =
+    window.bpmnInstance?.element.businessObject.extensionElements;
+  let properties: any[] =
+    extensionElements?.values?.find(
+      (e: any) => e.$type === `${prefix}:${suffix}`,
+    )?.values || [];
+  return properties;
+}
+
+/**
  * 获取 非suffix类型扩展属性
  * @param prefix
  * @param suffix
@@ -33,11 +48,11 @@ export function createProperties(prefix: string, options: any) {
 export function extractOtherExtensionList(prefix: string, suffix: string) {
   let extensionElements: any =
     window.bpmnInstance?.element.businessObject.extensionElements;
-  let otherExtensionList: any[] =
-    extensionElements?.values?.filter((el: any) => {
-      return el.$type !== `${prefix}:${suffix}`;
-    }) || [];
-  return otherExtensionList;
+  let otherProperties: any[] =
+    extensionElements?.values?.filter(
+      (el: any) => el.$type !== `${prefix}:${suffix}`,
+    ) || [];
+  return otherProperties;
 }
 
 /**

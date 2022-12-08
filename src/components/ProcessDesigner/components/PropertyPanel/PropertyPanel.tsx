@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Collapse, Space, Typography } from 'antd';
 import ElementBaseInfo from '@/bpmn/panel/ElementBaseInfo/ElementBaseInfo';
 
-import ElementOtherInfo from '@/bpmn/panel/ElementOtherInfo/ElementOtherInfo';
+import ElementDocument from '@/bpmn/panel/ElementDocument/ElementDocument';
 import ExtensionProperties from '@/bpmn/panel/ExtensionProperties/ExtensionProperties';
 import SignalMessage from '@/bpmn/panel/SignalMessage/SignalMessage';
 import ElementListener from '@/bpmn/panel/ElementListener/ElementListener';
@@ -11,6 +11,9 @@ import MultiInstance from '@/bpmn/panel/MultiInstance/MultiInstance';
 import ElementForm from '@/bpmn/panel/ElementForm/ElementForm';
 import {
   BellOutlined,
+  BulbTwoTone,
+  DatabaseTwoTone,
+  FileTwoTone,
   MessageOutlined,
   PlusOutlined,
   PlusSquareTwoTone,
@@ -137,7 +140,7 @@ export default function PropertyPanel(props: IProps) {
       <Collapse.Panel
         header={
           <Typography style={{ color: '#1890ff', fontWeight: 'bold' }}>
-            <PushpinTwoTone />
+            <BulbTwoTone />
             &nbsp;常规
           </Typography>
         }
@@ -311,7 +314,7 @@ export default function PropertyPanel(props: IProps) {
       <Collapse.Panel
         header={
           <Typography style={{ color: '#1890ff', fontWeight: 'bold' }}>
-            <PlusSquareTwoTone />
+            <DatabaseTwoTone />
             &nbsp;扩展属性
           </Typography>
         }
@@ -334,8 +337,8 @@ export default function PropertyPanel(props: IProps) {
       <Collapse.Panel
         header={
           <Typography style={{ color: '#1890ff', fontWeight: 'bold' }}>
-            <PlusSquareTwoTone />
-            &nbsp;其它属性
+            <FileTwoTone />
+            &nbsp;元素文档
           </Typography>
         }
         key={11}
@@ -343,7 +346,7 @@ export default function PropertyPanel(props: IProps) {
         showArrow={true}
         forceRender={false}
       >
-        <ElementOtherInfo businessObject={businessObject} />
+        <ElementDocument businessObject={businessObject} />
       </Collapse.Panel>
     );
   }

@@ -39,7 +39,7 @@ export default function EditListener(props: IProps) {
   const { onRef, isTask, reFreshParent } = props;
 
   // setState属性
-  const [visible, setVisible] = useState(false);
+  const [open, setOpen] = useState(false);
   const [rows, setRows] = useState<Array<any>>([]);
 
   // ref
@@ -73,12 +73,12 @@ export default function EditListener(props: IProps) {
 
   function showDrawer(rowObj: any) {
     initPageData(rowObj);
-    setVisible(true);
+    setOpen(true);
   }
 
   function closeDrawer() {
     form.resetFields();
-    setVisible(false);
+    setOpen(false);
   }
 
   function initPageData(rowObj: any) {
@@ -370,7 +370,7 @@ export default function EditListener(props: IProps) {
         title="属性配置"
         placement="right"
         onClose={closeDrawer}
-        visible={visible}
+        visible={open}
       >
         <Form labelCol={{ span: 5 }} wrapperCol={{ span: 18 }} form={form}>
           <Form.Item
