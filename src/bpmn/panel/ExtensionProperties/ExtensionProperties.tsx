@@ -49,18 +49,13 @@ export default function ExtensionProperties(props: IProps) {
   }
 
   /**
-   * 初始化表格行数据
+   * 初始化表格行数据源
    */
   function initRows() {
-    let businessObject =
-      window.bpmnInstance?.element?.businessObject || props.businessObject;
-    if (!businessObject) {
-      return;
-    }
     // 获取扩展属性
     let properties: any[] = extractExtensionList(prefix, 'Properties');
     setPropertyList(properties);
-    // 初始化行数据源
+    // 设置行数据源
     let rows: any[] =
       properties?.map((e, i) => {
         return {
@@ -79,18 +74,22 @@ export default function ExtensionProperties(props: IProps) {
     return extractOtherExtensionList(prefix, 'Properties');
   }
 
-  // todo 修改到这里
+  /**
+   * 新增或修改属性
+   *
+   * @param options [options.rowKey:行号, options.propertyName:属性名, options.propertyValue:属性值,]
+   */
   function createOrUpdate(options: any) {
-    const { rowKey, propertyName, propertyValue } = options;
+    const { rowKey: index, propertyName: name, propertyValue: value } = options;
     // 创建属性实例
     let property: any = createProperty(prefix, {
-      name: propertyName,
-      value: propertyValue,
+      name: name,
+      value: value,
     });
     // 创建扩展属性列表实例
     let newProperties: Array<any> = [...propertyList];
     newProperties.splice(
-      rowKey > 0 ? rowKey - 1 : propertyList.length,
+      index > 0 ? index - 1 : propertyList.length,
       1,
       property,
     );
@@ -103,6 +102,10 @@ export default function ExtensionProperties(props: IProps) {
     initRows();
   }
 
+  /**
+   * 移除某个扩展属性
+   * @param rowKey
+   */
   function remove(rowKey: number) {
     // 创建扩展属性列表实例
     let newProperties: Array<any> = [...propertyList];
@@ -116,7 +119,7 @@ export default function ExtensionProperties(props: IProps) {
     initRows();
     // 提示通知
     notification.open({
-      message: <span style={{ color: 'red' }}>属性已删除</span>,
+      message: <span style={{ color: 'red' }}>{'属性已删除'}</span>,
       placement: 'top',
       duration: 2,
       description: `已删除编号为 ${rowKey} 的监听器`,

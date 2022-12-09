@@ -7,12 +7,18 @@ interface IProps {
   createOrUpdate: (options: any) => any;
 }
 
+/**
+ * 编辑扩展属性 组件
+ *
+ * @param props
+ * @constructor
+ */
 export default function EditProperty(props: IProps) {
-  // props属性
+  // props
   const { onRef, createOrUpdate } = props;
-  // state属性
+  // state
   const [isOpen, setIsOpen] = useState(false);
-  // form表单属性
+  // form表单
   const [form] = Form.useForm<{
     key: number;
     propertyName: string;
@@ -27,6 +33,11 @@ export default function EditProperty(props: IProps) {
     showEditModal: (rowObj: any) => showModal(rowObj),
   }));
 
+  /**
+   * 打开弹窗，并提前加载表单数据
+   *
+   * @param rowObj
+   */
   function showModal(rowObj: any) {
     form.setFieldsValue({
       key: rowObj?.key || -1,
@@ -36,11 +47,17 @@ export default function EditProperty(props: IProps) {
     setIsOpen(true);
   }
 
+  /**
+   * 关闭弹窗
+   */
   function handleCancel() {
     form.resetFields();
     setIsOpen(false);
   }
 
+  /**
+   * 提交表单
+   */
   function handleOK() {
     form
       .validateFields()
