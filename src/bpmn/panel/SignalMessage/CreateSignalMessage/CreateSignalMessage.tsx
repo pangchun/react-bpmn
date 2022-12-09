@@ -1,36 +1,49 @@
 import React, { useState } from 'react';
 import { Modal, Button, Input, Typography, Form } from 'antd';
-import { EditOutlined, PlusOutlined } from '@ant-design/icons';
+import { EditOutlined } from '@ant-design/icons';
 
 const MESSAGE_CONSTANT: string = 'message';
 
 interface IProps {
   createType: 'message' | 'signal';
-  reInitRows: () => any;
+  initRows: () => any;
 }
 
+/**
+ * 编辑消息与信号 组件
+ *
+ * @param props
+ * @constructor
+ */
 export default function CreateSignalMessage(props: IProps) {
-  // props属性
-  const { createType, reInitRows } = props;
-
-  // setState属性
-  const [isModalVisible, setIsModalVisible] = useState(false);
-
-  // 其它属性
+  // props
+  const { createType, initRows } = props;
+  // state
+  const [open, setOpen] = useState(false);
+  // form
   const [form] = Form.useForm<{
     id: string;
     name: string;
   }>();
 
+  /**
+   * 打开弹窗并重置表单
+   */
   function showModal() {
-    setIsModalVisible(true);
+    setOpen(true);
     form.resetFields();
   }
 
+  /**
+   * 关闭弹窗
+   */
   function handleCancel() {
-    setIsModalVisible(false);
+    setOpen(false);
   }
 
+  /**
+   * 提交表单,并更新表格
+   */
   function handleOK() {
     form
       .validateFields()
@@ -47,7 +60,7 @@ export default function CreateSignalMessage(props: IProps) {
         });
         window.bpmnInstance.rootElements.push(element);
         // push之后，更新父组件的表格行数据
-        reInitRows();
+        initRows();
         handleCancel();
       })
       .catch((info) => {
@@ -61,14 +74,13 @@ export default function CreateSignalMessage(props: IProps) {
         type="primary"
         size={'small'}
         style={{
-          marginTop: 8,
-          float: 'right',
+          // marginTop: 8,
+          width: '100%',
         }}
         onClick={showModal}
       >
-        <PlusOutlined />
         <span style={{ marginLeft: 0 }}>
-          {createType === MESSAGE_CONSTANT ? '创建新消息' : '创建新信号'}
+          {createType === MESSAGE_CONSTANT ? '创建消息' : '创建信号'}
         </span>
       </Button>
 
@@ -79,10 +91,10 @@ export default function CreateSignalMessage(props: IProps) {
           <Typography style={{ color: '#1890ff' }}>
             <EditOutlined />
             &nbsp;
-            {createType === MESSAGE_CONSTANT ? '创建新消息' : '创建新信号'}
+            {createType === MESSAGE_CONSTANT ? '编辑消息' : '编辑信号'}
           </Typography>
         }
-        visible={isModalVisible}
+        open={open}
         okText={'确认'}
         cancelText={'取消'}
         onOk={handleOK}

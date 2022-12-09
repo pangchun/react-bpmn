@@ -15,12 +15,13 @@ import {
   DatabaseTwoTone,
   FileTwoTone,
   MessageOutlined,
+  NotificationOutlined,
   PlusOutlined,
   PlusSquareTwoTone,
   PushpinTwoTone,
 } from '@ant-design/icons';
 import { initBpmnInstance } from '@/util/windowUtil';
-import { useAppDispatch, useAppSelector } from '@/redux/hook/hooks';
+import { useAppSelector } from '@/redux/hook/hooks';
 
 interface IProps {
   modeler: any;
@@ -139,9 +140,9 @@ export default function PropertyPanel(props: IProps) {
     return (
       <Collapse.Panel
         header={
-          <Typography style={{ color: '#1890ff', fontWeight: 'bold' }}>
-            <BulbTwoTone />
-            &nbsp;常规
+          <Typography style={{ color: '#f2cbff', fontWeight: 'bold' }}>
+            <BulbTwoTone twoToneColor={'#f2cbff'} />
+            &nbsp;常规信息
           </Typography>
         }
         key={1}
@@ -163,8 +164,8 @@ export default function PropertyPanel(props: IProps) {
       return (
         <Collapse.Panel
           header={
-            <Typography style={{ color: '#1890ff', fontWeight: 'bold' }}>
-              <MessageOutlined />
+            <Typography style={{ color: '#f2cbff', fontWeight: 'bold' }}>
+              <NotificationOutlined twoToneColor={'#f2cbff'} />
               &nbsp;消息与信号
             </Typography>
           }
@@ -191,8 +192,8 @@ export default function PropertyPanel(props: IProps) {
       return (
         <Collapse.Panel
           header={
-            <Typography style={{ color: '#1890ff', fontWeight: 'bold' }}>
-              <MessageOutlined />
+            <Typography style={{ color: '#f2cbff', fontWeight: 'bold' }}>
+              <MessageOutlined twoToneColor={'#f2cbff'} />
               &nbsp;表单
             </Typography>
           }
@@ -216,8 +217,8 @@ export default function PropertyPanel(props: IProps) {
       return (
         <Collapse.Panel
           header={
-            <Typography style={{ color: '#1890ff', fontWeight: 'bold' }}>
-              <PushpinTwoTone />
+            <Typography style={{ color: '#f2cbff', fontWeight: 'bold' }}>
+              <PushpinTwoTone twoToneColor={'#f2cbff'} />
               &nbsp;任务
             </Typography>
           }
@@ -241,8 +242,8 @@ export default function PropertyPanel(props: IProps) {
       return (
         <Collapse.Panel
           header={
-            <Typography style={{ color: '#1890ff', fontWeight: 'bold' }}>
-              <PushpinTwoTone />
+            <Typography style={{ color: '#f2cbff', fontWeight: 'bold' }}>
+              <PushpinTwoTone twoToneColor={'#f2cbff'} />
               &nbsp;多实例
             </Typography>
           }
@@ -265,8 +266,8 @@ export default function PropertyPanel(props: IProps) {
     return (
       <Collapse.Panel
         header={
-          <Typography style={{ color: '#1890ff', fontWeight: 'bold' }}>
-            <BellOutlined />
+          <Typography style={{ color: '#f2cbff', fontWeight: 'bold' }}>
+            <BellOutlined twoToneColor={'#f2cbff'} />
             &nbsp;执行监听器
           </Typography>
         }
@@ -289,8 +290,8 @@ export default function PropertyPanel(props: IProps) {
       return (
         <Collapse.Panel
           header={
-            <Typography style={{ color: '#1890ff', fontWeight: 'bold' }}>
-              <PlusOutlined />
+            <Typography style={{ color: '#f2cbff', fontWeight: 'bold' }}>
+              <PlusOutlined twoToneColor={'#f2cbff'} />
               &nbsp;任务监听器
             </Typography>
           }
@@ -313,8 +314,8 @@ export default function PropertyPanel(props: IProps) {
     return (
       <Collapse.Panel
         header={
-          <Typography style={{ color: '#1890ff', fontWeight: 'bold' }}>
-            <DatabaseTwoTone />
+          <Typography style={{ color: '#f2cbff', fontWeight: 'bold' }}>
+            <DatabaseTwoTone twoToneColor={'#f2cbff'} />
             &nbsp;扩展属性
           </Typography>
         }
@@ -336,8 +337,8 @@ export default function PropertyPanel(props: IProps) {
     return (
       <Collapse.Panel
         header={
-          <Typography style={{ color: '#1890ff', fontWeight: 'bold' }}>
-            <FileTwoTone />
+          <Typography style={{ color: '#f2cbff', fontWeight: 'bold' }}>
+            <FileTwoTone twoToneColor={'#f2cbff'} />
             &nbsp;元素文档
           </Typography>
         }
@@ -363,7 +364,7 @@ export default function PropertyPanel(props: IProps) {
           destroyInactivePanel={true}
         >
           {renderElementBaseInfo()}
-          {/*{renderSignalMessage()}*/}
+          {renderSignalMessage()}
           {/*{renderElementForm()}*/}
           {/*{renderElementTask()}*/}
           {/*{renderMultiInstance()}*/}

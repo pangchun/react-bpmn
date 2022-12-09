@@ -1,26 +1,31 @@
 import React, { useEffect, useState } from 'react';
-import { Space, Typography, Table } from 'antd';
+import { Empty, Space, Table } from 'antd';
 
-import { Collapse } from 'antd';
-import { MessageOutlined } from '@ant-design/icons';
 import CreateSignalMessage from '@/bpmn/panel/SignalMessage/CreateSignalMessage/CreateSignalMessage';
-
-const { Panel } = Collapse;
-
 interface IProps {
   businessObject: any;
 }
 
+/**
+ * 消息与信号 组件
+ *
+ * @param props
+ * @constructor
+ */
 export default function SignalMessage(props: IProps) {
-  // props属性
+  // props
   const { businessObject } = props;
-
-  // setState属性
+  // state
   const [signalRows, setSignalRows] = useState<Array<any>>([]);
   const [messageRows, setMessageRows] = useState<Array<any>>([]);
 
+  /**
+   * 初始化
+   */
   useEffect(() => {
-    initRows();
+    if (businessObject) {
+      initRows();
+    }
   }, [businessObject?.id]);
 
   /**
@@ -29,7 +34,6 @@ export default function SignalMessage(props: IProps) {
   function initRows() {
     let signalRows: any[] = [],
       messageRows: any[] = [];
-
     window.bpmnInstance?.rootElements?.map((e) => {
       if (e.$type === 'bpmn:Message') {
         messageRows.push({
@@ -45,11 +49,11 @@ export default function SignalMessage(props: IProps) {
         });
       }
     });
-
     setSignalRows(signalRows);
     setMessageRows(messageRows);
   }
 
+  // 列
   const signalColumns = [
     {
       title: '序号',
@@ -101,23 +105,39 @@ export default function SignalMessage(props: IProps) {
   return (
     <>
       <Space direction="vertical" size={4} style={{ display: 'flex' }}>
-        <CreateSignalMessage createType={'message'} reInitRows={initRows} />
         <Table
           columns={messageColumns}
           dataSource={messageRows}
           pagination={false}
           bordered
           size={'small'}
+          locale={{
+            emptyText: (
+              <Empty
+                image={Empty.PRESENTED_IMAGE_SIMPLE}
+                description={'暂无数据'}
+              />
+            ),
+          }}
         />
-
-        <CreateSignalMessage createType={'signal'} reInitRows={initRows} />
+        <CreateSignalMessage createType={'message'} initRows={initRows} />
         <Table
           columns={signalColumns}
           dataSource={signalRows}
           pagination={false}
           bordered
+          style={{ marginTop: 30 }}
           size={'small'}
+          locale={{
+            emptyText: (
+              <Empty
+                image={Empty.PRESENTED_IMAGE_SIMPLE}
+                description={'暂无数据'}
+              />
+            ),
+          }}
         />
+        <CreateSignalMessage createType={'signal'} initRows={initRows} />
       </Space>
     </>
   );

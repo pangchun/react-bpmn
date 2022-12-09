@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Button, notification, Space, Table } from 'antd';
+import { Button, Empty, notification, Space, Table } from 'antd';
 import { InboxOutlined, PlusOutlined } from '@ant-design/icons';
 import EditProperty from '@/bpmn/panel/ExtensionProperties/EditProperty/EditProperty';
 import {
@@ -190,10 +190,10 @@ export default function ExtensionProperties(props: IProps) {
         size={'small'}
         locale={{
           emptyText: (
-            <div style={{ margin: 20 }}>
-              <InboxOutlined style={{ fontSize: '50px' }} />
-              <div>{'暂无'}</div>
-            </div>
+            <Empty
+              image={Empty.PRESENTED_IMAGE_SIMPLE}
+              description={'暂无数据'}
+            />
           ),
         }}
       />
@@ -207,7 +207,6 @@ export default function ExtensionProperties(props: IProps) {
           modalRef.current.showEditModal();
         }}
       >
-        <PlusOutlined />
         <span style={{ marginLeft: 0 }}>添加属性</span>
       </Button>
       <EditProperty onRef={modalRef} createOrUpdate={createOrUpdate} />
