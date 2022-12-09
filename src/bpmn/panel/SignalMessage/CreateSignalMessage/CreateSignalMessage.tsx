@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Modal, Button, Input, Typography, Form } from 'antd';
 import { EditOutlined } from '@ant-design/icons';
+import { defaultData } from '@/pages/globalTheme';
 
 const MESSAGE_CONSTANT: string = 'message';
 
@@ -88,7 +89,7 @@ export default function CreateSignalMessage(props: IProps) {
         width={500}
         style={{ maxHeight: '50vh' }}
         title={
-          <Typography style={{ color: '#1890ff' }}>
+          <Typography style={{ color: defaultData.colorPrimary }}>
             <EditOutlined />
             &nbsp;
             {createType === MESSAGE_CONSTANT ? '编辑消息' : '编辑信号'}

@@ -1,6 +1,7 @@
 import React, { Ref, useImperativeHandle, useState } from 'react';
 import { Form, Input, Modal, Typography } from 'antd';
 import { EditOutlined } from '@ant-design/icons';
+import { defaultData } from '@/pages/globalTheme';
 
 interface IProps {
   onRef: Ref<any>;
@@ -79,7 +80,7 @@ export default function EditProperty(props: IProps) {
         width={500}
         style={{ maxHeight: '50vh' }}
         title={
-          <Typography style={{ color: '#1890ff' }}>
+          <Typography style={{ color: defaultData.colorPrimary }}>
             <EditOutlined />
             &nbsp;编辑属性
           </Typography>
