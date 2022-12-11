@@ -8,7 +8,7 @@ import {
   extractExtensionList,
   extractOtherExtensionList,
   updateElementExtensions,
-} from '@/util/panelUtil';
+} from '@/bpmn/util/panelUtil';
 import { useAppSelector } from '@/redux/hook/hooks';
 
 interface IProps {

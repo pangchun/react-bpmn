@@ -1,56 +1,59 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Button, Collapse, notification, Space, Table, Typography } from 'antd';
-import { BellOutlined, PlusOutlined } from '@ant-design/icons';
-import { FLOWABLE_PREFIX } from '@/bpmn/constant/constants';
+import { Button, Collapse, notification, Space, Table } from 'antd';
+import { PlusOutlined } from '@ant-design/icons';
 import { encapsulateListener } from '@/bpmn/panel/ElementListener/dataSelf';
 import EditListener from '@/bpmn/panel/ElementListener/EditListener/EditListener';
 import { createListenerObject } from '@/bpmn/panel/ElementListener/listenerUtil';
-import { updateElementExtensions } from '@/util/panelUtil';
-
-const { Panel } = Collapse;
-
+import { updateElementExtensions } from '@/bpmn/util/panelUtil';
+import { useAppSelector } from '@/redux/hook/hooks';
 interface IProps {
   businessObject: any;
   isTask: boolean;
 }
 
+/**
+ * 执行监听器/任务监听器 组件
+ *
+ * @param props
+ * @constructor
+ */
 export default function ElementListener(props: IProps) {
-  // props属性
+  // props
   const { businessObject, isTask } = props;
-
-  // setState属性
-  const [rows, setRows] = useState<Array<any>>([]);
+  // state
+  const [dataSource, setDataSource] = useState<Array<any>>([]);
   const [listenerExtensionList, setListenerExtensionList] = useState<
     Array<any>
   >([]);
-
   // ref
   const editRef = useRef<any>();
+  // redux
+  const prefix = useAppSelector((state) => state.bpmn.prefix);
 
+  /**
+   * 初始化
+   */
   useEffect(() => {
-    initRows();
+    if (businessObject) {
+      initRows();
+    }
   }, [businessObject?.id]);
 
   /**
-   * 初始化行数据
+   * 初始化表格行数据源
    */
   function initRows() {
-    let businessObject: any =
-      window.bpmnInstance?.element?.businessObject || props.businessObject;
-    if (!businessObject) {
-      return;
-    }
     // 获取监听器
     let rows: any[];
     let listeners: any[] =
       businessObject.extensionElements?.values?.filter((e: any) => {
         return (
           e.$type ===
-          `${FLOWABLE_PREFIX}:${isTask ? 'TaskListener' : 'ExecutionListener'}`
+          `${prefix}:${isTask ? 'TaskListener' : 'ExecutionListener'}`
         );
       }) || [];
     setListenerExtensionList(listeners);
-    // 初始化行数据源
+    // 设置行数据源
     rows = listeners?.map((e, i) => {
       let listener = encapsulateListener(e);
       return {
@@ -61,7 +64,7 @@ export default function ElementListener(props: IProps) {
         protoListener: listener,
       };
     });
-    setRows(rows);
+    setDataSource(rows);
   }
 
   /**
@@ -73,9 +76,7 @@ export default function ElementListener(props: IProps) {
         (e: any) => {
           return (
             e.$type !==
-            `${FLOWABLE_PREFIX}:${
-              isTask ? 'TaskListener' : 'ExecutionListener'
-            }`
+            `${prefix}:${isTask ? 'TaskListener' : 'ExecutionListener'}`
           );
         },
       ) || [];
@@ -114,11 +115,7 @@ export default function ElementListener(props: IProps) {
     listener.value = options.scriptValue;
     listener.resource = options.resource;
     // 创建监听器实例
-    let listenerObject = createListenerObject(
-      listener,
-      isTask,
-      FLOWABLE_PREFIX,
-    );
+    let listenerObject = createListenerObject(listener, isTask, prefix);
     // 将监听器实例绑定到bpmn
     let newListenerExtensionList: Array<any> = [...listenerExtensionList];
     newListenerExtensionList.splice(
@@ -269,7 +266,7 @@ export default function ElementListener(props: IProps) {
     <>
       <Table
         columns={columns}
-        dataSource={rows}
+        dataSource={dataSource}
         pagination={false}
         bordered
         size={'small'}

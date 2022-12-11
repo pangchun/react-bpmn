@@ -4,7 +4,7 @@ import { Modal, message } from 'antd';
 // 引入代码高亮插件和样式
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import { obsidian } from 'react-syntax-highlighter/dist/esm/styles/hljs';
-import { xml2json } from '@/util/xmlUtil';
+import { xml2json } from '@/bpmn/util/xmlUtil';
 
 // 样式
 import styles from './index.less';

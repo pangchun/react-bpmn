@@ -20,7 +20,7 @@ import {
   PlusSquareTwoTone,
   PushpinTwoTone,
 } from '@ant-design/icons';
-import { initBpmnInstance } from '@/util/windowUtil';
+import { initBpmnInstance } from '@/bpmn/util/windowUtil';
 import { useAppSelector } from '@/redux/hook/hooks';
 import { defaultData, ThemeData } from '@/pages/globalTheme';
 
@@ -387,7 +387,7 @@ export default function PropertyPanel(props: IProps) {
           {/*{renderElementForm()}*/}
           {/*{renderElementTask()}*/}
           {/*{renderMultiInstance()}*/}
-          {/*{renderElementListener()}*/}
+          {renderElementListener()}
           {/*{renderElementListenerOfTask()}*/}
           {renderExtensionProperties()}
           {renderElementOtherInfo()}
