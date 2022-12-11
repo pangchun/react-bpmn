@@ -4,8 +4,12 @@ import { PlusOutlined } from '@ant-design/icons';
 import { encapsulateListener } from '@/bpmn/panel/ElementListener/dataSelf';
 import EditListener from '@/bpmn/panel/ElementListener/EditListener/EditListener';
 import { createListenerObject } from '@/bpmn/panel/ElementListener/listenerUtil';
-import { updateElementExtensions } from '@/bpmn/util/panelUtil';
+import {
+  extractExtensionList,
+  updateElementExtensions,
+} from '@/bpmn/util/panelUtil';
 import { useAppSelector } from '@/redux/hook/hooks';
+
 interface IProps {
   businessObject: any;
   isTask: boolean;
@@ -22,9 +26,7 @@ export default function ElementListener(props: IProps) {
   const { businessObject, isTask } = props;
   // state
   const [dataSource, setDataSource] = useState<Array<any>>([]);
-  const [listenerExtensionList, setListenerExtensionList] = useState<
-    Array<any>
-  >([]);
+  const [listenerList, setListenerList] = useState<Array<any>>([]);
   // ref
   const editRef = useRef<any>();
   // redux
@@ -44,17 +46,20 @@ export default function ElementListener(props: IProps) {
    */
   function initRows() {
     // 获取监听器
-    let rows: any[];
+    // let listeners: any[] = extractExtensionList(prefix, `${isTask ? 'TaskListener' : 'ExecutionListener'}`);
     let listeners: any[] =
-      businessObject.extensionElements?.values?.filter((e: any) => {
-        return (
-          e.$type ===
-          `${prefix}:${isTask ? 'TaskListener' : 'ExecutionListener'}`
-        );
-      }) || [];
-    setListenerExtensionList(listeners);
+      window.bpmnInstance?.element.businessObject.extensionElements?.values?.filter(
+        (e: any) => {
+          return (
+            e.$type ===
+            `${prefix}:${isTask ? 'TaskListener' : 'ExecutionListener'}`
+          );
+        },
+      ) || [];
+    setListenerList(listeners);
+
     // 设置行数据源
-    rows = listeners?.map((e, i) => {
+    let rows: any[] = listeners?.map((e, i) => {
       let listener = encapsulateListener(e);
       return {
         key: i + 1,
@@ -64,6 +69,7 @@ export default function ElementListener(props: IProps) {
         protoListener: listener,
       };
     });
+    console.dir(rows);
     setDataSource(rows);
   }
 
@@ -117,9 +123,9 @@ export default function ElementListener(props: IProps) {
     // 创建监听器实例
     let listenerObject = createListenerObject(listener, isTask, prefix);
     // 将监听器实例绑定到bpmn
-    let newListenerExtensionList: Array<any> = [...listenerExtensionList];
+    let newListenerExtensionList: Array<any> = [...listenerList];
     newListenerExtensionList.splice(
-      options.rowKey > 0 ? options.rowKey - 1 : listenerExtensionList.length,
+      options.rowKey > 0 ? options.rowKey - 1 : listenerList.length,
       1,
       listenerObject,
     );
@@ -136,7 +142,7 @@ export default function ElementListener(props: IProps) {
    */
   function remove(key: number) {
     // 将监听器实例绑定到bpmn
-    let newListenerExtensionList: Array<any> = [...listenerExtensionList];
+    let newListenerExtensionList: Array<any> = [...listenerList];
     newListenerExtensionList.splice(key - 1, 1);
     updateElementExtensions(
       getOtherExtensionList().concat(newListenerExtensionList),

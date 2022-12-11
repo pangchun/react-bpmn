@@ -54,8 +54,6 @@ export default function PropertyPanel(props: IProps) {
     // 避免初始化，流程图未加载完导致出错
     if (modeler) {
       init();
-      console.log(processId);
-      console.dir(modeler);
     }
   }, [processId]);
 
@@ -273,7 +271,7 @@ export default function PropertyPanel(props: IProps) {
    * 渲染 执行监听器 组件
    * 1、所有节点都有
    */
-  function renderElementListener() {
+  function renderExecutionListener() {
     return (
       <Collapse.Panel
         header={
@@ -298,7 +296,7 @@ export default function PropertyPanel(props: IProps) {
    * 渲染 任务监听器 组件
    * 1、只有 UserTask 才有
    */
-  function renderElementListenerOfTask() {
+  function renderTaskListener() {
     if (element?.type === 'bpmn:UserTask') {
       return (
         <Collapse.Panel
@@ -306,7 +304,7 @@ export default function PropertyPanel(props: IProps) {
             <Typography
               style={{ color: defaultData.colorPrimary, fontWeight: 'bold' }}
             >
-              <PlusOutlined twoToneColor={defaultData.colorPrimary} />
+              <BellOutlined twoToneColor={defaultData.colorPrimary} />
               &nbsp;任务监听器
             </Typography>
           }
@@ -387,8 +385,8 @@ export default function PropertyPanel(props: IProps) {
           {/*{renderElementForm()}*/}
           {/*{renderElementTask()}*/}
           {/*{renderMultiInstance()}*/}
-          {renderElementListener()}
-          {/*{renderElementListenerOfTask()}*/}
+          {renderExecutionListener()}
+          {renderTaskListener()}
           {renderExtensionProperties()}
           {renderElementOtherInfo()}
         </Collapse>

@@ -6,6 +6,7 @@ export const execute_event_type = {
   end: 'end',
 };
 
+// 执行监听器 事件类型下拉项
 export const execute_event_type_options = [
   {
     name: '开始',
@@ -27,6 +28,7 @@ export const task_event_type = {
   timeout: 'timeout',
 };
 
+// 任务监听器 事件类型下拉项
 export const task_event_type_options = [
   {
     name: '创建',
@@ -54,17 +56,6 @@ export const task_event_type_options = [
   },
 ];
 
-function findEventType(listener: any) {
-  let eventType: any;
-  eventType = execute_event_type_options.find(
-    (e) => e.value === listener.event,
-  );
-  if (!eventType) {
-    eventType = task_event_type_options.find((e) => e.value === listener.event);
-  }
-  return eventType;
-}
-
 // 任务监听器 定时器类型
 export const timer_type = {
   timeDate: 'timeDate',
@@ -73,6 +64,7 @@ export const timer_type = {
   none: 'none',
 };
 
+// 任务监听器 定时器类型下拉项
 export const timer_type_options = [
   {
     name: '日期',
@@ -92,7 +84,7 @@ export const timer_type_options = [
   },
 ];
 
-// 执行监听器/用户任务监听器 监听器类型
+// 监听器类型
 export const listener_type = {
   class: 'class',
   expression: 'expression',
@@ -100,6 +92,7 @@ export const listener_type = {
   script: 'script',
 };
 
+// 监听器类型下拉项
 export const listener_type_options = [
   {
     name: 'Java 类',
@@ -119,6 +112,62 @@ export const listener_type_options = [
   },
 ];
 
+// 监听器脚本类型
+export const script_type = {
+  inlineScript: 'inlineScript',
+  externalResource: 'externalResource',
+};
+
+// 监听器脚本类型下拉项
+export const script_type_options = [
+  {
+    name: '内联脚本',
+    value: script_type.inlineScript,
+  },
+  {
+    name: '外部脚本',
+    value: script_type.externalResource,
+  },
+];
+
+// 监听器字段类型
+export const field_type = {
+  string: 'string',
+  expression: 'expression',
+};
+
+// 监听器字段类型下拉项
+export const field_type_options = [
+  {
+    name: '字符串',
+    value: field_type.string,
+  },
+  {
+    name: '表达式',
+    value: field_type.expression,
+  },
+];
+
+/**
+ * 查询 监听器事件类型
+ *
+ * @param listener
+ */
+function findEventType(listener: any) {
+  let eventType: any = execute_event_type_options.find(
+    (e) => e.value === listener.event,
+  );
+  if (!eventType) {
+    eventType = task_event_type_options.find((e) => e.value === listener.event);
+  }
+  return eventType;
+}
+
+/**
+ * 查询 监听器类型
+ *
+ * @param listener
+ */
 function findListenerType(listener: any) {
   let listenerType: any;
   if (listener.class) {
@@ -141,36 +190,11 @@ function findListenerType(listener: any) {
   return listenerType;
 }
 
-export function encapsulateListener(listener: any) {
-  let listenerType: any = findListenerType(listener);
-  let eventType: any = findEventType(listener);
-  let scriptType: any = findScriptType(listener);
-  return {
-    ...JSON.parse(JSON.stringify(listener)),
-    ...(listener.script ?? {}),
-    eventType,
-    listenerType,
-    scriptType,
-  };
-}
-
-// 执行监听器/用户任务监听器 脚本类型
-export const script_type = {
-  inlineScript: 'inlineScript',
-  externalResource: 'externalResource',
-};
-
-export const script_type_options = [
-  {
-    name: '内联脚本',
-    value: script_type.inlineScript,
-  },
-  {
-    name: '外部脚本',
-    value: script_type.externalResource,
-  },
-];
-
+/**
+ * 查询 监听器脚本类型
+ *
+ * @param listener
+ */
 function findScriptType(listener: any) {
   let scriptType: any;
   if (listener.script?.value) {
@@ -185,23 +209,29 @@ function findScriptType(listener: any) {
   return scriptType;
 }
 
-// 执行监听器/用户任务监听器 字段类型
-export const field_type = {
-  string: 'string',
-  expression: 'expression',
-};
+/**
+ * 封装 监听器对象
+ *
+ * @param listener
+ */
+export function encapsulateListener(listener: any) {
+  let listenerType: any = findListenerType(listener);
+  let eventType: any = findEventType(listener);
+  let scriptType: any = findScriptType(listener);
+  return {
+    ...JSON.parse(JSON.stringify(listener)),
+    ...(listener.script ?? {}),
+    eventType,
+    listenerType,
+    scriptType,
+  };
+}
 
-export const field_type_options = [
-  {
-    name: '字符串',
-    value: field_type.string,
-  },
-  {
-    name: '表达式',
-    value: field_type.expression,
-  },
-];
-
+/**
+ * 封装 监听器字段对象
+ *
+ * @param field
+ */
 export function encapsulateField(field: any) {
   let fieldType: any;
   if (field.string) {
@@ -210,6 +240,8 @@ export function encapsulateField(field: any) {
     fieldType = listener_type_options.find(
       (e) => e.value === field_type.expression,
     );
+  } else {
+    throw new Error('【错误】查询监听器字段类型失败');
   }
   return {
     ...JSON.parse(JSON.stringify(field)),
