@@ -6,6 +6,7 @@ import EditListener from '@/bpmn/panel/ElementListener/EditListener/EditListener
 import { createListenerObject } from '@/bpmn/panel/ElementListener/listenerUtil';
 import {
   extractExtensionList,
+  extractOtherExtensionList,
   updateElementExtensions,
 } from '@/bpmn/util/panelUtil';
 import { useAppSelector } from '@/redux/hook/hooks';
@@ -46,18 +47,11 @@ export default function ElementListener(props: IProps) {
    */
   function initRows() {
     // 获取监听器
-    // let listeners: any[] = extractExtensionList(prefix, `${isTask ? 'TaskListener' : 'ExecutionListener'}`);
-    let listeners: any[] =
-      window.bpmnInstance?.element.businessObject.extensionElements?.values?.filter(
-        (e: any) => {
-          return (
-            e.$type ===
-            `${prefix}:${isTask ? 'TaskListener' : 'ExecutionListener'}`
-          );
-        },
-      ) || [];
+    let listeners: any[] = extractExtensionList(
+      prefix,
+      `${isTask ? 'TaskListener' : 'ExecutionListener'}`,
+    );
     setListenerList(listeners);
-
     // 设置行数据源
     let rows: any[] = listeners?.map((e, i) => {
       let listener = encapsulateListener(e);
@@ -69,7 +63,6 @@ export default function ElementListener(props: IProps) {
         protoListener: listener,
       };
     });
-    console.dir(rows);
     setDataSource(rows);
   }
 
@@ -77,15 +70,10 @@ export default function ElementListener(props: IProps) {
    * 获取其它类型扩展元素
    */
   function getOtherExtensionList() {
-    let otherExtensionList: Array<any> =
-      window.bpmnInstance?.element?.businessObject?.extensionElements?.values?.filter(
-        (e: any) => {
-          return (
-            e.$type !==
-            `${prefix}:${isTask ? 'TaskListener' : 'ExecutionListener'}`
-          );
-        },
-      ) || [];
+    let otherExtensionList: Array<any> = extractOtherExtensionList(
+      prefix,
+      `${isTask ? 'TaskListener' : 'ExecutionListener'}`,
+    );
     return otherExtensionList;
   }
 
@@ -158,7 +146,6 @@ export default function ElementListener(props: IProps) {
     });
   }
 
-  // todo 需要把这个数组优化，太过于臃肿
   const columns = isTask
     ? [
         {

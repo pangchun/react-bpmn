@@ -5,8 +5,8 @@ import EditProperty from '@/bpmn/panel/ExtensionProperties/EditProperty/EditProp
 import {
   createProperties,
   createProperty,
-  extractExtensionList,
   extractOtherExtensionList,
+  extractPropertiesExtension,
   updateElementExtensions,
 } from '@/bpmn/util/panelUtil';
 import { useAppSelector } from '@/redux/hook/hooks';
@@ -53,7 +53,7 @@ export default function ExtensionProperties(props: IProps) {
    */
   function initRows() {
     // 获取扩展属性
-    let properties: any[] = extractExtensionList(prefix, 'Properties');
+    let properties: any[] = extractPropertiesExtension(prefix);
     setPropertyList(properties);
     // 设置行数据源
     let rows: any[] =

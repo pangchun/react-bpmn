@@ -370,7 +370,7 @@ export default function EditListener(props: IProps) {
         title="属性配置"
         placement="right"
         onClose={closeDrawer}
-        visible={open}
+        open={open}
       >
         <Form labelCol={{ span: 5 }} wrapperCol={{ span: 18 }} form={form}>
           <Form.Item

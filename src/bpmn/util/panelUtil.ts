@@ -1,6 +1,6 @@
 // ts: 属性面板通用方法
 
-/* *************************************** 扩展属性相关 *************************************** */
+/* *************************************** Property相关 *************************************** */
 
 /**
  * 创建 Property实例
@@ -27,23 +27,37 @@ export function createProperties(prefix: string, options: any) {
   });
 }
 
+/**
+ * 获取 Properties扩展属性
+ * @param prefix
+ */
+export function extractPropertiesExtension(prefix: string) {
+  let extensionElements: any =
+    window.bpmnInstance?.element.businessObject.extensionElements;
+  // find 方法只会查出满足条件的第一个对象
+  let list: any[] =
+    extensionElements?.values?.find(
+      (e: any) => e.$type === `${prefix}:Properties`,
+    )?.values || [];
+  return list;
+}
+
 /* *************************************** 监听器相关 *************************************** */
 
 /* *************************************** 通用 *************************************** */
 
 /**
- * 获取 指定suffix类型扩展属性 todo 将这个方法提取出一个查询properties的方法，然后将这个设置为通用方法
+ * 获取 指定suffix类型扩展属性
  * @param prefix
  * @param suffix
  */
 export function extractExtensionList(prefix: string, suffix: string) {
   let extensionElements: any =
     window.bpmnInstance?.element.businessObject.extensionElements;
-  // find 方法只会查出满足条件的第一个对象
   let list: any[] =
-    extensionElements?.values?.find(
+    extensionElements?.values?.filter(
       (e: any) => e.$type === `${prefix}:${suffix}`,
-    )?.values || [];
+    ) || [];
   return list;
 }
 

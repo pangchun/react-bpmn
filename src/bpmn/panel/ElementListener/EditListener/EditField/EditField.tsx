@@ -77,7 +77,7 @@ export default function EditField(props: IProps) {
             &nbsp;编辑属性
           </Typography>
         }
-        visible={open}
+        open={open}
         okText={'确认'}
         cancelText={'取消'}
         onOk={handleOK}
