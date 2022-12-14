@@ -1,15 +1,21 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Button, Collapse, notification, Space, Table } from 'antd';
+import { Button, notification, Space, Table } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { encapsulateListener } from '@/bpmn/panel/ElementListener/dataSelf';
 import EditListener from '@/bpmn/panel/ElementListener/EditListener/EditListener';
-import { createListenerObject } from '@/bpmn/panel/ElementListener/listenerUtil';
 import {
+  createListenerObject,
   extractExtensionList,
   extractOtherExtensionList,
   updateElementExtensions,
 } from '@/bpmn/util/panelUtil';
 import { useAppSelector } from '@/redux/hook/hooks';
+
+// 监听器节点类型
+const ELEMENT_LISTENER_TYPE = {
+  TaskListener: 'TaskListener',
+  ExecutionListener: 'ExecutionListener',
+};
 
 interface IProps {
   businessObject: any;
@@ -49,7 +55,11 @@ export default function ElementListener(props: IProps) {
     // 获取监听器
     let listeners: any[] = extractExtensionList(
       prefix,
-      `${isTask ? 'TaskListener' : 'ExecutionListener'}`,
+      `${
+        isTask
+          ? ELEMENT_LISTENER_TYPE.TaskListener
+          : ELEMENT_LISTENER_TYPE.ExecutionListener
+      }`,
     );
     setListenerList(listeners);
     // 设置行数据源
@@ -72,11 +82,20 @@ export default function ElementListener(props: IProps) {
   function getOtherExtensionList() {
     let otherExtensionList: Array<any> = extractOtherExtensionList(
       prefix,
-      `${isTask ? 'TaskListener' : 'ExecutionListener'}`,
+      `${
+        isTask
+          ? ELEMENT_LISTENER_TYPE.TaskListener
+          : ELEMENT_LISTENER_TYPE.ExecutionListener
+      }`,
     );
     return otherExtensionList;
   }
 
+  /**
+   * 创建或修改监听器
+   *
+   * @param options
+   */
   function createOrUpdate(options: any) {
     // 创建监听器对象
     let listener: any = Object.create(null);
@@ -139,7 +158,7 @@ export default function ElementListener(props: IProps) {
     initRows();
     // 提示通知
     notification.open({
-      message: <span style={{ color: 'red' }}>监听器已删除</span>,
+      message: <span style={{ color: 'red' }}>{'监听器已删除'}</span>,
       placement: 'top',
       duration: 2,
       description: `已删除编号为 ${key} 的监听器`,
@@ -153,7 +172,7 @@ export default function ElementListener(props: IProps) {
           width: 40,
           dataIndex: 'key',
           key: 'key',
-          render: (text: any) => <a>{text}</a>,
+          render: (text: any) => text,
         },
         {
           title: '事件类型',

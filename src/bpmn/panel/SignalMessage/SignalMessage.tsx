@@ -60,7 +60,7 @@ export default function SignalMessage(props: IProps) {
       width: 40,
       dataIndex: 'key',
       key: 'key',
-      render: (text: any) => <a>{text}</a>,
+      render: (text: any) => text,
     },
     {
       title: '信号ID',
@@ -84,7 +84,7 @@ export default function SignalMessage(props: IProps) {
       width: 40,
       dataIndex: 'key',
       key: 'key',
-      render: (text: any) => <a>{text}</a>,
+      render: (text: any) => text,
     },
     {
       title: '消息ID',

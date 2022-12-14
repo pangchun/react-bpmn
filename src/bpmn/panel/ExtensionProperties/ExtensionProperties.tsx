@@ -133,7 +133,7 @@ export default function ExtensionProperties(props: IProps) {
       width: 40,
       dataIndex: 'key',
       key: 'key',
-      render: (text: any) => <a>{text}</a>,
+      render: (text: any) => text,
     },
     {
       title: '属性名',

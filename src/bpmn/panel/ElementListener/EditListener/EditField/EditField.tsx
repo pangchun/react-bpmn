@@ -9,13 +9,11 @@ interface IProps {
 }
 
 export default function EditField(props: IProps) {
-  // props属性
+  // props
   const { onRef, reFreshParent } = props;
-
-  // setState属性
+  // state
   const [open, setOpen] = useState(false);
-
-  // 其它属性
+  // form
   const [form] = Form.useForm<{
     key: number;
     fieldName: string;
@@ -24,27 +22,40 @@ export default function EditField(props: IProps) {
     fieldValue: string;
   }>();
 
+  //暴露给父组件的方法
   useImperativeHandle(onRef, () => ({
+    // 打开弹窗
     showEditModal: (rowObj: any) => showModal(rowObj),
   }));
 
+  /**
+   * 打开弹窗并初始化表单数据
+   *
+   * @param rowObj
+   */
   function showModal(rowObj: any) {
     form.setFieldsValue({
       // -1表示当前是新增
       key: rowObj?.key || -1,
-      fieldName: rowObj?.fieldName || '',
-      fieldType: rowObj?.fieldType || '',
-      fieldTypeValue: rowObj?.fieldTypeValue || '',
-      fieldValue: rowObj?.fieldValue || '',
+      fieldName: rowObj?.fieldName,
+      fieldType: rowObj?.fieldType,
+      fieldTypeValue: rowObj?.fieldTypeValue,
+      fieldValue: rowObj?.fieldValue,
     });
     setOpen(true);
   }
 
+  /**
+   * 关闭弹窗
+   */
   function handleCancel() {
     form.resetFields();
     setOpen(false);
   }
 
+  /**
+   * 提交表单
+   */
   function handleOK() {
     form
       .validateFields()
@@ -74,7 +85,7 @@ export default function EditField(props: IProps) {
         title={
           <Typography style={{ color: '#1890ff' }}>
             <EditOutlined />
-            &nbsp;编辑属性
+            &nbsp;{'编辑属性'}
           </Typography>
         }
         open={open}
@@ -87,16 +98,16 @@ export default function EditField(props: IProps) {
           <Form.Item
             label="字段名称"
             name="fieldName"
-            rules={[{ required: true, message: '字段名称不能为空哦!' }]}
+            rules={[{ required: true, message: '请输入字段名称' }]}
           >
             <Input placeholder={'请输入'} />
           </Form.Item>
           <Form.Item
             name="fieldTypeValue"
             label="字段类型"
-            rules={[{ required: true }]}
+            rules={[{ required: true, message: '请选择字段类型' }]}
           >
-            <Select>
+            <Select placeholder={'请选择'}>
               {field_type_options.map((e) => {
                 return (
                   <Select.Option key={e.value} value={e.value}>
@@ -109,7 +120,7 @@ export default function EditField(props: IProps) {
           <Form.Item
             label="字段值"
             name="fieldValue"
-            rules={[{ required: true, message: '字段值不能为空哦!' }]}
+            rules={[{ required: true, message: '请输入字段值!' }]}
           >
             <Input placeholder={'请输入'} />
           </Form.Item>

@@ -35,17 +35,14 @@ interface IProps {
 }
 
 export default function EditListener(props: IProps) {
-  // props属性
+  // props
   const { onRef, isTask, reFreshParent } = props;
-
-  // setState属性
+  // state
   const [open, setOpen] = useState(false);
-  const [rows, setRows] = useState<Array<any>>([]);
-
+  const [fieldList, setFieldList] = useState<Array<any>>([]);
   // ref
   const editRef = useRef<any>();
-
-  // 其它属性
+  // form
   const [form] = Form.useForm<{
     key: number;
     eventType: string;
@@ -61,41 +58,56 @@ export default function EditListener(props: IProps) {
     timerType: string;
     timerValue: string;
   }>();
-
+  // 监听form字段
   const eventType = Form.useWatch('eventType', form);
   const listenerType = Form.useWatch('listenerType', form);
   const scriptType = Form.useWatch('scriptType', form);
   const timerType = Form.useWatch('timerType', form);
 
+  // 暴露给父组件的方法
   useImperativeHandle(onRef, () => ({
+    // 打开弹窗
     showEditDrawer: (rowObj: any) => showDrawer(rowObj),
   }));
 
+  /**
+   * 打开弹窗并初始化页面数据
+   *
+   * @param rowObj
+   */
   function showDrawer(rowObj: any) {
     initPageData(rowObj);
     setOpen(true);
   }
 
+  /**
+   * 关闭弹窗并重置页面数据
+   */
   function closeDrawer() {
     form.resetFields();
     setOpen(false);
   }
 
+  /**
+   * 初始化页面数据
+   *
+   * @param rowObj
+   */
   function initPageData(rowObj: any) {
     form.setFieldsValue({
       key: rowObj?.key || -1,
-      eventType: rowObj?.protoListener?.eventType.value || '',
-      eventId: rowObj?.protoListener?.id || '',
-      listenerType: rowObj?.protoListener?.listenerType.value || '',
-      javaClass: rowObj?.protoListener?.class || '',
-      expression: rowObj?.protoListener?.expression || '',
-      delegateExpression: rowObj?.protoListener?.delegateExpression || '',
-      scriptType: rowObj?.protoListener?.scriptType?.value || '',
-      scriptFormat: rowObj?.protoListener?.script?.scriptFormat || '',
-      scriptValue: rowObj?.protoListener?.script?.value || '',
-      resource: rowObj?.protoListener?.script?.resource || '',
-      timerType: rowObj?.protoListener?.timerType || '',
-      timerValue: rowObj?.protoListener?.timerValue || '',
+      eventType: rowObj?.protoListener?.eventType.value,
+      eventId: rowObj?.protoListener?.id,
+      listenerType: rowObj?.protoListener?.listenerType.value,
+      javaClass: rowObj?.protoListener?.class,
+      expression: rowObj?.protoListener?.expression,
+      delegateExpression: rowObj?.protoListener?.delegateExpression,
+      scriptType: rowObj?.protoListener?.scriptType?.value,
+      scriptFormat: rowObj?.protoListener?.script?.scriptFormat,
+      scriptValue: rowObj?.protoListener?.script?.value,
+      resource: rowObj?.protoListener?.script?.resource,
+      timerType: rowObj?.protoListener?.timerType,
+      timerValue: rowObj?.protoListener?.timerValue,
     });
     // 初始化rows
     let fields: Array<any> = rowObj?.protoListener?.fields || [];
@@ -109,9 +121,12 @@ export default function EditListener(props: IProps) {
       row.fieldValue = field.string || field.expression;
       return row;
     });
-    setRows(rows);
+    setFieldList(rows);
   }
 
+  /**
+   * 提交表单
+   */
   function handleOK() {
     form
       .validateFields()
@@ -120,7 +135,7 @@ export default function EditListener(props: IProps) {
         reFreshParent({
           rowKey: form.getFieldValue('key'),
           ...values,
-          fields: [...rows],
+          fields: [...fieldList],
         });
         closeDrawer();
       })
@@ -131,18 +146,24 @@ export default function EditListener(props: IProps) {
 
   /**
    * 新建或修改注入字段
+   *
    * @param rowObj [key, fieldName, fieldType, fieldTypeValue, fieldValue]
    */
   function createOrUpdateField(rowObj: any) {
     const { key } = rowObj;
-    let newRows: Array<any> = [...rows];
-    rowObj.key = key > 0 ? key : rows.length + 1;
+    let newRows: Array<any> = [...fieldList];
+    rowObj.key = key > 0 ? key : fieldList.length + 1;
     newRows.splice(rowObj.key - 1, 1, rowObj);
-    setRows(newRows);
+    setFieldList(newRows);
   }
 
+  /**
+   * 移除注入字段
+   *
+   * @param key
+   */
   function removeField(key: number) {
-    let newRows: Array<any> = [...rows];
+    let newRows: Array<any> = [...fieldList];
     newRows.splice(key - 1, 1);
     newRows = newRows.map((el, index) => {
       if (el.key !== key) {
@@ -150,16 +171,19 @@ export default function EditListener(props: IProps) {
         return el;
       }
     });
-    setRows(newRows);
+    setFieldList(newRows);
     // 提示通知
     notification.open({
-      message: <span style={{ color: 'red' }}>字段已删除</span>,
+      message: <span style={{ color: 'red' }}>{'字段已删除'}</span>,
       placement: 'top',
       duration: 2,
       description: `已删除编号为 ${key} 的字段`,
     });
   }
 
+  /**
+   * 渲染监听器表单
+   */
   function renderListenerForm() {
     switch (listenerType) {
       case listener_type.class:
@@ -167,7 +191,7 @@ export default function EditListener(props: IProps) {
           <Form.Item
             name="javaClass"
             label="Java类"
-            rules={[{ required: true }]}
+            rules={[{ required: true, message: '请输入Java类名' }]}
           >
             <Input placeholder="请输入" />
           </Form.Item>
@@ -177,7 +201,7 @@ export default function EditListener(props: IProps) {
           <Form.Item
             name="expression"
             label="表达式"
-            rules={[{ required: true }]}
+            rules={[{ required: true, message: '请输入表达式' }]}
           >
             <Input placeholder="请输入" />
           </Form.Item>
@@ -187,7 +211,7 @@ export default function EditListener(props: IProps) {
           <Form.Item
             name="delegateExpression"
             label="代理表达式"
-            rules={[{ required: true }]}
+            rules={[{ required: true, message: '请输入代理表达式' }]}
           >
             <Input placeholder="请输入" />
           </Form.Item>
@@ -198,16 +222,16 @@ export default function EditListener(props: IProps) {
             <Form.Item
               name="scriptFormat"
               label="脚本格式"
-              rules={[{ required: true }]}
+              rules={[{ required: true, message: '请输入脚本格式' }]}
             >
               <Input placeholder="请输入" />
             </Form.Item>
             <Form.Item
               name="scriptType"
               label="脚本类型"
-              rules={[{ required: true }]}
+              rules={[{ required: true, message: '请选择脚本类型' }]}
             >
-              <Select value={scriptType}>
+              <Select placeholder={'请选择'} value={scriptType}>
                 {script_type_options.map((e) => {
                   return (
                     <Option key={e.value} value={e.value}>
@@ -221,7 +245,7 @@ export default function EditListener(props: IProps) {
               <Form.Item
                 name="scriptValue"
                 label="脚本内容"
-                rules={[{ required: true }]}
+                rules={[{ required: true, message: '请输入脚本内容' }]}
               >
                 <Input placeholder="请输入" />
               </Form.Item>
@@ -230,7 +254,7 @@ export default function EditListener(props: IProps) {
               <Form.Item
                 name="resource"
                 label="资源地址"
-                rules={[{ required: true }]}
+                rules={[{ required: true, message: '请输入资源地址' }]}
               >
                 <Input placeholder="请输入" />
               </Form.Item>
@@ -266,7 +290,7 @@ export default function EditListener(props: IProps) {
             <Form.Item
               name="timerValue"
               label="定时器"
-              rules={[{ required: true }]}
+              rules={[{ required: true, message: '请输入定时器设置' }]}
             >
               <Input placeholder="请输入" />
             </Form.Item>
@@ -276,13 +300,14 @@ export default function EditListener(props: IProps) {
     }
   }
 
+  // 列
   const columns = [
     {
       title: '序号',
       width: 40,
       dataIndex: 'key',
       key: 'key',
-      render: (text: any) => <a>{text}</a>,
+      render: (text: any) => text,
     },
     {
       title: '字段名称',
@@ -334,6 +359,9 @@ export default function EditListener(props: IProps) {
     },
   ];
 
+  /**
+   * 渲染表格
+   */
   function renderTable() {
     return (
       <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
@@ -354,7 +382,7 @@ export default function EditListener(props: IProps) {
         </div>
         <Table
           columns={columns}
-          dataSource={rows}
+          dataSource={fieldList}
           pagination={false}
           bordered
           size={'small'}
@@ -376,9 +404,9 @@ export default function EditListener(props: IProps) {
           <Form.Item
             name="eventType"
             label="事件类型"
-            rules={[{ required: true }]}
+            rules={[{ required: true, message: '请选择事件类型' }]}
           >
-            <Select>
+            <Select placeholder={'请选择'}>
               {(isTask
                 ? task_event_type_options
                 : execute_event_type_options
@@ -395,7 +423,7 @@ export default function EditListener(props: IProps) {
             <Form.Item
               name="eventId"
               label="事件id"
-              rules={[{ required: true }]}
+              rules={[{ required: true, message: '请输入事件id' }]}
             >
               <Input placeholder="请输入" />
             </Form.Item>
@@ -403,9 +431,9 @@ export default function EditListener(props: IProps) {
           <Form.Item
             name="listenerType"
             label="监听器类型"
-            rules={[{ required: true }]}
+            rules={[{ required: true, message: '请选择监听器类型' }]}
           >
-            <Select>
+            <Select placeholder={'请选择'}>
               {listener_type_options.map((e) => {
                 return (
                   <Option key={e.value} value={e.value}>
