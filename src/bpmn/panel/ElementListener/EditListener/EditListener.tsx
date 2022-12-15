@@ -397,6 +397,7 @@ export default function EditListener(props: IProps) {
         width={495}
         title="属性配置"
         placement="right"
+        closable={false}
         onClose={closeDrawer}
         open={open}
       >

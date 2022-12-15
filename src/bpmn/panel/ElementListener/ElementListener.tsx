@@ -294,7 +294,6 @@ export default function ElementListener(props: IProps) {
           editRef.current.showEditDrawer();
         }}
       >
-        <PlusOutlined />
         <span style={{ marginLeft: 0 }}>添加属性</span>
       </Button>
 
