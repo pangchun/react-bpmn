@@ -4,6 +4,7 @@ import {
   EditOutlined,
   QuestionOutlined,
   SettingOutlined,
+  ToolOutlined,
 } from '@ant-design/icons';
 import {
   ACTIVITI_PREFIX,
@@ -52,7 +53,7 @@ export default function ConfigServer(props: IProps) {
 
   return (
     <>
-      <FloatButton.Group icon={<EditOutlined />} type="primary" trigger="hover">
+      <FloatButton.Group icon={<ToolOutlined />} type="primary" trigger="hover">
         <FloatButton icon={<SettingOutlined />} onClick={showDrawer} />
         <FloatButton
           icon={<QuestionOutlined />}

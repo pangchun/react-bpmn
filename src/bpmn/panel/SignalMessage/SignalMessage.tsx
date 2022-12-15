@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Empty, Space, Table } from 'antd';
 
-import CreateSignalMessage from '@/bpmn/panel/SignalMessage/EditSignalMessage/EditSignalMessage';
+import EditSignalMessage from '@/bpmn/panel/SignalMessage/EditSignalMessage/EditSignalMessage';
 
 interface IProps {
   businessObject: any;
@@ -130,7 +130,7 @@ export default function SignalMessage(props: IProps) {
             ),
           }}
         />
-        <CreateSignalMessage
+        <EditSignalMessage
           createType={'message'}
           initRows={initRows}
           rowIds={messageIds}
@@ -151,7 +151,7 @@ export default function SignalMessage(props: IProps) {
             ),
           }}
         />
-        <CreateSignalMessage
+        <EditSignalMessage
           createType={'signal'}
           initRows={initRows}
           rowIds={signalIds}

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Divider, Form, Input, Modal, Select, Space, Typography } from 'antd';
 import { EditOutlined, PlusOutlined } from '@ant-design/icons';
+import { defaultData } from '@/pages/globalTheme';
 
 const defaultOptions = {
   name: '无',
@@ -150,36 +151,7 @@ export default function ReceiveTask(props: IProps) {
       }
       return {
         status: true,
-      };
-    }
-
-    /**
-     * 校验name
-     *
-     * @param value
-     */
-    function validateName(value: string) {
-      if (!value) {
-        return {
-          status: false,
-          message: '请输入消息名称',
-        };
-      }
-      // 校验 消息name已存在
-      if (messageRefOptions.find((el) => el.name === value)) {
-        return {
-          status: false,
-          message: '消息名称已存在，请重新输入',
-        };
-      }
-      if (value.includes(' ')) {
-        return {
-          status: false,
-          message: '消息名称中不能包含空格',
-        };
-      }
-      return {
-        status: true,
+        message: 'ok',
       };
     }
 
@@ -187,7 +159,7 @@ export default function ReceiveTask(props: IProps) {
       <>
         <Typography.Link
           onClick={() => setOpen(true)}
-          style={{ whiteSpace: 'nowrap' }}
+          style={{ whiteSpace: 'nowrap', color: defaultData.colorPrimary }}
         >
           <PlusOutlined /> {'创建新消息'}
         </Typography.Link>
@@ -195,9 +167,7 @@ export default function ReceiveTask(props: IProps) {
           width={500}
           style={{ maxHeight: '50vh' }}
           title={
-            <Typography style={{ color: '#1890ff' }}>
-              <EditOutlined />
-              &nbsp;
+            <Typography style={{ color: defaultData.colorPrimary }}>
               {'创建消息实例'}
             </Typography>
           }
@@ -211,6 +181,7 @@ export default function ReceiveTask(props: IProps) {
             <Form.Item
               name="id"
               label={'消息ID'}
+              required
               rules={[
                 {
                   validator: (_, value) => {
@@ -227,16 +198,8 @@ export default function ReceiveTask(props: IProps) {
             <Form.Item
               name="name"
               label={'消息名称'}
-              rules={[
-                {
-                  validator: (_, value) => {
-                    const validateName$1 = validateName(value);
-                    return validateName$1.status
-                      ? Promise.resolve()
-                      : Promise.reject(new Error(validateName$1.message));
-                  },
-                },
-              ]}
+              required
+              rules={[{ required: true, message: '请输入消息名称' }]}
             >
               <Input placeholder={'请输入'} />
             </Form.Item>

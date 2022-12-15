@@ -121,8 +121,6 @@ export default function EditSignalMessage(props: IProps) {
         style={{ maxHeight: '50vh' }}
         title={
           <Typography style={{ color: defaultData.colorPrimary }}>
-            <EditOutlined />
-            &nbsp;
             {createType === MESSAGE_CONSTANT ? '编辑消息' : '编辑信号'}
           </Typography>
         }
@@ -136,6 +134,7 @@ export default function EditSignalMessage(props: IProps) {
           <Form.Item
             name="id"
             label={createType === MESSAGE_CONSTANT ? '消息ID' : '信号ID'}
+            required
             rules={[
               {
                 validator: (_, value) => {
@@ -152,6 +151,7 @@ export default function EditSignalMessage(props: IProps) {
           <Form.Item
             name="name"
             label={createType === MESSAGE_CONSTANT ? '消息名称' : '信号名称'}
+            required
             rules={[{ required: true, message: '请输入名称' }]}
           >
             <Input placeholder={'请输入'} />

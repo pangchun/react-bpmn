@@ -58,7 +58,12 @@ export default function ElementDocument(props: IProps) {
 
   return (
     <>
-      <Form form={form} labelCol={{ span: 5 }} wrapperCol={{ span: '100%' }}>
+      <Form
+        form={form}
+        labelCol={{ span: 5 }}
+        wrapperCol={{ span: '100%' }}
+        style={{ marginBottom: 120 }}
+      >
         <Form.Item name="documentation">
           <TextArea
             rows={6}

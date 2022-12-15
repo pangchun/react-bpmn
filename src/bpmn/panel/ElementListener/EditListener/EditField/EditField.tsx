@@ -2,6 +2,7 @@ import React, { Ref, useImperativeHandle, useState } from 'react';
 import { Form, Input, Modal, Select, Typography } from 'antd';
 import { EditOutlined } from '@ant-design/icons';
 import { field_type_options } from '@/bpmn/panel/ElementListener/dataSelf';
+import { defaultData } from '@/pages/globalTheme';
 
 interface IProps {
   onRef: Ref<any>;
@@ -83,9 +84,8 @@ export default function EditField(props: IProps) {
         width={500}
         style={{ maxHeight: '50vh' }}
         title={
-          <Typography style={{ color: '#1890ff' }}>
-            <EditOutlined />
-            &nbsp;{'编辑属性'}
+          <Typography style={{ color: defaultData.colorPrimary }}>
+            {'编辑属性'}
           </Typography>
         }
         open={open}
