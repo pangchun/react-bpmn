@@ -1,11 +1,5 @@
 import React, { useEffect } from 'react';
-import { DatePicker, Form, Input, Select } from 'antd';
-import {
-  assignee_mock,
-  candidateGroups_mock,
-  candidateUsers_mock,
-} from '@/bpmn/panel/ElementTask/mockData';
-import moment from 'moment';
+import { Form, Input, Select } from 'antd';
 import {
   script_type,
   script_type_options,
@@ -23,11 +17,16 @@ interface IProps {
   businessObject: any;
 }
 
+/**
+ * 脚本任务 组件
+ *
+ * @param props
+ * @constructor
+ */
 export default function ScriptTask(props: IProps) {
-  // props属性
+  // props
   const { businessObject } = props;
-
-  // 其它属性
+  // form
   const [form] = Form.useForm<{
     scriptFormat: string;
     scriptType: string;
@@ -35,14 +34,19 @@ export default function ScriptTask(props: IProps) {
     resource: string;
     resultVariable: string;
   }>();
-
   // watch
   const scriptType = Form.useWatch('scriptType', form);
 
+  //初始化
   useEffect(() => {
-    initPageData();
+    if (businessObject) {
+      initPageData();
+    }
   }, [businessObject?.id]);
 
+  /**
+   * 初始化页面数据
+   */
   function initPageData() {
     form.setFieldsValue({
       scriptFormat: businessObject?.scriptFormat,
@@ -54,6 +58,9 @@ export default function ScriptTask(props: IProps) {
     });
   }
 
+  /**
+   * 更新脚本任务组件
+   */
   function updateScriptTask() {
     let taskAttr = Object.create(null);
     if (
