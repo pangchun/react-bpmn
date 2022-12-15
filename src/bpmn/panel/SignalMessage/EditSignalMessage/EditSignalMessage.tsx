@@ -17,7 +17,7 @@ interface IProps {
  * @param props
  * @constructor
  */
-export default function CreateSignalMessage(props: IProps) {
+export default function EditSignalMessage(props: IProps) {
   // props
   const { createType, initRows, rowIds } = props;
   // state
@@ -49,6 +49,12 @@ export default function CreateSignalMessage(props: IProps) {
    * @param value
    */
   function validateId(value: string) {
+    if (!value) {
+      return {
+        status: false,
+        message: '请输入ID',
+      };
+    }
     if (rowIds.length > 0 && rowIds.includes(value)) {
       return {
         status: false,
@@ -131,7 +137,6 @@ export default function CreateSignalMessage(props: IProps) {
             name="id"
             label={createType === MESSAGE_CONSTANT ? '消息ID' : '信号ID'}
             rules={[
-              { required: true, message: '请输入id' },
               {
                 validator: (_, value) => {
                   const validateId$1 = validateId(value);

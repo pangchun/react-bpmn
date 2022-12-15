@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Empty, Space, Table } from 'antd';
 
-import CreateSignalMessage from '@/bpmn/panel/SignalMessage/CreateSignalMessage/CreateSignalMessage';
+import CreateSignalMessage from '@/bpmn/panel/SignalMessage/EditSignalMessage/EditSignalMessage';
 
 interface IProps {
   businessObject: any;

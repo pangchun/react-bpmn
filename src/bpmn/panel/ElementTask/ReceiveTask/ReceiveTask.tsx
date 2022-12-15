@@ -118,59 +118,71 @@ export default function ReceiveTask(props: IProps) {
   }
 
   /**
-   * 校验id
-   *
-   * @param value
-   */
-  function validateId(value: string) {
-    // 校验 消息id已存在
-    if (messageRefOptions.find((el) => el.value === value)) {
-      return {
-        status: false,
-        message: '消息ID已存在，请重新输入',
-      };
-    }
-    if (value.includes(' ')) {
-      return {
-        status: false,
-        message: '消息ID中不能包含空格',
-      };
-    }
-    return {
-      status: true,
-    };
-  }
-
-  /**
-   * 校验name
-   *
-   * @param value
-   */
-  function validateName(value: string) {
-    // 校验 消息name已存在
-    if (messageRefOptions.find((el) => el.name === value)) {
-      return {
-        status: false,
-        message: '消息名称已存在，请重新输入',
-      };
-    }
-    if (value.includes(' ')) {
-      return {
-        status: false,
-        message: '消息名称中不能包含空格',
-      };
-    }
-    return {
-      status: true,
-    };
-  }
-
-  /**
    * 弹窗组件
    *
    * @constructor
    */
   function CreateNewMessage() {
+    /**
+     * 校验id
+     *
+     * @param value
+     */
+    function validateId(value: string) {
+      if (!value) {
+        return {
+          status: false,
+          message: '请输入消息ID',
+        };
+      }
+      // 校验 消息id已存在
+      if (messageRefOptions.find((el) => el.value === value)) {
+        return {
+          status: false,
+          message: '消息ID已存在，请重新输入',
+        };
+      }
+      if (value.includes(' ')) {
+        return {
+          status: false,
+          message: '消息ID中不能包含空格',
+        };
+      }
+      return {
+        status: true,
+      };
+    }
+
+    /**
+     * 校验name
+     *
+     * @param value
+     */
+    function validateName(value: string) {
+      if (!value) {
+        return {
+          status: false,
+          message: '请输入消息名称',
+        };
+      }
+      // 校验 消息name已存在
+      if (messageRefOptions.find((el) => el.name === value)) {
+        return {
+          status: false,
+          message: '消息名称已存在，请重新输入',
+        };
+      }
+      if (value.includes(' ')) {
+        return {
+          status: false,
+          message: '消息名称中不能包含空格',
+        };
+      }
+      return {
+        status: true,
+      };
+    }
+
     return (
       <>
         <Typography.Link
@@ -200,7 +212,6 @@ export default function ReceiveTask(props: IProps) {
               name="id"
               label={'消息ID'}
               rules={[
-                { required: true, message: 'ID不能为空哦!' },
                 {
                   validator: (_, value) => {
                     const validateId$1 = validateId(value);
@@ -217,7 +228,6 @@ export default function ReceiveTask(props: IProps) {
               name="name"
               label={'消息名称'}
               rules={[
-                { required: true, message: '名称不能为空哦!' },
                 {
                   validator: (_, value) => {
                     const validateName$1 = validateName(value);

@@ -95,14 +95,14 @@ export default function EditProperty(props: IProps) {
           <Form.Item
             label="属性名"
             name="propertyName"
-            rules={[{ required: true, message: '属性名不能为空哦!' }]}
+            rules={[{ required: true, message: '请输入属性名' }]}
           >
             <Input placeholder={'请输入'} />
           </Form.Item>
           <Form.Item
             label="属性值"
             name="propertyValue"
-            rules={[{ required: true, message: '属性值不能为空哦!' }]}
+            rules={[{ required: true, message: '请输入属性值' }]}
           >
             <Input placeholder={'请输入'} />
           </Form.Item>
