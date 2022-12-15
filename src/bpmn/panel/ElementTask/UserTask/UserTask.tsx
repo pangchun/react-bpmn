@@ -20,11 +20,16 @@ interface IProps {
   businessObject: any;
 }
 
+/**
+ * 用户任务 组件
+ *
+ * @param props
+ * @constructor
+ */
 export default function UserTask(props: IProps) {
-  // props属性
+  // props
   const { businessObject } = props;
-
-  // 其它属性
+  // form
   const [form] = Form.useForm<{
     assignee: string;
     candidateUsers: string[];
@@ -34,10 +39,16 @@ export default function UserTask(props: IProps) {
     priority: number;
   }>();
 
+  // 初始化
   useEffect(() => {
-    initPageData();
+    if (businessObject) {
+      initPageData();
+    }
   }, [businessObject?.id]);
 
+  /**
+   * 初始化页面数据
+   */
   function initPageData() {
     form.setFieldsValue({
       assignee: businessObject?.assignee,
@@ -47,16 +58,18 @@ export default function UserTask(props: IProps) {
       candidateGroups: businessObject?.candidateGroups
         ? [businessObject.candidateGroups]
         : [],
-      dueDate: businessObject?.dueDate
-        ? moment(businessObject.dueDate, true)
-        : undefined,
-      followUpDate: businessObject?.followUpDate
-        ? moment(businessObject.followUpDate, true)
-        : undefined,
+      dueDate: businessObject?.dueDate && moment(businessObject.dueDate, true),
+      followUpDate:
+        businessObject?.followUpDate &&
+        moment(businessObject.followUpDate, true),
       priority: businessObject?.priority,
     });
   }
 
+  /**
+   * 更新用户任务
+   * @param key
+   */
   function updateUserTask(key: string) {
     let values: any = form.getFieldsValue();
     const taskAttr = Object.create(null);

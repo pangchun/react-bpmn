@@ -70,7 +70,8 @@ export default function PropertyPanel(props: IProps) {
         confirmCurrentElement(null);
         // 获取rootElements
         setRootElements(modeler.getDefinitions().rootElements);
-        window.bpmnInstance.rootElements = modeler.getDefinitions().rootElements;
+        window.bpmnInstance.rootElements =
+          modeler.getDefinitions().rootElements;
       });
       // 设置监听器，监听选中节点变化 (特别注意：监听器只能设置一次，如果执行多次，会设置多个监听器)
       modeler?.on('selection.changed', (e: any) => {
@@ -226,7 +227,7 @@ export default function PropertyPanel(props: IProps) {
               style={{ color: defaultData.colorPrimary, fontWeight: 'bold' }}
             >
               <PushpinTwoTone twoToneColor={defaultData.colorPrimary} />
-              &nbsp;任务
+              &nbsp;{'任务'}
             </Typography>
           }
           key={5}
@@ -383,7 +384,7 @@ export default function PropertyPanel(props: IProps) {
           {renderElementBaseInfo()}
           {renderSignalMessage()}
           {/*{renderElementForm()}*/}
-          {/*{renderElementTask()}*/}
+          {renderElementTask()}
           {/*{renderMultiInstance()}*/}
           {renderExecutionListener()}
           {renderTaskListener()}

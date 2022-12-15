@@ -1,46 +1,43 @@
-import React, { useEffect, useState } from 'react';
-import {
-  Checkbox,
-  Form,
-  Input,
-  message,
-  Space,
-  Switch,
-  Typography,
-} from 'antd';
-import { Collapse } from 'antd';
-import { PushpinTwoTone } from '@ant-design/icons';
-import { useInterval } from 'ahooks';
-import { useWatch } from 'antd/es/form/Form';
+import React, { useEffect } from 'react';
+import { Checkbox, Form } from 'antd';
 import UserTask from '@/bpmn/panel/ElementTask/UserTask/UserTask';
 import ReceiveTask from '@/bpmn/panel/ElementTask/ReceiveTask/ReceiveTask';
 import ScriptTask from '@/bpmn/panel/ElementTask/ScriptTask/ScriptTask';
-
-const { Panel } = Collapse;
 
 interface IProps {
   businessObject: any;
 }
 
+/**
+ * 任务 组件
+ *
+ * @param props
+ * @constructor
+ */
 export default function ElementTask(props: IProps) {
-  // props属性
+  // props
   const { businessObject } = props;
-
-  // 其它属性
+  // form
   const [form] = Form.useForm<{
     asyncBefore: boolean;
     asyncAfter: boolean;
+    // 是否排除只有为false才会在xml中体现
     exclusive: boolean;
   }>();
-
   // 字段监听
   const asyncBefore = Form.useWatch('asyncBefore', form);
   const asyncAfter = Form.useWatch('asyncAfter', form);
 
+  // 初始化
   useEffect(() => {
-    initPageData();
+    if (businessObject) {
+      initPageData();
+    }
   }, [businessObject?.id]);
 
+  /**
+   * 初始化页面数据
+   */
   function initPageData() {
     form.setFieldsValue({
       asyncBefore: businessObject?.asyncBefore || false,
@@ -49,6 +46,9 @@ export default function ElementTask(props: IProps) {
     });
   }
 
+  /**
+   * 更新异步延续
+   */
   function updateTaskAsync() {
     let asyncBefore: boolean = form.getFieldValue('asyncBefore');
     let asyncAfter: boolean = form.getFieldValue('asyncAfter');
@@ -70,18 +70,18 @@ export default function ElementTask(props: IProps) {
           label={'异步延续'}
           name="asyncBefore"
           valuePropName="checked"
-          style={{ marginLeft: 22, marginBottom: 20 }}
+          style={{ marginLeft: 19, marginBottom: 20 }}
         >
-          <Checkbox style={{ marginLeft: 5 }} onChange={updateTaskAsync}>
-            异步前
+          <Checkbox style={{ marginLeft: 2 }} onChange={updateTaskAsync}>
+            {'异步前'}
           </Checkbox>
         </Form.Item>
         <Form.Item name="asyncAfter" valuePropName="checked">
-          <Checkbox onChange={updateTaskAsync}>异步后</Checkbox>
+          <Checkbox onChange={updateTaskAsync}>{'异步后'}</Checkbox>
         </Form.Item>
         {(asyncBefore || asyncAfter) && (
           <Form.Item name="exclusive" valuePropName="checked">
-            <Checkbox onChange={updateTaskAsync}>是否排除</Checkbox>
+            <Checkbox onChange={updateTaskAsync}>{'是否排除'}</Checkbox>
           </Form.Item>
         )}
       </Form>
