@@ -12,8 +12,6 @@ interface IProps {
   businessObject: any;
 }
 
-// 注意：直接在xml中定义消息id全为数字时，会导致无法回显
-
 /**
  * 接收任务 组件
  *

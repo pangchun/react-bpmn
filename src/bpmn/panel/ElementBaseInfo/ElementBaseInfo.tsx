@@ -168,6 +168,7 @@ export default function ElementBaseInfo(props: IProps) {
         <Form.Item
           label="编号"
           name="id"
+          required
           rules={[
             {
               validator: (_, value) => {

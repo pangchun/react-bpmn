@@ -1,18 +1,10 @@
 import React, { useEffect } from 'react';
-import { Checkbox, Form, Input, Select, Typography } from 'antd';
-import { Collapse } from 'antd';
-import { PushpinTwoTone } from '@ant-design/icons';
+import { Checkbox, Form, Input, Select } from 'antd';
 import {
   loop_characteristics_type,
   loop_characteristics_type_options,
 } from '@/bpmn/panel/MultiInstance/dataSelf';
 import { FLOWABLE_PREFIX } from '@/bpmn/constant/constants';
-
-const { Panel } = Collapse;
-
-interface IProps {
-  businessObject: any;
-}
 
 const keyOptions = {
   collection: 'collection',
@@ -21,11 +13,20 @@ const keyOptions = {
   asyncAfter: 'asyncAfter',
 };
 
-export default function MultiInstance(props: IProps) {
-  // props属性
-  const { businessObject } = props;
+interface IProps {
+  businessObject: any;
+}
 
-  // 其它属性
+/**
+ * 多实例 组件
+ *
+ * @param props
+ * @constructor
+ */
+export default function MultiInstance(props: IProps) {
+  // props
+  const { businessObject } = props;
+  // form
   const [multiInstanceForm] = Form.useForm<{
     loopCharacteristics: string;
     loopCardinality: string;
@@ -41,7 +42,6 @@ export default function MultiInstance(props: IProps) {
   const [timeCycleForm] = Form.useForm<{
     timeCycle: string;
   }>();
-
   // 字段监听
   const loopCharacteristics = Form.useWatch(
     'loopCharacteristics',
@@ -50,24 +50,37 @@ export default function MultiInstance(props: IProps) {
   const asyncBefore = Form.useWatch('asyncBefore', asyncStatusForm);
   const asyncAfter = Form.useWatch('asyncAfter', asyncStatusForm);
 
+  /**
+   * 初始化
+   */
   useEffect(() => {
-    initPageData();
+    if (businessObject) {
+      initPageData();
+    }
   }, [businessObject?.id]);
 
   /**
-   * 之所以多提取一个初始化方法，是因为form报错
+   * 初始化页面数据
    */
-  useEffect(() => {
-    if (asyncBefore || asyncAfter) {
-      timeCycleForm.setFieldsValue({
-        timeCycle:
-          businessObject?.loopCharacteristics?.extensionElements?.values[0]
-            ?.body,
-      });
-    }
-  }, [asyncBefore, asyncAfter]);
-
   function initPageData() {
+    /**
+     * 初始化回路特性
+     */
+    function initLoopCharacteristics() {
+      if (!businessObject?.loopCharacteristics) {
+        return undefined;
+      } else if (
+        businessObject?.loopCharacteristics?.$type ===
+        'bpmn:StandardLoopCharacteristics'
+      ) {
+        return loop_characteristics_type.standardLoop;
+      } else if (businessObject?.loopCharacteristics?.isSequential) {
+        return loop_characteristics_type.sequentialMultiInstance;
+      } else {
+        return loop_characteristics_type.parallelMultiInstance;
+      }
+    }
+
     multiInstanceForm.setFieldsValue({
       loopCharacteristics: initLoopCharacteristics(),
       loopCardinality:
@@ -82,24 +95,33 @@ export default function MultiInstance(props: IProps) {
       asyncAfter: businessObject?.loopCharacteristics?.asyncAfter,
       exclusive: businessObject?.loopCharacteristics?.exclusive,
     });
-  }
-
-  function initLoopCharacteristics() {
-    if (!businessObject?.loopCharacteristics) {
-      return undefined;
-    } else if (
-      businessObject?.loopCharacteristics?.$type ===
-      'bpmn:StandardLoopCharacteristics'
+    if (
+      asyncStatusForm.getFieldValue('asyncBefore') ||
+      asyncStatusForm.getFieldValue('asyncAfter')
     ) {
-      return loop_characteristics_type.standardLoop;
-    } else if (businessObject?.loopCharacteristics?.isSequential) {
-      return loop_characteristics_type.sequentialMultiInstance;
-    } else {
-      return loop_characteristics_type.parallelMultiInstance;
+      timeCycleForm.setFieldsValue({
+        timeCycle:
+          businessObject?.loopCharacteristics?.extensionElements?.values[0]
+            ?.body,
+      });
     }
   }
 
+  /**
+   * 更新回路特性
+   *
+   * @param value
+   */
   function updateLoopCharacteristics(value: string) {
+    // 重置表单
+    multiInstanceForm.resetFields([
+      'loopCardinality',
+      'collection',
+      'elementVariable',
+      'completionCondition',
+    ]);
+    asyncStatusForm.resetFields();
+    (asyncBefore || asyncAfter) && timeCycleForm.resetFields();
     // 取消多实例配置
     if (value === '-1') {
       window.bpmnInstance.modeling.updateProperties(
@@ -150,6 +172,11 @@ export default function MultiInstance(props: IProps) {
     }
   }
 
+  /**
+   * 更新循环基数
+   *
+   * @param value
+   */
   function updateLoopCardinality(value: string) {
     let loopCardinality = null;
     if (value && value.length) {
@@ -167,6 +194,11 @@ export default function MultiInstance(props: IProps) {
     );
   }
 
+  /**
+   * 更新完成条件
+   *
+   * @param value
+   */
   function updateLoopCondition(value: string) {
     let completionCondition = null;
     if (value && value.length) {
@@ -184,6 +216,11 @@ export default function MultiInstance(props: IProps) {
     );
   }
 
+  /**
+   * 更新重试周期
+   *
+   * @param value
+   */
   function updateLoopTimeCycle(value: string) {
     const extensionElements = window.bpmnInstance.moddle.create(
       'bpmn:ExtensionElements',
@@ -207,6 +244,9 @@ export default function MultiInstance(props: IProps) {
     );
   }
 
+  /**
+   * 更新集合与元素变量
+   */
   function updateLoopBase() {
     window.bpmnInstance.modeling.updateModdleProperties(
       window.bpmnInstance.element,
@@ -220,6 +260,9 @@ export default function MultiInstance(props: IProps) {
     );
   }
 
+  /**
+   * 更新异步状态
+   */
   function updateLoopAsync() {
     let asyncAttr: any;
     let asyncBefore: boolean = asyncStatusForm.getFieldValue('asyncBefore');
@@ -242,6 +285,9 @@ export default function MultiInstance(props: IProps) {
     );
   }
 
+  /**
+   * 渲染 多实例表单
+   */
   function renderMultiInstanceForm() {
     return (
       <>
@@ -271,6 +317,9 @@ export default function MultiInstance(props: IProps) {
     );
   }
 
+  /**
+   * 渲染 异步状态表单
+   */
   function renderAsyncStatusForm() {
     return (
       <>
@@ -299,6 +348,9 @@ export default function MultiInstance(props: IProps) {
     );
   }
 
+  /**
+   * 渲染 重试周期表单
+   */
   function renderTimeCycleForm() {
     return (
       <>

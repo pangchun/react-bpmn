@@ -10,12 +10,14 @@ import ElementTask from '@/bpmn/panel/ElementTask/ElementTask';
 import MultiInstance from '@/bpmn/panel/MultiInstance/MultiInstance';
 import ElementForm from '@/bpmn/panel/ElementForm/ElementForm';
 import {
+  AppstoreOutlined,
   BellOutlined,
   BulbTwoTone,
   DatabaseTwoTone,
   FileTwoTone,
   MessageOutlined,
   NotificationOutlined,
+  OrderedListOutlined,
   PlusOutlined,
   PlusSquareTwoTone,
   PushpinTwoTone,
@@ -226,7 +228,7 @@ export default function PropertyPanel(props: IProps) {
             <Typography
               style={{ color: defaultData.colorPrimary, fontWeight: 'bold' }}
             >
-              <PushpinTwoTone twoToneColor={defaultData.colorPrimary} />
+              <OrderedListOutlined twoToneColor={defaultData.colorPrimary} />
               &nbsp;{'任务'}
             </Typography>
           }
@@ -253,7 +255,7 @@ export default function PropertyPanel(props: IProps) {
             <Typography
               style={{ color: defaultData.colorPrimary, fontWeight: 'bold' }}
             >
-              <PushpinTwoTone twoToneColor={defaultData.colorPrimary} />
+              <AppstoreOutlined twoToneColor={defaultData.colorPrimary} />
               &nbsp;多实例
             </Typography>
           }
@@ -385,7 +387,7 @@ export default function PropertyPanel(props: IProps) {
           {renderSignalMessage()}
           {/*{renderElementForm()}*/}
           {renderElementTask()}
-          {/*{renderMultiInstance()}*/}
+          {renderMultiInstance()}
           {renderExecutionListener()}
           {renderTaskListener()}
           {renderExtensionProperties()}
