@@ -8,6 +8,7 @@ const MESSAGE_CONSTANT: string = 'message';
 interface IProps {
   createType: 'message' | 'signal';
   initRows: () => any;
+  rowIds: string[];
 }
 
 /**
@@ -18,7 +19,7 @@ interface IProps {
  */
 export default function CreateSignalMessage(props: IProps) {
   // props
-  const { createType, initRows } = props;
+  const { createType, initRows, rowIds } = props;
   // state
   const [open, setOpen] = useState(false);
   // form
@@ -43,6 +44,30 @@ export default function CreateSignalMessage(props: IProps) {
   }
 
   /**
+   * 校验id
+   *
+   * @param value
+   */
+  function validateId(value: string) {
+    if (rowIds.length > 0 && rowIds.includes(value)) {
+      return {
+        status: false,
+        message: '此编号已经存在，请重新输入',
+      };
+    }
+    if (value.includes(' ')) {
+      return {
+        status: false,
+        message: '编号中不能包含空格',
+      };
+    }
+    return {
+      status: true,
+      message: 'ok',
+    };
+  }
+
+  /**
    * 提交表单,并更新表格
    */
   function handleOK() {
@@ -59,7 +84,7 @@ export default function CreateSignalMessage(props: IProps) {
           id: values.id,
           name: values.name,
         });
-        window.bpmnInstance.rootElements.push(element);
+        window.bpmnInstance.modeler.getDefinitions().rootElements.push(element);
         // push之后，更新父组件的表格行数据
         initRows();
         handleCancel();
@@ -105,14 +130,24 @@ export default function CreateSignalMessage(props: IProps) {
           <Form.Item
             name="id"
             label={createType === MESSAGE_CONSTANT ? '消息ID' : '信号ID'}
-            rules={[{ required: true, message: '编号不能为空哦!' }]}
+            rules={[
+              { required: true, message: '请输入id' },
+              {
+                validator: (_, value) => {
+                  const validateId$1 = validateId(value);
+                  return validateId$1.status
+                    ? Promise.resolve()
+                    : Promise.reject(new Error(validateId$1.message));
+                },
+              },
+            ]}
           >
             <Input placeholder={'请输入'} />
           </Form.Item>
           <Form.Item
             name="name"
             label={createType === MESSAGE_CONSTANT ? '消息名称' : '信号名称'}
-            rules={[{ required: true, message: '名称不能为空哦!' }]}
+            rules={[{ required: true, message: '请输入名称' }]}
           >
             <Input placeholder={'请输入'} />
           </Form.Item>

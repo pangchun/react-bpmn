@@ -10,7 +10,7 @@ declare global {
       elementRegistry: any;
       bpmnFactory: any;
       moddle: any;
-      rootElements: any[];
+      rootElements: any[]; // todo 删除这个属性，rootEl是一个数组
     };
   }
 }

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Empty, Space, Table } from 'antd';
 
 import CreateSignalMessage from '@/bpmn/panel/SignalMessage/CreateSignalMessage/CreateSignalMessage';
+
 interface IProps {
   businessObject: any;
 }
@@ -18,6 +19,8 @@ export default function SignalMessage(props: IProps) {
   // state
   const [signalRows, setSignalRows] = useState<Array<any>>([]);
   const [messageRows, setMessageRows] = useState<Array<any>>([]);
+  const [signalIds, setSignalIds] = useState<Array<string>>([]);
+  const [messageIds, setMessageIds] = useState<Array<string>>([]);
 
   /**
    * 初始化
@@ -33,24 +36,31 @@ export default function SignalMessage(props: IProps) {
    */
   function initRows() {
     let signalRows: any[] = [],
-      messageRows: any[] = [];
-    window.bpmnInstance?.rootElements?.map((e) => {
+      messageRows: any[] = [],
+      signalIds: string[] = [],
+      messageIds: string[] = [];
+    window.bpmnInstance.modeler.getDefinitions().rootElements?.map((e: any) => {
+      // todo 将消息和信号的id存起来，用于校验id不能重复
       if (e.$type === 'bpmn:Message') {
         messageRows.push({
           key: messageRows.length + 1,
           id: e.id,
           name: e.name,
         });
+        messageIds.push(e.id);
       } else if (e.$type === 'bpmn:Signal') {
         signalRows.push({
           key: signalRows.length + 1,
           id: e.id,
           name: e.name,
         });
+        signalIds.push(e.id);
       }
     });
     setSignalRows(signalRows);
     setMessageRows(messageRows);
+    setSignalIds(signalIds);
+    setMessageIds(messageIds);
   }
 
   // 列
@@ -120,7 +130,11 @@ export default function SignalMessage(props: IProps) {
             ),
           }}
         />
-        <CreateSignalMessage createType={'message'} initRows={initRows} />
+        <CreateSignalMessage
+          createType={'message'}
+          initRows={initRows}
+          rowIds={messageIds}
+        />
         <Table
           columns={signalColumns}
           dataSource={signalRows}
@@ -137,7 +151,11 @@ export default function SignalMessage(props: IProps) {
             ),
           }}
         />
-        <CreateSignalMessage createType={'signal'} initRows={initRows} />
+        <CreateSignalMessage
+          createType={'signal'}
+          initRows={initRows}
+          rowIds={signalIds}
+        />
       </Space>
     </>
   );

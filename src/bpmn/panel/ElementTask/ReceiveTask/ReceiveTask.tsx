@@ -2,37 +2,48 @@ import React, { useEffect, useState } from 'react';
 import { Divider, Form, Input, Modal, Select, Space, Typography } from 'antd';
 import { EditOutlined, PlusOutlined } from '@ant-design/icons';
 
-interface IProps {
-  businessObject: any;
-}
-
 const defaultOptions = {
   name: '无',
   value: '-1',
 };
 
-// 注意：直接在xml中定义消息id全为数字时，会导致无法回显
-export default function ReceiveTask(props: IProps) {
-  // props属性
-  const { businessObject } = props;
+interface IProps {
+  businessObject: any;
+}
 
-  // state属性
-  const [isModalVisible, setIsModalVisible] = useState(false);
+// 注意：直接在xml中定义消息id全为数字时，会导致无法回显
+
+/**
+ * 接收任务 组件
+ *
+ * @param props
+ * @constructor
+ */
+export default function ReceiveTask(props: IProps) {
+  // props
+  const { businessObject } = props;
+  // state
+  const [open, setOpen] = useState(false);
   const [messageRefOptions, setMessageRefOptions] = useState<Array<any>>([
     defaultOptions,
   ]);
-
-  // 其它属性
+  // form
   const [form] = Form.useForm<{
     messageId: string;
     id: string;
     name: string;
   }>();
 
+  // 初始化
   useEffect(() => {
-    initPageData();
+    if (businessObject) {
+      initPageData();
+    }
   }, [businessObject?.id]);
 
+  /**
+   * 初始化页面数据
+   */
   function initPageData() {
     // 初始化下拉项
     const rootElements: Array<any> =
@@ -55,6 +66,9 @@ export default function ReceiveTask(props: IProps) {
     });
   }
 
+  /**
+   * 提交表单
+   */
   function handleOK() {
     form
       .validateFields()
@@ -64,17 +78,24 @@ export default function ReceiveTask(props: IProps) {
           'bpmn:Message',
           { id: values['id'], name: values['name'] },
         );
-        window.bpmnInstance.rootElements.push(messageConfig);
+        window.bpmnInstance?.modeler
+          .getDefinitions()
+          .rootElements.push(messageConfig);
         updateReceiveMessage(values['id']);
         // 刷新界面
         initPageData();
-        setIsModalVisible(false);
+        setOpen(false);
       })
       .catch((info) => {
         console.log('表单校验失败: ', info);
       });
   }
 
+  /**
+   * 更新接收任务组件
+   *
+   * @param messageId
+   */
   function updateReceiveMessage(messageId: string) {
     if (messageId === '-1') {
       window.bpmnInstance.modeling.updateProperties(
@@ -87,14 +108,20 @@ export default function ReceiveTask(props: IProps) {
       window.bpmnInstance.modeling.updateProperties(
         window.bpmnInstance.element,
         {
-          messageRef: window.bpmnInstance.rootElements
-            .filter((el) => el.$type === 'bpmn:Message')
-            .find((el) => el.id === messageId),
+          messageRef: window.bpmnInstance.modeler
+            .getDefinitions()
+            .rootElements.filter((el: any) => el.$type === 'bpmn:Message')
+            .find((el: any) => el.id === messageId),
         },
       );
     }
   }
 
+  /**
+   * 校验id
+   *
+   * @param value
+   */
   function validateId(value: string) {
     // 校验 消息id已存在
     if (messageRefOptions.find((el) => el.value === value)) {
@@ -114,6 +141,11 @@ export default function ReceiveTask(props: IProps) {
     };
   }
 
+  /**
+   * 校验name
+   *
+   * @param value
+   */
   function validateName(value: string) {
     // 校验 消息name已存在
     if (messageRefOptions.find((el) => el.name === value)) {
@@ -133,11 +165,16 @@ export default function ReceiveTask(props: IProps) {
     };
   }
 
+  /**
+   * 弹窗组件
+   *
+   * @constructor
+   */
   function CreateNewMessage() {
     return (
       <>
         <Typography.Link
-          onClick={() => setIsModalVisible(true)}
+          onClick={() => setOpen(true)}
           style={{ whiteSpace: 'nowrap' }}
         >
           <PlusOutlined /> {'创建新消息'}
@@ -152,11 +189,11 @@ export default function ReceiveTask(props: IProps) {
               {'创建消息实例'}
             </Typography>
           }
-          visible={isModalVisible}
+          open={open}
           okText={'确认'}
           cancelText={'取消'}
           onOk={handleOK}
-          onCancel={() => setIsModalVisible(false)}
+          onCancel={() => setOpen(false)}
         >
           <Form form={form} labelCol={{ span: 5 }} wrapperCol={{ span: 18 }}>
             <Form.Item
