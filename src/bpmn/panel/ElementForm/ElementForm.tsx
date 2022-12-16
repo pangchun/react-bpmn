@@ -1,101 +1,76 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Button, Form, Input, Select, Space, Table, Typography } from 'antd';
-import { Collapse } from 'antd';
-import { PlusOutlined } from '@ant-design/icons';
+import {
+  Button,
+  Empty,
+  Form,
+  Input,
+  Select,
+  Space,
+  Table,
+  Typography,
+} from 'antd';
+import { AlignRightOutlined, PlusOutlined } from '@ant-design/icons';
 import EditFormField from '@/bpmn/panel/ElementForm/EditFormField/EditFormField';
-import { FLOWABLE_PREFIX } from '@/bpmn/constant/constants';
-import { getFormFieldNameByType } from '@/bpmn/panel/ElementForm/dataSelf';
-
-const { Panel } = Collapse;
+import {
+  checkIsCustomType,
+  getFormFieldNameByType,
+} from '@/bpmn/panel/ElementForm/dataSelf';
+import { useAppSelector } from '@/redux/hook/hooks';
+import { extractFormData } from '@/bpmn/util/panelUtil';
 
 interface IProps {
   businessObject: any;
 }
 
+/**
+ * 表单 组件
+ *
+ * @param props
+ * @constructor
+ */
 export default function ElementForm(props: IProps) {
-  // props属性
+  // props
   const { businessObject } = props;
-
-  // setState属性
-  const [formFields, setFormFields] = useState<Array<any>>([]);
+  // state
   const [formData, setFormData] = useState<any>();
+  const [formFields, setFormFields] = useState<Array<any>>([]);
   const [businessKeyOptions, setBusinessKeyOptions] = useState<Array<any>>([]);
-
   // ref
   const editFormFieldRef = useRef<any>();
-
-  // 其它属性
+  // form
   const [form] = Form.useForm<{
     formKey: string;
     businessKey: string;
   }>();
+  // redux
+  const bpmnPrefix = useAppSelector((state) => state.bpmn.prefix);
 
+  /**
+   * 初始化
+   */
   useEffect(() => {
-    initPageData();
+    if (businessObject) {
+      initPageData();
+    }
   }, [businessObject?.id]);
 
+  /**
+   * 初始化页面数据
+   */
   function initPageData() {
-    // 获取业务对象
     let businessObject: any =
       window.bpmnInstance?.element?.businessObject || props.businessObject;
-    if (!businessObject) {
-      return;
-    }
-
     // 获取FormData
-    let formData: any =
-      businessObject.extensionElements?.values?.filter(
-        (e: any) => e.$type === `${FLOWABLE_PREFIX}:FormData`,
-      )?.[0] ||
-      window.bpmnInstance.moddle.create(`${FLOWABLE_PREFIX}:FormData`, {
-        fields: [],
-      });
+    let formData: any = extractFormData(bpmnPrefix);
     setFormData(formData);
-
-    // 获取表单字段，填充table表格
-    let fields: Array<any> = JSON.parse(JSON.stringify(formData?.fields || []));
-    fields = fields?.map((e, i) => {
-      // 获取枚举值列表
-      let values: Array<any> = e.values;
-      values = values?.map((e, i) => {
-        return {
-          key: i + 1,
-          id: e.id,
-          name: e.name,
-        };
-      });
-      // 获取字段属性
-      let properties: Array<any> = e.properties?.values;
-      properties = properties?.map((e, i) => {
-        return {
-          key: i + 1,
-          id: e.id,
-          value: e.value,
-        };
-      });
-      // 获取字段约束
-      let validation: Array<any> = e.validation?.constraints;
-      validation = validation?.map((e, i) => {
-        return {
-          key: i + 1,
-          name: e.name,
-          config: e.config,
-        };
-      });
-      // 获取其他属性并封装后返回
-      return {
-        key: i + 1,
-        id: e.id,
-        label: e.label,
-        type: e.type,
-        defaultValue: e.defaultValue,
-        values,
-        properties,
-        validation,
-      };
+    // 获取表单标识和业务标识
+    form.setFieldsValue({
+      formKey: businessObject?.formKey,
+      businessKey: formData?.businessKey,
     });
+    // 获取表单字段
+    let fields: Array<any> = encapsulateFormFields();
     setFormFields(fields);
-
     // 获取表单字段id与名称，构造业务标识下拉项
     let businessKeyOptions: Array<any> =
       fields?.map((e) => {
@@ -105,21 +80,80 @@ export default function ElementForm(props: IProps) {
         };
       }) || [];
     setBusinessKeyOptions(businessKeyOptions);
-    // 设置表单初始值
-    form.setFieldsValue({
-      formKey: businessObject.formKey || undefined,
-      businessKey: formData?.businessKey || undefined,
-    });
+
+    /**
+     * 封装表单字段
+     */
+    function encapsulateFormFields() {
+      // 获取FormData
+      let formData: any = extractFormData(bpmnPrefix);
+      // 获取表单字段
+      let fields: Array<any> = JSON.parse(
+        JSON.stringify(formData?.fields || []),
+      );
+      fields = fields?.map((e, i) => {
+        // 获取枚举值列表
+        let enumValues: Array<any> = e.values;
+        enumValues = enumValues?.map((e, i) => {
+          return {
+            key: i + 1,
+            id: e.id,
+            name: e.name,
+          };
+        });
+        // 获取字段属性
+        let properties: Array<any> = e.properties?.values;
+        properties = properties?.map((e, i) => {
+          return {
+            key: i + 1,
+            id: e.id,
+            value: e.value,
+          };
+        });
+        // 获取字段约束
+        let constraints: Array<any> = e.validation?.constraints;
+        constraints = constraints?.map((e, i) => {
+          return {
+            key: i + 1,
+            name: e.name,
+            config: e.config,
+          };
+        });
+        // 获取其他属性并封装后返回
+        return {
+          key: i + 1,
+          id: e.id,
+          label: e.label,
+          type: e.type,
+          isCustomType: checkIsCustomType(e.type),
+          datePattern: e.datePattern,
+          defaultValue: e.defaultValue,
+          enumValues,
+          properties,
+          constraints,
+        };
+      });
+      return fields;
+    }
   }
 
+  /**
+   * 更新表单标识
+   *
+   * @param value
+   */
   function updateFormKey(value: any) {
     window.bpmnInstance.modeling.updateProperties(window.bpmnInstance.element, {
       formKey: value,
     });
   }
 
+  /**
+   * 更新业务标识
+   *
+   * @param value
+   */
   function updateBusinessKey(value: any) {
-    console.log(value);
     window.bpmnInstance.modeling.updateModdleProperties(
       window.bpmnInstance.element,
       formData,
@@ -129,6 +163,11 @@ export default function ElementForm(props: IProps) {
     );
   }
 
+  /**
+   * 新增或修改表单字段
+   *
+   * @param options
+   */
   function createOrUpdateFormFields(options: any) {
     console.log(options);
     // properties 是特殊变量，重命名使不警告
@@ -145,15 +184,16 @@ export default function ElementForm(props: IProps) {
     } = options;
 
     // 创建或更新表单字段
-    const Field = window.bpmnInstance.moddle.create(
-      `${FLOWABLE_PREFIX}:FormField`,
-      { id, type, label },
-    );
+    const Field = window.bpmnInstance.moddle.create(`${bpmnPrefix}:FormField`, {
+      id,
+      type,
+      label,
+    });
     defaultValue && (Field.defaultValue = defaultValue);
     // 设置枚举值
     if (values && values.length) {
       Field.values = values.map((e: any, i: number) => {
-        return window.bpmnInstance.moddle.create(`${FLOWABLE_PREFIX}:Value`, {
+        return window.bpmnInstance.moddle.create(`${bpmnPrefix}:Value`, {
           name: e.name,
           id: e.id,
         });
@@ -163,14 +203,14 @@ export default function ElementForm(props: IProps) {
     if (properties && properties.length) {
       const propertiesConfig: Array<any> = properties.map(
         (e: any, i: number) => {
-          return window.bpmnInstance.moddle.create(
-            `${FLOWABLE_PREFIX}:Property`,
-            { id: e.id, value: e.value },
-          );
+          return window.bpmnInstance.moddle.create(`${bpmnPrefix}:Property`, {
+            id: e.id,
+            value: e.value,
+          });
         },
       );
       Field.properties = window.bpmnInstance.moddle.create(
-        `${FLOWABLE_PREFIX}:Properties`,
+        `${bpmnPrefix}:Properties`,
         {
           values: propertiesConfig,
         },
@@ -180,14 +220,14 @@ export default function ElementForm(props: IProps) {
     if (validation && validation.length) {
       const validationConfig: Array<any> = validation.map(
         (e: any, i: number) => {
-          return window.bpmnInstance.moddle.create(
-            `${FLOWABLE_PREFIX}:Constraint`,
-            { name: e.name, config: e.config },
-          );
+          return window.bpmnInstance.moddle.create(`${bpmnPrefix}:Constraint`, {
+            name: e.name,
+            config: e.config,
+          });
         },
       );
       Field.properties = window.bpmnInstance.moddle.create(
-        `${FLOWABLE_PREFIX}:Validation`,
+        `${bpmnPrefix}:Validation`,
         {
           constraints: validationConfig,
         },
@@ -209,13 +249,14 @@ export default function ElementForm(props: IProps) {
     // 修改字段后直接更新FormData
   }
 
+  // 列
   const columns = [
     {
       title: '序号',
       width: 40,
       dataIndex: 'key',
       key: 'key',
-      render: (text: any) => <a>{text}</a>,
+      render: (text: any) => text,
     },
     {
       title: '字段名称',
@@ -230,7 +271,8 @@ export default function ElementForm(props: IProps) {
       dataIndex: 'type',
       key: 'type',
       ellipsis: true,
-      render: (text: any) => getFormFieldNameByType(text),
+      render: (text: any) =>
+        checkIsCustomType(text) ? getFormFieldNameByType(text)?.name : text,
     },
     {
       title: '默认值',
@@ -304,9 +346,9 @@ export default function ElementForm(props: IProps) {
           marginBottom: '1rem',
         }}
       >
-        {
-          '-------------------------------- 表单字段 --------------------------------'
-        }
+        {'----------------------------- '}
+        <AlignRightOutlined />
+        {' 表单字段 -----------------------------'}
       </Typography.Paragraph>
       <Table
         columns={columns}
@@ -314,6 +356,14 @@ export default function ElementForm(props: IProps) {
         pagination={false}
         bordered
         size={'small'}
+        locale={{
+          emptyText: (
+            <Empty
+              image={Empty.PRESENTED_IMAGE_SIMPLE}
+              description={'暂无数据'}
+            />
+          ),
+        }}
       />
       <Button
         type="primary"

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Button, notification, Space, Table } from 'antd';
+import { Button, Empty, notification, Space, Table } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { encapsulateListener } from '@/bpmn/panel/ElementListener/dataSelf';
 import EditListener from '@/bpmn/panel/ElementListener/EditListener/EditListener';
@@ -282,6 +282,14 @@ export default function ElementListener(props: IProps) {
         pagination={false}
         bordered
         size={'small'}
+        locale={{
+          emptyText: (
+            <Empty
+              image={Empty.PRESENTED_IMAGE_SIMPLE}
+              description={'暂无数据'}
+            />
+          ),
+        }}
       />
       <Button
         type="primary"

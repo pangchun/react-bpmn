@@ -11,20 +11,17 @@ import MultiInstance from '@/bpmn/panel/MultiInstance/MultiInstance';
 import ElementForm from '@/bpmn/panel/ElementForm/ElementForm';
 import {
   AppstoreOutlined,
+  AuditOutlined,
   BellOutlined,
   BulbTwoTone,
   DatabaseTwoTone,
   FileTwoTone,
-  MessageOutlined,
   NotificationOutlined,
   OrderedListOutlined,
-  PlusOutlined,
-  PlusSquareTwoTone,
-  PushpinTwoTone,
 } from '@ant-design/icons';
 import { initBpmnInstance } from '@/bpmn/util/windowUtil';
 import { useAppSelector } from '@/redux/hook/hooks';
-import { defaultData, ThemeData } from '@/pages/globalTheme';
+import { defaultData } from '@/pages/globalTheme';
 
 interface IProps {
   modeler: any;
@@ -72,8 +69,7 @@ export default function PropertyPanel(props: IProps) {
         confirmCurrentElement(null);
         // 获取rootElements
         setRootElements(modeler.getDefinitions().rootElements);
-        window.bpmnInstance.rootElements =
-          modeler.getDefinitions().rootElements;
+        window.bpmnInstance.rootElements = modeler.getDefinitions().rootElements;
       });
       // 设置监听器，监听选中节点变化 (特别注意：监听器只能设置一次，如果执行多次，会设置多个监听器)
       modeler?.on('selection.changed', (e: any) => {
@@ -201,7 +197,7 @@ export default function PropertyPanel(props: IProps) {
             <Typography
               style={{ color: defaultData.colorPrimary, fontWeight: 'bold' }}
             >
-              <MessageOutlined twoToneColor={defaultData.colorPrimary} />
+              <AuditOutlined twoToneColor={defaultData.colorPrimary} />
               &nbsp;表单
             </Typography>
           }
@@ -385,7 +381,7 @@ export default function PropertyPanel(props: IProps) {
         >
           {renderElementBaseInfo()}
           {renderSignalMessage()}
-          {/*{renderElementForm()}*/}
+          {renderElementForm()}
           {renderElementTask()}
           {renderMultiInstance()}
           {renderExecutionListener()}

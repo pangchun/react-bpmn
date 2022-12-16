@@ -4,7 +4,7 @@ import {
   loop_characteristics_type,
   loop_characteristics_type_options,
 } from '@/bpmn/panel/MultiInstance/dataSelf';
-import { FLOWABLE_PREFIX } from '@/bpmn/constant/constants';
+import { useAppSelector } from '@/redux/hook/hooks';
 
 const keyOptions = {
   collection: 'collection',
@@ -49,6 +49,8 @@ export default function MultiInstance(props: IProps) {
   );
   const asyncBefore = Form.useWatch('asyncBefore', asyncStatusForm);
   const asyncAfter = Form.useWatch('asyncAfter', asyncStatusForm);
+  // redux
+  const bpmnPrefix = useAppSelector((state) => state.bpmn.prefix);
 
   /**
    * 初始化
@@ -227,7 +229,7 @@ export default function MultiInstance(props: IProps) {
       {
         values: [
           window.bpmnInstance.moddle.create(
-            `${FLOWABLE_PREFIX}:FailedJobRetryTimeCycle`,
+            `${bpmnPrefix}:FailedJobRetryTimeCycle`,
             {
               body: value,
             },

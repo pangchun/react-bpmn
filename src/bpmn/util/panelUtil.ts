@@ -199,3 +199,24 @@ export function createListenerObject(
     listenerObj,
   );
 }
+
+/* *************************************** 表单相关 *************************************** */
+
+/**
+ * 获取 FormData
+ * 1、如果不存在FormData时，会新建并返回
+ *
+ * @param prefix
+ */
+export function extractFormData(prefix: string) {
+  let extensionElements: any =
+    window.bpmnInstance?.element.businessObject.extensionElements;
+  return (
+    extensionElements?.values?.filter(
+      (e: any) => e.$type === `${prefix}:FormData`,
+    )?.[0] ||
+    window.bpmnInstance.moddle.create(`${prefix}:FormData`, {
+      fields: [],
+    })
+  );
+}
