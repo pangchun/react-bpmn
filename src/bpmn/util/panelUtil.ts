@@ -204,19 +204,29 @@ export function createListenerObject(
 
 /**
  * 获取 FormData
- * 1、如果不存在FormData时，会新建并返回
+ * 1、如果不存在扩展属性时，要先创建扩展属性
+ * 2、如果不存在FormData时，会新建并返回
  *
  * @param prefix
  */
 export function extractFormData(prefix: string) {
-  let extensionElements: any =
-    window.bpmnInstance?.element.businessObject.extensionElements;
-  return (
+  // 获取或新建ExtensionElements
+  const extensionElements: any =
+    window.bpmnInstance?.element.businessObject.extensionElements ||
+    window.bpmnInstance?.moddle.create('bpmn:ExtensionElements', {
+      values: [],
+    });
+  // 获取或新建FormData
+  const formData: any =
     extensionElements?.values?.filter(
       (e: any) => e.$type === `${prefix}:FormData`,
     )?.[0] ||
     window.bpmnInstance.moddle.create(`${prefix}:FormData`, {
       fields: [],
-    })
-  );
+    });
+  // 获取其他类型的扩展属性
+  const otherExtensionList = extractOtherExtensionList(prefix, 'FormData');
+  // 更新回扩展元素
+  updateElementExtensions(otherExtensionList.concat(formData));
+  return formData;
 }

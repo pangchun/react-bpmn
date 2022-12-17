@@ -17,6 +17,7 @@ import {
 } from '@/bpmn/panel/ElementForm/dataSelf';
 import { useAppSelector } from '@/redux/hook/hooks';
 import { extractFormData } from '@/bpmn/util/panelUtil';
+import { UUIdGenerator } from '@/bpmn/util/idUtil';
 
 interface IProps {
   businessObject: any;
@@ -69,9 +70,9 @@ export default function ElementForm(props: IProps) {
       businessKey: formData?.businessKey,
     });
     // 获取表单字段
-    let fields: Array<any> = encapsulateFormFields();
+    let fields: Array<any> = encapsulateFormFields(formData);
     setFormFields(fields);
-    // 获取表单字段id与名称，构造业务标识下拉项
+    // 构造业务标识下拉项
     let businessKeyOptions: Array<any> =
       fields?.map((e) => {
         return {
@@ -84,9 +85,7 @@ export default function ElementForm(props: IProps) {
     /**
      * 封装表单字段
      */
-    function encapsulateFormFields() {
-      // 获取FormData
-      let formData: any = extractFormData(bpmnPrefix);
+    function encapsulateFormFields(formData: any) {
       // 获取表单字段
       let fields: Array<any> = JSON.parse(
         JSON.stringify(formData?.fields || []),
@@ -125,7 +124,6 @@ export default function ElementForm(props: IProps) {
           id: e.id,
           label: e.label,
           type: e.type,
-          isCustomType: checkIsCustomType(e.type),
           datePattern: e.datePattern,
           defaultValue: e.defaultValue,
           enumValues,
@@ -151,9 +149,15 @@ export default function ElementForm(props: IProps) {
   /**
    * 更新业务标识
    *
-   * @param value
+   * @param option [key, value, children]
    */
-  function updateBusinessKey(value: any) {
+  function updateBusinessKey(option: any) {
+    console.log(option);
+    let { key, value } = option;
+    if (key === 'no') {
+      // 如果选择无，则默认没有业务标识
+      value = '';
+    }
     window.bpmnInstance.modeling.updateModdleProperties(
       window.bpmnInstance.element,
       formData,
@@ -169,84 +173,136 @@ export default function ElementForm(props: IProps) {
    * @param options
    */
   function createOrUpdateFormFields(options: any) {
-    console.log(options);
-    // properties 是特殊变量，重命名使不警告
     const {
       key,
       id,
       label,
       type,
-      customType,
+      datePattern,
       defaultValue,
-      values,
+      enumValues,
+      // properties 是特殊变量，重命名使不警告
       properties: properties,
-      validation,
+      constraints,
     } = options;
 
-    // 创建或更新表单字段
-    const Field = window.bpmnInstance.moddle.create(`${bpmnPrefix}:FormField`, {
-      id,
-      type,
-      label,
+    // 更新业务标识 (如果当前是修改操作，一旦字段id更改了，正好是业务标识时，则需要更新业务标识)
+    if (key > 0) {
+      let businessKey: string = form.getFieldValue('businessKey');
+      let field: any = formFields.at(key - 1);
+      if (businessKey === field.id) {
+        updateBusinessKey({ value: id });
+        form.setFieldValue('businessKey', id);
+      }
+    }
+
+    // 更新表格
+    let newFormFields: Array<any> = [...formFields];
+    let fieldObj: any = Object.create({
+      key: key,
+      id: id,
+      label: label,
+      type: type,
+      datePattern: datePattern,
+      defaultValue: defaultValue,
+      enumValues: enumValues,
+      properties: properties,
+      constraints: constraints,
     });
-    defaultValue && (Field.defaultValue = defaultValue);
-    // 设置枚举值
-    if (values && values.length) {
-      Field.values = values.map((e: any, i: number) => {
-        return window.bpmnInstance.moddle.create(`${bpmnPrefix}:Value`, {
-          name: e.name,
-          id: e.id,
-        });
-      });
-    }
-    // 设置字段属性
-    if (properties && properties.length) {
-      const propertiesConfig: Array<any> = properties.map(
-        (e: any, i: number) => {
-          return window.bpmnInstance.moddle.create(`${bpmnPrefix}:Property`, {
-            id: e.id,
-            value: e.value,
-          });
-        },
-      );
-      Field.properties = window.bpmnInstance.moddle.create(
-        `${bpmnPrefix}:Properties`,
-        {
-          values: propertiesConfig,
-        },
-      );
-    }
-    // 设置字段约束
-    if (validation && validation.length) {
-      const validationConfig: Array<any> = validation.map(
-        (e: any, i: number) => {
-          return window.bpmnInstance.moddle.create(`${bpmnPrefix}:Constraint`, {
-            name: e.name,
-            config: e.config,
-          });
-        },
-      );
-      Field.properties = window.bpmnInstance.moddle.create(
-        `${bpmnPrefix}:Validation`,
-        {
-          constraints: validationConfig,
-        },
-      );
-    }
-
-    // 更新表格数据和FormData
     if (key === -1) {
-      let newFormFields: Array<any> = [...formFields];
-      options.key = formFields.length + 1;
-      newFormFields.push(options);
-      setFormFields(newFormFields);
+      fieldObj.key = newFormFields.length + 1;
+      newFormFields.push(fieldObj);
     } else {
-      let newFormFields: Array<any> = [...formFields];
-      newFormFields.splice(key, 1, options);
-      setFormFields(newFormFields);
+      newFormFields.splice(key - 1, 1, fieldObj);
+    }
+    setFormFields(newFormFields);
+
+    // 更新FormData
+    let fieldConfigObj = createFieldConfigObj();
+    if (key === -1) {
+      formData.fields.push(fieldConfigObj);
+    } else {
+      formData.fields.splice(key - 1, 1, fieldConfigObj);
     }
 
-    // 修改字段后直接更新FormData
+    // 更新业务标识下拉项 todo 每次新增编辑或删除都要重新渲染下拉项，抽取成一个方法
+    let businessKeyOptions: Array<any> =
+      newFormFields?.map((e) => {
+        return {
+          name: e.label,
+          value: e.id,
+        };
+      }) || [];
+    setBusinessKeyOptions(businessKeyOptions);
+
+    /**
+     * 创建表单字段
+     */
+    function createFieldConfigObj() {
+      const field = window.bpmnInstance.moddle.create(
+        `${bpmnPrefix}:FormField`,
+        {
+          id,
+          type,
+          label,
+        },
+      );
+      defaultValue && (field.defaultValue = defaultValue);
+      // 设置枚举值
+      if (enumValues && enumValues.length) {
+        field.values = enumValues.map((e: any, i: number) => {
+          return window.bpmnInstance.moddle.create(`${bpmnPrefix}:Value`, {
+            name: e.name,
+            id: e.id,
+          });
+        });
+      }
+      // 设置属性
+      if (properties && properties.length) {
+        const propertiesConfig: Array<any> = properties.map(
+          (e: any, i: number) => {
+            return window.bpmnInstance.moddle.create(`${bpmnPrefix}:Property`, {
+              id: e.id,
+              value: e.value,
+            });
+          },
+        );
+        field.properties = window.bpmnInstance.moddle.create(
+          `${bpmnPrefix}:Properties`,
+          {
+            values: propertiesConfig,
+          },
+        );
+      }
+      // 设置约束
+      if (constraints && constraints.length) {
+        const validationConfig: Array<any> = constraints.map(
+          (e: any, i: number) => {
+            return window.bpmnInstance.moddle.create(
+              `${bpmnPrefix}:Constraint`,
+              {
+                name: e.name,
+                config: e.config,
+              },
+            );
+          },
+        );
+        field.validation = window.bpmnInstance.moddle.create(
+          `${bpmnPrefix}:Validation`,
+          {
+            constraints: validationConfig,
+          },
+        );
+      }
+      return field;
+    }
+  }
+
+  function removeFormField(key: number) {
+    // 更新业务标识
+    // 删除表格中的字段
+    //  删除FormData中的字段
+    // 重构业务标识下拉项
   }
 
   // 列
@@ -272,7 +328,7 @@ export default function ElementForm(props: IProps) {
       key: 'type',
       ellipsis: true,
       render: (text: any) =>
-        checkIsCustomType(text) ? getFormFieldNameByType(text)?.name : text,
+        checkIsCustomType(text) ? text : getFormFieldNameByType(text)?.name,
     },
     {
       title: '默认值',
@@ -301,7 +357,7 @@ export default function ElementForm(props: IProps) {
             danger
             type="text"
             size={'small'}
-            // onClick={() => remove(record.key)}
+            onClick={() => removeFormField(record.key)}
           >
             {'删除'}
           </Button>
@@ -324,7 +380,7 @@ export default function ElementForm(props: IProps) {
         <Form.Item name="businessKey" label="业务标识">
           <Select
             placeholder={'请选择'}
-            onChange={(value, option) => updateBusinessKey(value)}
+            onChange={(value, option) => updateBusinessKey(option)}
           >
             {businessKeyOptions?.map((e) => {
               return (

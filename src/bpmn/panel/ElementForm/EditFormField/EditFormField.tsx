@@ -118,12 +118,15 @@ export default function EditFormField(props: IProps) {
           key: form.getFieldValue('key'),
           id: form.getFieldValue('id'),
           label: form.getFieldValue('label'),
-          type: form.getFieldValue('type'),
-          customType: form.getFieldValue('customType'),
+          type:
+            form.getFieldValue('type') === form_field_type.custom
+              ? form.getFieldValue('customType')
+              : form.getFieldValue('type'),
+          datePattern: form.getFieldValue('datePattern'),
           defaultValue: form.getFieldValue('defaultValue'),
-          values: enumValueRows,
+          enumValues: enumValueRows,
           properties: propertyRows,
-          validation: constraintRows,
+          constraints: constraintRows,
         });
         closeDrawer();
       })
