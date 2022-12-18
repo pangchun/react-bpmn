@@ -4,6 +4,7 @@ import {
   Empty,
   Form,
   Input,
+  notification,
   Select,
   Space,
   Table,
@@ -17,7 +18,6 @@ import {
 } from '@/bpmn/panel/ElementForm/dataSelf';
 import { useAppSelector } from '@/redux/hook/hooks';
 import { extractFormData } from '@/bpmn/util/panelUtil';
-import { UUIdGenerator } from '@/bpmn/util/idUtil';
 
 interface IProps {
   businessObject: any;
@@ -73,14 +73,7 @@ export default function ElementForm(props: IProps) {
     let fields: Array<any> = encapsulateFormFields(formData);
     setFormFields(fields);
     // 构造业务标识下拉项
-    let businessKeyOptions: Array<any> =
-      fields?.map((e) => {
-        return {
-          name: e.label,
-          value: e.id,
-        };
-      }) || [];
-    setBusinessKeyOptions(businessKeyOptions);
+    createBusinessKeySelectOptions(fields);
 
     /**
      * 封装表单字段
@@ -152,7 +145,6 @@ export default function ElementForm(props: IProps) {
    * @param option [key, value, children]
    */
   function updateBusinessKey(option: any) {
-    console.log(option);
     let { key, value } = option;
     if (key === 'no') {
       // 如果选择无，则默认没有业务标识
@@ -165,6 +157,22 @@ export default function ElementForm(props: IProps) {
         businessKey: value,
       },
     );
+  }
+
+  /**
+   * 构造业务标识下拉项
+   *
+   * @param fields
+   */
+  function createBusinessKeySelectOptions(fields: Array<any>) {
+    let businessKeyOptions: Array<any> =
+      fields?.map((e) => {
+        return {
+          name: e.label,
+          value: e.id,
+        };
+      }) || [];
+    setBusinessKeyOptions(businessKeyOptions);
   }
 
   /**
@@ -225,15 +233,8 @@ export default function ElementForm(props: IProps) {
       formData.fields.splice(key - 1, 1, fieldConfigObj);
     }
 
-    // 更新业务标识下拉项 todo 每次新增编辑或删除都要重新渲染下拉项，抽取成一个方法
-    let businessKeyOptions: Array<any> =
-      newFormFields?.map((e) => {
-        return {
-          name: e.label,
-          value: e.id,
-        };
-      }) || [];
-    setBusinessKeyOptions(businessKeyOptions);
+    // 更新业务标识下拉项
+    createBusinessKeySelectOptions(newFormFields);
 
     /**
      * 创建表单字段
@@ -298,11 +299,31 @@ export default function ElementForm(props: IProps) {
     }
   }
 
+  /**
+   * 删除表单字段
+   *
+   * @param key
+   */
   function removeFormField(key: number) {
-    // 更新业务标识
     // 删除表格中的字段
+    let newFormFields: Array<any> = [...formFields];
+    newFormFields.splice(key - 1, 1);
+    newFormFields = newFormFields.map((el, index) => {
+      el.key = index + 1;
+      return el;
+    });
+    setFormFields(newFormFields);
     //  删除FormData中的字段
+    formData.fields.splice(key - 1, 1);
     // 重构业务标识下拉项
+    createBusinessKeySelectOptions(newFormFields);
+    // 提示通知
+    notification.open({
+      message: <span style={{ color: 'red' }}>{'删除字段'}</span>,
+      placement: 'top',
+      duration: 2,
+      description: `已删除序号为 ${key} 的表单字段`,
+    });
   }
 
   // 列
