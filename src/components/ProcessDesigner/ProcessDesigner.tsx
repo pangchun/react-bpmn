@@ -24,8 +24,8 @@ import 'bpmn-js-properties-panel/dist/assets/element-templates.css';
 import 'bpmn-js-properties-panel/dist/assets/properties-panel.css';
 
 // 引入翻译模块
-import translateCN from '@/bpmn/translate/zh.js';
-import translateCustom from '@/bpmn/translate/customTranslate.js';
+import translationsCN from '@/bpmn/translate/zh.js';
+import customTranslate from '@/bpmn/translate/customTranslate.js';
 
 // 引入流程图文件
 import DefaultEmptyXML from '@/bpmn/constant/emptyXml';
@@ -52,7 +52,6 @@ import {
 } from '@/bpmn/constant/constants';
 import ButtonGroup from 'antd/es/button/button-group';
 import { handleProcessId, handleProcessName } from '@/redux/slice/bpmnSlice';
-import customTranslate from '@/bpmn/translate/customTranslate.js';
 
 export default function ProcessDesigner() {
   // state
@@ -113,10 +112,11 @@ export default function ProcessDesigner() {
         modules.push(activitiExtension);
       }
       // 添加翻译模块
-      // const TranslateModule = {
-      //   translate: ["value", customTranslate(this.translations || translationsCN)]
-      // };
-      // modules.push(TranslateModule);
+      const TranslateModule = {
+        // translate: ["value", customTranslate(translations || translationsCN)] translations是自定义的翻译文件
+        translate: ['value', customTranslate(translationsCN)],
+      };
+      modules.push(TranslateModule);
       return modules;
     }
 
