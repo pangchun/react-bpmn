@@ -22,6 +22,7 @@ import {
 import { initBpmnInstance } from '@/bpmn/util/windowUtil';
 import { useAppSelector } from '@/redux/hook/hooks';
 import { defaultData } from '@/pages/globalTheme';
+import FlowCondition from '@/bpmn/panel/FlowCondition/FlowCondition';
 
 interface IProps {
   modeler: any;
@@ -153,6 +154,37 @@ export default function PropertyPanel(props: IProps) {
         <ElementBaseInfo businessObject={businessObject} />
       </Collapse.Panel>
     );
+  }
+
+  /**
+   * 渲染 流转条件 组件
+   */
+  function renderFlowCondition() {
+    let conditionFormVisible: boolean = !!(
+      element?.type === 'bpmn:SequenceFlow' &&
+      element?.source &&
+      element?.source?.type?.indexOf('StartEvent') === -1
+    );
+    if (conditionFormVisible) {
+      return (
+        <Collapse.Panel
+          header={
+            <Typography
+              style={{ color: defaultData.colorPrimary, fontWeight: 'bold' }}
+            >
+              <BulbTwoTone twoToneColor={defaultData.colorPrimary} />
+              &nbsp;流转条件
+            </Typography>
+          }
+          key={12}
+          style={{ backgroundColor: '#FFF' }}
+          showArrow={true}
+          forceRender={false}
+        >
+          <FlowCondition businessObject={businessObject} />
+        </Collapse.Panel>
+      );
+    }
   }
 
   /**
@@ -380,6 +412,7 @@ export default function PropertyPanel(props: IProps) {
           destroyInactivePanel={true}
         >
           {renderElementBaseInfo()}
+          {renderFlowCondition()}
           {renderSignalMessage()}
           {renderElementForm()}
           {renderElementTask()}
