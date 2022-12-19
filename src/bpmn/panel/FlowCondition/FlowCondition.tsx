@@ -45,7 +45,7 @@ export default function FlowCondition(props: IProps) {
     if (businessObject) {
       initPageData();
     }
-  }, [businessObject?.id]);
+  }, [businessObject?.id, businessObject?.conditionExpression]);
 
   /**
    * 初始化页面数据
