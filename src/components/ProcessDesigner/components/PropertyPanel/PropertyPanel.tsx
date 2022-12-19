@@ -18,6 +18,7 @@ import {
   FileTwoTone,
   NotificationOutlined,
   OrderedListOutlined,
+  RetweetOutlined,
 } from '@ant-design/icons';
 import { initBpmnInstance } from '@/bpmn/util/windowUtil';
 import { useAppSelector } from '@/redux/hook/hooks';
@@ -172,7 +173,7 @@ export default function PropertyPanel(props: IProps) {
             <Typography
               style={{ color: defaultData.colorPrimary, fontWeight: 'bold' }}
             >
-              <BulbTwoTone twoToneColor={defaultData.colorPrimary} />
+              <RetweetOutlined twoToneColor={defaultData.colorPrimary} />
               &nbsp;流转条件
             </Typography>
           }
