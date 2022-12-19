@@ -27,6 +27,10 @@ import 'bpmn-js-properties-panel/dist/assets/properties-panel.css';
 import translationsCN from '@/bpmn/translate/zh.js';
 import customTranslate from '@/bpmn/translate/customTranslate.js';
 
+// 模拟流转流程
+import TokenSimulationModule from 'bpmn-js-token-simulation';
+import 'bpmn-js-token-simulation/assets/css/bpmn-js-token-simulation.css';
+
 // 引入流程图文件
 import DefaultEmptyXML from '@/bpmn/constant/emptyXml';
 
@@ -37,8 +41,8 @@ import { Button, Col, Dropdown, MenuProps, message, Row, Space } from 'antd';
 import PropertyPanel from '@/components/ProcessDesigner/components/PropertyPanel/PropertyPanel';
 import Previewer from '@/components/ProcessDesigner/components/Previewer/Previewer';
 import {
+  BugOutlined,
   DownloadOutlined,
-  EditOutlined,
   EyeOutlined,
   FolderOpenOutlined,
 } from '@ant-design/icons';
@@ -52,10 +56,12 @@ import {
 } from '@/bpmn/constant/constants';
 import ButtonGroup from 'antd/es/button/button-group';
 import { handleProcessId, handleProcessName } from '@/redux/slice/bpmnSlice';
+import { useBoolean } from 'ahooks';
 
 export default function ProcessDesigner() {
   // state
   const [bpmnModeler, setBpmnModeler] = useState<any>();
+  const [simulationStatus, setSimulationStatus] = useState<boolean>(false);
   // redux
   const bpmnPrefix = useAppSelector((state) => state.bpmn.prefix);
   const processId = useAppSelector((state) => state.bpmn.processId);
@@ -117,6 +123,8 @@ export default function ProcessDesigner() {
         translate: ['value', customTranslate(translationsCN)],
       };
       modules.push(TranslateModule);
+      // 添加模拟流转模块
+      modules.push(TokenSimulationModule);
       return modules;
     }
 
@@ -401,6 +409,31 @@ export default function ProcessDesigner() {
   }
 
   /**
+   * 渲染模拟流转按钮
+   */
+  function renderSimulationButton() {
+    function handleSimulation() {
+      bpmnModeler.get('toggleMode').toggleMode();
+      setSimulationStatus(!simulationStatus);
+    }
+
+    return (
+      <>
+        <Button
+          type="primary"
+          size={'small'}
+          onClick={(e) => handleSimulation()}
+        >
+          <Space>
+            <BugOutlined />
+            {simulationStatus ? '退出模拟' : '开启模拟'}
+          </Space>
+        </Button>
+      </>
+    );
+  }
+
+  /**
    * 渲染顶部工具栏
    */
   function renderToolBar() {
@@ -416,6 +449,7 @@ export default function ProcessDesigner() {
             {renderImportButton()}
             {renderDownloadButton()}
             {renderPreviewButton()}
+            {renderSimulationButton()}
           </ButtonGroup>
           <ConfigServer />
         </Space>

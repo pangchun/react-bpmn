@@ -28,6 +28,7 @@
     "antd": "5.x",
     "bpmn-js": "^9.0.3",
     "bpmn-js-properties-panel": "^1.0.0",
+    "bpmn-js-token-simulation": "^0.28.0",
     "camunda-bpmn-moddle": "^6.1.2",
     "moment": "^2.29.3",
     "react": "^17.0.2",
