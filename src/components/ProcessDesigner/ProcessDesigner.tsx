@@ -56,7 +56,10 @@ import {
   DownloadOutlined,
   EyeOutlined,
   FolderOpenOutlined,
+  RedoOutlined,
   SearchOutlined,
+  SyncOutlined,
+  UndoOutlined,
   ZoomInOutlined,
   ZoomOutOutlined,
 } from '@ant-design/icons';
@@ -76,6 +79,8 @@ export default function ProcessDesigner() {
   const [bpmnModeler, setBpmnModeler] = useState<any>();
   const [simulationStatus, setSimulationStatus] = useState<boolean>(false);
   const [zoomSize, setZoomSize] = useState<number>(1);
+  const [revocable, setRevocable] = useState<boolean>(false);
+  const [recoverable, setRecoverable] = useState<boolean>(false);
   // redux
   const bpmnPrefix = useAppSelector((state) => state.bpmn.prefix);
   const processId = useAppSelector((state) => state.bpmn.processId);
@@ -218,7 +223,12 @@ export default function ProcessDesigner() {
   function bindPropertiesListener() {
     console.log('【绑定属性面板监听器】1、开始绑定');
     bpmnModeler?.on('commandStack.changed', async () => {
-      // 这里可以执行一些其他操作
+      // 监听当前是否可撤销与恢复
+      let revocable: boolean = bpmnModeler.get('commandStack').canUndo();
+      let recoverable: boolean = bpmnModeler.get('commandStack').canRedo();
+      setRevocable(revocable);
+      setRecoverable(recoverable);
+      //  其它操作
     });
     console.log('【绑定属性面板监听器】2、绑定成功');
   }
@@ -249,7 +259,7 @@ export default function ProcessDesigner() {
             refFile.current.click();
           }}
         >
-          {'打开本地文件'}
+          {'打开文件'}
         </Button>
         <input
           type={'file'}
@@ -450,7 +460,7 @@ export default function ProcessDesigner() {
   /**
    * 渲染 视图操作按钮组
    */
-  function renderZoomButton() {
+  function renderScaleControlButtons() {
     const zoomStep = 0.1;
 
     function handleZoomIn() {
@@ -515,6 +525,57 @@ export default function ProcessDesigner() {
   }
 
   /**
+   * 渲染 撤销恢复按钮组
+   */
+  function renderStackControlButtons() {
+    function handleUndo() {
+      bpmnModeler.get('commandStack').undo();
+    }
+
+    function handleRedo() {
+      bpmnModeler.get('commandStack').redo();
+    }
+
+    function handleRestart() {
+      createBpmnDiagram();
+    }
+
+    return (
+      <>
+        <Tooltip title="撤销">
+          <Button
+            type={'default'}
+            size={'small'}
+            style={{ width: '45px' }}
+            disabled={!revocable}
+            icon={<UndoOutlined />}
+            onClick={handleUndo}
+          />
+        </Tooltip>
+        <Tooltip title="恢复">
+          <Button
+            type={'default'}
+            size={'small'}
+            style={{ width: '45px' }}
+            disabled={!recoverable}
+            icon={<RedoOutlined />}
+            onClick={handleRedo}
+          />
+        </Tooltip>
+        <Tooltip title="重新绘制">
+          <Button
+            type={'default'}
+            size={'small'}
+            style={{ width: '45px' }}
+            icon={<SyncOutlined />}
+            onClick={handleRestart}
+          />
+        </Tooltip>
+      </>
+    );
+  }
+
+  /**
    * 渲染顶部工具栏
    */
   function renderToolBar() {
@@ -525,7 +586,7 @@ export default function ProcessDesigner() {
           size={8}
           style={{ marginTop: 3, marginBottom: 3 }}
         >
-          {/* 操作按钮组 */}
+          {/* 基本操作按钮组 */}
           <ButtonGroup>
             {renderImportButton()}
             {renderDownloadButton()}
@@ -533,7 +594,9 @@ export default function ProcessDesigner() {
             {renderSimulationButton()}
           </ButtonGroup>
           {/* 缩放按钮组 */}
-          <ButtonGroup>{renderZoomButton()}</ButtonGroup>
+          <ButtonGroup>{renderScaleControlButtons()}</ButtonGroup>
+          {/* 撤销按钮组 */}
+          <ButtonGroup>{renderStackControlButtons()}</ButtonGroup>
           {/*配置中心按钮*/}
           <ConfigServer />
         </Space>
