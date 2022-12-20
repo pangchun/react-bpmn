@@ -474,6 +474,12 @@ export default function ProcessDesigner() {
     function handleOpen(
       align: 'left' | 'right' | 'top' | 'bottom' | 'center' | 'middle',
     ) {
+      const Selection = bpmnModeler.get('selection');
+      const SelectedElements = Selection.get();
+      if (!SelectedElements || SelectedElements.length <= 1) {
+        message.warning('请按住 Shift 键选择多个元素对齐').then(() => {});
+        return;
+      }
       setAlign(align);
       setOpen(true);
     }
