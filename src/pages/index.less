@@ -3,7 +3,86 @@ body {
   margin-bottom: 0;
 }
 
-// 隐藏模拟流转的toggle按钮 (这里是作为全局生效的)
+// 隐藏模拟流转的toggle按钮
 .bts-toggle-mode {
   display: none;
+}
+
+//侧边栏配置
+.djs-palette.open {
+  .djs-palette-entries {
+    div[class^='bpmn-icon-']:before,
+    div[class*='bpmn-icon-']:before {
+      line-height: unset;
+    }
+    div.entry {
+      position: relative;
+    }
+    div.entry:hover {
+      &::after {
+        width: max-content;
+        content: attr(title);
+        vertical-align: text-bottom;
+        position: absolute;
+        right: -10px;
+        top: 0;
+        bottom: 0;
+        overflow: hidden;
+        transform: translateX(100%);
+        font-size: 0.5em;
+        display: inline-block;
+        text-decoration: inherit;
+        font-variant: normal;
+        text-transform: none;
+        background: #fafafa;
+        box-shadow: 0 0 6px #eeeeee;
+        border: 1px solid #cccccc;
+        box-sizing: border-box;
+        padding: 0 16px;
+        border-radius: 4px;
+        z-index: 100;
+      }
+    }
+  }
+}
+
+// palette内的元素: hover效果
+.djs-palette .entry:hover {
+  color: #ff33cc;
+}
+
+// palette内的元素(抓手工具、套索工具、空间工具、全局连接工具): 选中效果
+.djs-palette .highlighted-entry {
+  color: #ff33cc !important;
+}
+
+// 元素外的虚线框: 选中效果
+.djs-element.selected .djs-outline {
+  stroke: #ff33cc;
+  stroke-width: 1px;
+}
+
+// 元素外的虚线框: hover效果
+.djs-element.hover .djs-outline {
+  stroke: #ff33cc;
+  stroke-width: 1px;
+}
+
+// palette内的元素(创建分组工具): 选中效果
+svg.new-parent {
+  background: var(--shape-drop-allowed-fill-color) !important;
+}
+
+// 页面元素：拖取样式
+.djs-dragger * {
+  fill: none !important;
+  stroke: #ff33cc !important;
+}
+
+// 对齐线：拖动元素对齐时的对齐线样式
+.djs-snap-line {
+  stroke: #ff33cc;
+  stroke-linecap: round;
+  stroke-width: 2px;
+  pointer-events: none;
 }
