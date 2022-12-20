@@ -35,16 +35,30 @@ import 'bpmn-js-token-simulation/assets/css/bpmn-js-token-simulation.css';
 import DefaultEmptyXML from '@/bpmn/constant/emptyXml';
 
 // 引入当前组件样式
-import { Button, Col, Dropdown, MenuProps, message, Row, Space } from 'antd';
+import {
+  Button,
+  Col,
+  Dropdown,
+  MenuProps,
+  message,
+  Row,
+  Space,
+  Tooltip,
+} from 'antd';
 
 // 组件引入
 import PropertyPanel from '@/components/ProcessDesigner/components/PropertyPanel/PropertyPanel';
 import Previewer from '@/components/ProcessDesigner/components/Previewer/Previewer';
 import {
+  BorderInnerOutlined,
   BugOutlined,
+  CompressOutlined,
   DownloadOutlined,
   EyeOutlined,
   FolderOpenOutlined,
+  SearchOutlined,
+  ZoomInOutlined,
+  ZoomOutOutlined,
 } from '@ant-design/icons';
 import ConfigServer from '@/components/ProcessDesigner/components/ConfigServer/ConfigServer';
 
@@ -56,12 +70,12 @@ import {
 } from '@/bpmn/constant/constants';
 import ButtonGroup from 'antd/es/button/button-group';
 import { handleProcessId, handleProcessName } from '@/redux/slice/bpmnSlice';
-import { useBoolean } from 'ahooks';
 
 export default function ProcessDesigner() {
   // state
   const [bpmnModeler, setBpmnModeler] = useState<any>();
   const [simulationStatus, setSimulationStatus] = useState<boolean>(false);
+  const [zoomSize, setZoomSize] = useState<number>(1);
   // redux
   const bpmnPrefix = useAppSelector((state) => state.bpmn.prefix);
   const processId = useAppSelector((state) => state.bpmn.processId);
@@ -426,9 +440,76 @@ export default function ProcessDesigner() {
         >
           <Space>
             <BugOutlined />
-            {simulationStatus ? '退出模拟' : '开启模拟'}
+            {simulationStatus ? '退出' : '模拟'}
           </Space>
         </Button>
+      </>
+    );
+  }
+
+  /**
+   * 渲染 视图操作按钮组
+   */
+  function renderZoomButton() {
+    const zoomStep = 0.1;
+
+    function handleZoomIn() {
+      let newSize: number = Math.floor(zoomSize * 100 + zoomStep * 100) / 100;
+      if (newSize > 4) {
+        newSize = 4;
+        message.warning('已达到最大倍数 400%, 不能继续放大').then(() => {});
+      }
+      setZoomSize(newSize);
+      bpmnModeler.get('canvas').zoom(newSize);
+    }
+
+    function handleZoomOut() {
+      let newSize: number = Math.floor(zoomSize * 100 - zoomStep * 100) / 100;
+      if (newSize < 0.2) {
+        newSize = 0.2;
+        message.warning('已达到最小倍数 20%, 不能继续缩小').then(() => {});
+      }
+      setZoomSize(newSize);
+      bpmnModeler.get('canvas').zoom(newSize);
+    }
+
+    function resetZoom() {
+      setZoomSize(1);
+      bpmnModeler.get('canvas').zoom('fit-viewport', 'auto');
+    }
+
+    return (
+      <>
+        <Tooltip title="缩小视图">
+          <Button
+            type={'default'}
+            size={'small'}
+            style={{ width: '45px' }}
+            icon={<ZoomOutOutlined />}
+            onClick={handleZoomOut}
+          />
+        </Tooltip>
+        <Button type={'default'} size={'small'} style={{ width: '65px' }}>
+          {Math.floor(zoomSize * 10 * 10) + '%'}
+        </Button>
+        <Tooltip title="放大视图">
+          <Button
+            type={'default'}
+            size={'small'}
+            style={{ width: '45px' }}
+            icon={<ZoomInOutlined />}
+            onClick={handleZoomIn}
+          />
+        </Tooltip>
+        <Tooltip title="重置视图并居中">
+          <Button
+            type={'default'}
+            size={'small'}
+            style={{ width: '45px' }}
+            icon={<CompressOutlined />}
+            onClick={resetZoom}
+          />
+        </Tooltip>
       </>
     );
   }
@@ -441,16 +522,19 @@ export default function ProcessDesigner() {
       <>
         <Space
           direction={'horizontal'}
-          size={3}
+          size={8}
           style={{ marginTop: 3, marginBottom: 3 }}
         >
-          {/*按钮组：打开、下载、预览*/}
+          {/* 操作按钮组 */}
           <ButtonGroup>
             {renderImportButton()}
             {renderDownloadButton()}
             {renderPreviewButton()}
             {renderSimulationButton()}
           </ButtonGroup>
+          {/* 缩放按钮组 */}
+          <ButtonGroup>{renderZoomButton()}</ButtonGroup>
+          {/*配置中心按钮*/}
           <ConfigServer />
         </Space>
       </>
