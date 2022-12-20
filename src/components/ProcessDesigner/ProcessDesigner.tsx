@@ -41,6 +41,7 @@ import {
   Dropdown,
   MenuProps,
   message,
+  Modal,
   Row,
   Space,
   Tooltip,
@@ -50,18 +51,22 @@ import {
 import PropertyPanel from '@/components/ProcessDesigner/components/PropertyPanel/PropertyPanel';
 import Previewer from '@/components/ProcessDesigner/components/Previewer/Previewer';
 import {
-  BorderInnerOutlined,
+  AlignLeftOutlined,
+  AlignRightOutlined,
+  VerticalAlignBottomOutlined,
+  AlignCenterOutlined,
   BugOutlined,
   CompressOutlined,
   DownloadOutlined,
   EyeOutlined,
   FolderOpenOutlined,
   RedoOutlined,
-  SearchOutlined,
   SyncOutlined,
   UndoOutlined,
   ZoomInOutlined,
   ZoomOutOutlined,
+  VerticalAlignTopOutlined,
+  VerticalAlignMiddleOutlined,
 } from '@ant-design/icons';
 import ConfigServer from '@/components/ProcessDesigner/components/ConfigServer/ConfigServer';
 
@@ -446,13 +451,111 @@ export default function ProcessDesigner() {
         <Button
           type="primary"
           size={'small'}
-          onClick={(e) => handleSimulation()}
+          onClick={() => handleSimulation()}
         >
           <Space>
             <BugOutlined />
             {simulationStatus ? '退出' : '模拟'}
           </Space>
         </Button>
+      </>
+    );
+  }
+
+  /**
+   * 渲染 对齐按钮组
+   */
+  function renderAlignControlButtons() {
+    const [open, setOpen] = useState(false);
+    const [align, setAlign] = useState<
+      'left' | 'right' | 'top' | 'bottom' | 'center' | 'middle'
+    >('left');
+
+    function handleOpen(
+      align: 'left' | 'right' | 'top' | 'bottom' | 'center' | 'middle',
+    ) {
+      setAlign(align);
+      setOpen(true);
+    }
+
+    function handleElAlign() {
+      const Align = bpmnModeler.get('alignElements');
+      const Selection = bpmnModeler.get('selection');
+      const SelectedElements = Selection.get();
+      if (!SelectedElements || SelectedElements.length <= 1) {
+        message.warning('请按住 Ctrl 键选择多个元素对齐').then(() => {});
+        return;
+      }
+      Align.trigger(SelectedElements, align);
+      setOpen(false);
+    }
+
+    return (
+      <>
+        <Modal
+          title="确认对齐"
+          okText={'确认'}
+          cancelText={'取消'}
+          open={open}
+          onOk={() => handleElAlign()}
+          onCancel={() => setOpen(false)}
+        >
+          <p>{'自动对齐可能造成图形变形,是否继续?'}</p>
+        </Modal>
+        <Tooltip title="向左对齐">
+          <Button
+            type={'default'}
+            size={'small'}
+            style={{ width: '45px' }}
+            icon={<AlignLeftOutlined />}
+            onClick={() => handleOpen('left')}
+          />
+        </Tooltip>
+        <Tooltip title="向右对齐">
+          <Button
+            type={'default'}
+            size={'small'}
+            style={{ width: '45px' }}
+            icon={<AlignRightOutlined />}
+            onClick={() => handleOpen('right')}
+          />
+        </Tooltip>
+        <Tooltip title="向上对齐">
+          <Button
+            type={'default'}
+            size={'small'}
+            style={{ width: '45px' }}
+            icon={<VerticalAlignTopOutlined />}
+            onClick={() => handleOpen('top')}
+          />
+        </Tooltip>
+        <Tooltip title="向下对齐">
+          <Button
+            type={'default'}
+            size={'small'}
+            style={{ width: '45px' }}
+            icon={<VerticalAlignBottomOutlined />}
+            onClick={() => handleOpen('bottom')}
+          />
+        </Tooltip>
+        <Tooltip title="水平居中">
+          <Button
+            type={'default'}
+            size={'small'}
+            style={{ width: '45px' }}
+            icon={<AlignCenterOutlined />}
+            onClick={() => handleOpen('center')}
+          />
+        </Tooltip>
+        <Tooltip title="垂直居中">
+          <Button
+            type={'default'}
+            size={'small'}
+            style={{ width: '45px' }}
+            icon={<VerticalAlignMiddleOutlined />}
+            onClick={() => handleOpen('middle')}
+          />
+        </Tooltip>
       </>
     );
   }
@@ -593,6 +696,8 @@ export default function ProcessDesigner() {
             {renderPreviewButton()}
             {renderSimulationButton()}
           </ButtonGroup>
+          {/* 对齐按钮组 */}
+          <ButtonGroup>{renderAlignControlButtons()}</ButtonGroup>
           {/* 缩放按钮组 */}
           <ButtonGroup>{renderScaleControlButtons()}</ButtonGroup>
           {/* 撤销按钮组 */}
