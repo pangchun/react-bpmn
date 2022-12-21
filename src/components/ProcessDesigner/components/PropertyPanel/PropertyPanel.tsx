@@ -22,7 +22,6 @@ import {
 } from '@ant-design/icons';
 import { initBpmnInstance } from '@/bpmn/util/windowUtil';
 import { useAppSelector } from '@/redux/hook/hooks';
-import { defaultData } from '@/pages/globalTheme';
 import FlowCondition from '@/bpmn/panel/FlowCondition/FlowCondition';
 
 interface IProps {
@@ -46,6 +45,7 @@ export default function PropertyPanel(props: IProps) {
   const [rootElements, setRootElements] = useState([]);
   // redux
   const processId = useAppSelector((state) => state.bpmn.processId);
+  const colorPrimary = useAppSelector((state) => state.theme.colorPrimary);
 
   /**
    * 初始化
@@ -71,7 +71,8 @@ export default function PropertyPanel(props: IProps) {
         confirmCurrentElement(null);
         // 获取rootElements
         setRootElements(modeler.getDefinitions().rootElements);
-        window.bpmnInstance.rootElements = modeler.getDefinitions().rootElements;
+        window.bpmnInstance.rootElements =
+          modeler.getDefinitions().rootElements;
       });
       // 设置监听器，监听选中节点变化 (特别注意：监听器只能设置一次，如果执行多次，会设置多个监听器)
       modeler?.on('selection.changed', (e: any) => {
@@ -140,10 +141,8 @@ export default function PropertyPanel(props: IProps) {
     return (
       <Collapse.Panel
         header={
-          <Typography
-            style={{ color: defaultData.colorPrimary, fontWeight: 'bold' }}
-          >
-            <BulbTwoTone twoToneColor={defaultData.colorPrimary} />
+          <Typography style={{ color: colorPrimary, fontWeight: 'bold' }}>
+            <BulbTwoTone twoToneColor={colorPrimary} />
             &nbsp;常规信息
           </Typography>
         }
@@ -170,10 +169,8 @@ export default function PropertyPanel(props: IProps) {
       return (
         <Collapse.Panel
           header={
-            <Typography
-              style={{ color: defaultData.colorPrimary, fontWeight: 'bold' }}
-            >
-              <RetweetOutlined twoToneColor={defaultData.colorPrimary} />
+            <Typography style={{ color: colorPrimary, fontWeight: 'bold' }}>
+              <RetweetOutlined twoToneColor={colorPrimary} />
               &nbsp;流转条件
             </Typography>
           }
@@ -197,10 +194,8 @@ export default function PropertyPanel(props: IProps) {
       return (
         <Collapse.Panel
           header={
-            <Typography
-              style={{ color: defaultData.colorPrimary, fontWeight: 'bold' }}
-            >
-              <NotificationOutlined twoToneColor={defaultData.colorPrimary} />
+            <Typography style={{ color: colorPrimary, fontWeight: 'bold' }}>
+              <NotificationOutlined twoToneColor={colorPrimary} />
               &nbsp;消息与信号
             </Typography>
           }
@@ -227,10 +222,8 @@ export default function PropertyPanel(props: IProps) {
       return (
         <Collapse.Panel
           header={
-            <Typography
-              style={{ color: defaultData.colorPrimary, fontWeight: 'bold' }}
-            >
-              <AuditOutlined twoToneColor={defaultData.colorPrimary} />
+            <Typography style={{ color: colorPrimary, fontWeight: 'bold' }}>
+              <AuditOutlined twoToneColor={colorPrimary} />
               &nbsp;表单
             </Typography>
           }
@@ -254,10 +247,8 @@ export default function PropertyPanel(props: IProps) {
       return (
         <Collapse.Panel
           header={
-            <Typography
-              style={{ color: defaultData.colorPrimary, fontWeight: 'bold' }}
-            >
-              <OrderedListOutlined twoToneColor={defaultData.colorPrimary} />
+            <Typography style={{ color: colorPrimary, fontWeight: 'bold' }}>
+              <OrderedListOutlined twoToneColor={colorPrimary} />
               &nbsp;{'任务'}
             </Typography>
           }
@@ -281,10 +272,8 @@ export default function PropertyPanel(props: IProps) {
       return (
         <Collapse.Panel
           header={
-            <Typography
-              style={{ color: defaultData.colorPrimary, fontWeight: 'bold' }}
-            >
-              <AppstoreOutlined twoToneColor={defaultData.colorPrimary} />
+            <Typography style={{ color: colorPrimary, fontWeight: 'bold' }}>
+              <AppstoreOutlined twoToneColor={colorPrimary} />
               &nbsp;多实例
             </Typography>
           }
@@ -307,10 +296,8 @@ export default function PropertyPanel(props: IProps) {
     return (
       <Collapse.Panel
         header={
-          <Typography
-            style={{ color: defaultData.colorPrimary, fontWeight: 'bold' }}
-          >
-            <BellOutlined twoToneColor={defaultData.colorPrimary} />
+          <Typography style={{ color: colorPrimary, fontWeight: 'bold' }}>
+            <BellOutlined twoToneColor={colorPrimary} />
             &nbsp;执行监听器
           </Typography>
         }
@@ -333,10 +320,8 @@ export default function PropertyPanel(props: IProps) {
       return (
         <Collapse.Panel
           header={
-            <Typography
-              style={{ color: defaultData.colorPrimary, fontWeight: 'bold' }}
-            >
-              <BellOutlined twoToneColor={defaultData.colorPrimary} />
+            <Typography style={{ color: colorPrimary, fontWeight: 'bold' }}>
+              <BellOutlined twoToneColor={colorPrimary} />
               &nbsp;任务监听器
             </Typography>
           }
@@ -359,10 +344,8 @@ export default function PropertyPanel(props: IProps) {
     return (
       <Collapse.Panel
         header={
-          <Typography
-            style={{ color: defaultData.colorPrimary, fontWeight: 'bold' }}
-          >
-            <DatabaseTwoTone twoToneColor={defaultData.colorPrimary} />
+          <Typography style={{ color: colorPrimary, fontWeight: 'bold' }}>
+            <DatabaseTwoTone twoToneColor={colorPrimary} />
             &nbsp;扩展属性
           </Typography>
         }
@@ -384,10 +367,8 @@ export default function PropertyPanel(props: IProps) {
     return (
       <Collapse.Panel
         header={
-          <Typography
-            style={{ color: defaultData.colorPrimary, fontWeight: 'bold' }}
-          >
-            <FileTwoTone twoToneColor={defaultData.colorPrimary} />
+          <Typography style={{ color: colorPrimary, fontWeight: 'bold' }}>
+            <FileTwoTone twoToneColor={colorPrimary} />
             &nbsp;元素文档
           </Typography>
         }

@@ -2,6 +2,7 @@ import React, { Ref, useImperativeHandle, useState } from 'react';
 import { Form, Input, Modal, Typography } from 'antd';
 import { EditOutlined } from '@ant-design/icons';
 import { defaultData } from '@/pages/globalTheme';
+import { useAppSelector } from '@/redux/hook/hooks';
 
 interface IProps {
   onRef: Ref<any>;
@@ -19,6 +20,8 @@ export default function EditConstraint(props: IProps) {
   const { onRef, reFreshParent } = props;
   // state
   const [open, setOpen] = useState(false);
+  // redux
+  const colorPrimary = useAppSelector((state) => state.theme.colorPrimary);
   // form
   const [form] = Form.useForm<{
     key: number;
@@ -80,7 +83,7 @@ export default function EditConstraint(props: IProps) {
         width={500}
         style={{ maxHeight: '50vh' }}
         title={
-          <Typography style={{ color: defaultData.colorPrimary }}>
+          <Typography style={{ color: colorPrimary }}>
             {'编辑约束条件'}
           </Typography>
         }

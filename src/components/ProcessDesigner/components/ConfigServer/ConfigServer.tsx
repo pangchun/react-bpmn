@@ -35,15 +35,17 @@ export default function ConfigServer(props: IProps) {
   // form
   const [form] = Form.useForm<{
     engineType: string;
-    primaryColor: any;
+    primaryColorObj: any;
   }>();
   // watch
-  const primaryColor: any = useWatch('primaryColor', form)?.hex;
+  const primaryColorObj: any = useWatch('primaryColorObj', form);
 
   useEffect(() => {
     form.setFieldsValue({
       engineType: 'flowable',
-      primaryColor: colorPrimary,
+      primaryColorObj: {
+        hex: colorPrimary,
+      },
     });
   }, []);
 
@@ -99,15 +101,19 @@ export default function ConfigServer(props: IProps) {
               >{`${ACTIVITI_PREFIX}`}</Radio.Button>
             </Radio.Group>
           </Form.Item>
-          <Form.Item valuePropName="color" name="primaryColor" label="主题换肤">
+          <Form.Item
+            valuePropName="color"
+            name="primaryColorObj"
+            label="主题换肤"
+          >
             <SketchPicker
               onChange={(color: any) => {
-                console.dir(color);
-                dispatch(handleColorPrimary(color.hex));
+                let newColor: string = color?.hex;
+                dispatch(handleColorPrimary(newColor));
+                document.body.style.setProperty('--primary-color', newColor);
               }}
             />
           </Form.Item>
-          <p>{primaryColor}</p>
         </Form>
       </Drawer>
     </>

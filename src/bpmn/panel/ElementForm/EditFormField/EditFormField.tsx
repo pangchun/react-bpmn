@@ -21,6 +21,7 @@ import {
 import EditConstraint from '@/bpmn/panel/ElementForm/EditFormField/EditConstraint/EditConstraint';
 import EditProperty from '@/bpmn/panel/ElementForm/EditFormField/EditProperty/EditProperty';
 import EditEnumValues from '@/bpmn/panel/ElementForm/EditFormField/EditEnumValues/EditEnumValues';
+import { useAppSelector } from '@/redux/hook/hooks';
 
 const { Option } = Select;
 
@@ -47,6 +48,8 @@ export default function EditFormField(props: IProps) {
   const editEnumValuesRef = useRef<any>();
   const editConstraintRef = useRef<any>();
   const editPropertyRef = useRef<any>();
+  // redux
+  const colorPrimary = useAppSelector((state) => state.theme.colorPrimary);
   // form
   const [form] = Form.useForm<{
     key: number;

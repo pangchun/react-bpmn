@@ -1,6 +1,7 @@
 import React, { Ref, useImperativeHandle, useState } from 'react';
 import { Form, Input, Modal, Typography } from 'antd';
 import { defaultData } from '@/pages/globalTheme';
+import { useAppSelector } from '@/redux/hook/hooks';
 
 interface IProps {
   onRef: Ref<any>;
@@ -18,6 +19,8 @@ export default function EditProperty(props: IProps) {
   const { onRef, createOrUpdate } = props;
   // state
   const [isOpen, setIsOpen] = useState(false);
+  // redux
+  const colorPrimary = useAppSelector((state) => state.theme.colorPrimary);
   // form表单
   const [form] = Form.useForm<{
     key: number;
@@ -79,9 +82,7 @@ export default function EditProperty(props: IProps) {
         width={500}
         style={{ maxHeight: '50vh' }}
         title={
-          <Typography style={{ color: defaultData.colorPrimary }}>
-            {'编辑属性'}
-          </Typography>
+          <Typography style={{ color: colorPrimary }}>{'编辑属性'}</Typography>
         }
         open={isOpen}
         okText={'确认'}
