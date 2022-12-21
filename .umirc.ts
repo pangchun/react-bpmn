@@ -4,8 +4,10 @@ export default defineConfig({
   nodeModulesTransform: {
     type: 'none',
   },
-  routes: [
-    { path: '/', component: '@/pages/index' },
-  ],
+  routes: [{ path: '/', component: '@/pages/index' }],
   fastRefresh: {},
+  // mfsu: {},
+  // theme: {
+  //   '@primary-color': '#1DA57A',
+  // },
 });

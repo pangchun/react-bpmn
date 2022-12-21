@@ -1,4 +1,9 @@
 body {
+  // CSS 变量定义
+  --primary-color: #ff33cc;
+}
+
+body {
   margin-top: 0;
   margin-bottom: 0;
 }
@@ -48,23 +53,23 @@ body {
 
 // palette内的元素: hover效果
 .djs-palette .entry:hover {
-  color: #ff33cc;
+  color: var(--primary-color);
 }
 
 // palette内的元素(抓手工具、套索工具、空间工具、全局连接工具): 选中效果
 .djs-palette .highlighted-entry {
-  color: #ff33cc !important;
+  color: var(--primary-color) !important;
 }
 
 // 元素外的虚线框: 选中效果
 .djs-element.selected .djs-outline {
-  stroke: #ff33cc;
+  stroke: var(--primary-color);
   stroke-width: 1px;
 }
 
 // 元素外的虚线框: hover效果
 .djs-element.hover .djs-outline {
-  stroke: #ff33cc;
+  stroke: var(--primary-color);
   stroke-width: 1px;
 }
 
@@ -76,12 +81,12 @@ svg.new-parent {
 // 页面元素：拖取样式
 .djs-dragger * {
   fill: none !important;
-  stroke: #ff33cc !important;
+  stroke: var(--primary-color) !important;
 }
 
 // 对齐线：拖动元素对齐时的对齐线样式
 .djs-snap-line {
-  stroke: #ff33cc;
+  stroke: var(--primary-color);
   stroke-linecap: round;
   stroke-width: 2px;
   pointer-events: none;

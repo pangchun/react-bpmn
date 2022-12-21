@@ -1,7 +1,7 @@
 import ProcessDesigner from '@/components/ProcessDesigner/ProcessDesigner';
 import { Provider } from 'react-redux';
 import { store } from '@/redux/store/store';
-import { ConfigProvider } from 'antd';
+import { Button, ConfigProvider } from 'antd';
 import { useState } from 'react';
 
 // 引入样式
@@ -24,6 +24,13 @@ export default function IndexPage() {
         <div>
           <ProcessDesigner />
         </div>
+        <Button
+          onClick={() => {
+            document.body.style.setProperty('--primary-color', '#aa8922');
+          }}
+        >
+          change
+        </Button>
       </ConfigProvider>
     </Provider>
   );
