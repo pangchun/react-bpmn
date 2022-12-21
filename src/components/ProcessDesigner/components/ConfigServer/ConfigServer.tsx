@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Drawer, FloatButton, Form, message, Radio, Space } from 'antd';
+import { SketchPicker } from 'react-color';
 import {
   EditOutlined,
   QuestionOutlined,
@@ -13,6 +14,8 @@ import {
 } from '@/bpmn/constant/constants';
 import { useAppDispatch, useAppSelector } from '@/redux/hook/hooks';
 import { handlePrefix } from '@/redux/slice/bpmnSlice';
+import { handleColorPrimary } from '@/redux/slice/themeSlice';
+import { useWatch } from 'antd/es/form/Form';
 
 interface IProps {}
 
@@ -26,15 +29,21 @@ export default function ConfigServer(props: IProps) {
   const [open, setOpen] = useState(false);
   // redux
   const bpmnPrefix = useAppSelector((state) => state.bpmn.prefix);
+  const colorPrimary = useAppSelector((state) => state.theme.colorPrimary);
+  const borderRadius = useAppSelector((state) => state.theme.borderRadius);
   const dispatch = useAppDispatch();
   // form
   const [form] = Form.useForm<{
     engineType: string;
+    primaryColor: any;
   }>();
+  // watch
+  const primaryColor: any = useWatch('primaryColor', form)?.hex;
 
   useEffect(() => {
     form.setFieldsValue({
       engineType: 'flowable',
+      primaryColor: colorPrimary,
     });
   }, []);
 
@@ -61,7 +70,7 @@ export default function ConfigServer(props: IProps) {
         />
       </FloatButton.Group>
       <Drawer
-        title="Basic Drawer"
+        title="配置中心"
         placement={'left'}
         closable={false}
         onClose={onClose}
@@ -69,13 +78,14 @@ export default function ConfigServer(props: IProps) {
         key={'left'}
         forceRender={true}
         destroyOnClose
+        width={'25%'}
         extra={
           <Space>
             <Button onClick={onClose}>收起</Button>
           </Space>
         }
       >
-        <Form labelCol={{ span: 5 }} wrapperCol={{ span: 18 }} form={form}>
+        <Form labelCol={{ span: 5 }} wrapperCol={{ span: 20 }} form={form}>
           <Form.Item label="流程引擎" name="engineType">
             <Radio.Group onChange={(e) => changeEngineType(e.target.value)}>
               <Radio.Button
@@ -89,6 +99,15 @@ export default function ConfigServer(props: IProps) {
               >{`${ACTIVITI_PREFIX}`}</Radio.Button>
             </Radio.Group>
           </Form.Item>
+          <Form.Item valuePropName="color" name="primaryColor" label="主题换肤">
+            <SketchPicker
+              onChange={(color: any) => {
+                console.dir(color);
+                dispatch(handleColorPrimary(color.hex));
+              }}
+            />
+          </Form.Item>
+          <p>{primaryColor}</p>
         </Form>
       </Drawer>
     </>

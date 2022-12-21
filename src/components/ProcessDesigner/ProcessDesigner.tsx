@@ -38,6 +38,7 @@ import DefaultEmptyXML from '@/bpmn/constant/emptyXml';
 import {
   Button,
   Col,
+  ConfigProvider,
   Dropdown,
   MenuProps,
   message,
@@ -90,6 +91,8 @@ export default function ProcessDesigner() {
   const bpmnPrefix = useAppSelector((state) => state.bpmn.prefix);
   const processId = useAppSelector((state) => state.bpmn.processId);
   const processName = useAppSelector((state) => state.bpmn.processName);
+  const colorPrimary = useAppSelector((state) => state.theme.colorPrimary);
+  const borderRadius = useAppSelector((state) => state.theme.borderRadius);
   const dispatch = useAppDispatch();
   // ref
   const refFile = React.useRef<any>();
@@ -717,33 +720,49 @@ export default function ProcessDesigner() {
 
   return (
     <>
-      <Row gutter={0}>
-        <Col span={1}>
-          {/*todo 2022/10/31 快捷工具栏，暂时留空，后面补充功能和界面*/}
-        </Col>
-        <Col span={17}>
-          {renderToolBar()}
-          <div
-            id="canvas"
+      <ConfigProvider
+        theme={{
+          token: {
+            colorPrimary: colorPrimary,
+            borderRadius: borderRadius,
+          },
+        }}
+      >
+        <Row gutter={0}>
+          <Col span={1}>
+            {/*todo 2022/10/31 快捷工具栏，暂时留空，后面补充功能和界面*/}
+          </Col>
+          <Col span={17}>
+            {renderToolBar()}
+            <div
+              id="canvas"
+              style={{
+                backgroundColor: 'transparent',
+                backgroundImage:
+                  'linear-gradient(#cccccc 1px, transparent 0), linear-gradient(90deg,#cccccc 1px, transparent 0)',
+                backgroundSize: '20px 20px',
+              }}
+            />
+          </Col>
+          <Col
+            span={6}
             style={{
-              backgroundColor: 'transparent',
-              backgroundImage:
-                'linear-gradient(#cccccc 1px, transparent 0), linear-gradient(90deg,#cccccc 1px, transparent 0)',
-              backgroundSize: '20px 20px',
+              height: '100vh',
+              overflowY: 'auto',
+              borderLeft: '1px solid #eee ',
             }}
-          />
-        </Col>
-        <Col
-          span={6}
-          style={{
-            height: '100vh',
-            overflowY: 'auto',
-            borderLeft: '1px solid #eee ',
+          >
+            <PropertyPanel modeler={bpmnModeler} />
+          </Col>
+        </Row>
+        <Button
+          onClick={() => {
+            document.body.style.setProperty('--primary-color', '#aa8922');
           }}
         >
-          <PropertyPanel modeler={bpmnModeler} />
-        </Col>
-      </Row>
+          change
+        </Button>
+      </ConfigProvider>
     </>
   );
 }
