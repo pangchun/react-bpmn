@@ -12,13 +12,6 @@ export default function IndexPage() {
       <div>
         <ProcessDesigner />
       </div>
-      <Button
-        onClick={() => {
-          document.body.style.setProperty('--primary-color', '#aa8922');
-        }}
-      >
-        change
-      </Button>
     </Provider>
   );
 }

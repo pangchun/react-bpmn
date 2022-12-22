@@ -725,6 +725,18 @@ export default function ProcessDesigner() {
           token: {
             colorPrimary: colorPrimary,
             borderRadius: borderRadius,
+            // 背景色
+            // colorBgElevated: '#000000',
+            // // 文本色
+            // colorText: 'rgba(255, 255, 255, 0.85)',
+            // colorTextSecondary: 'rgba(255, 255, 255, 0.65)',
+            // colorTextTertiary: 'rgba(255, 255, 255, 0.45)',
+            // colorTextQuaternary: 'rgba(255, 255, 255, 0.25)',
+            // // 填充色
+            // colorFill: 'rgba(255, 255, 255, 0.18)',
+            // colorFillSecondary: 'rgba(255, 255, 255, 0.12)',
+            // colorFillTertiary: 'rgba(255, 255, 255, 0.08)',
+            // colorFillQuaternary: 'rgba(255, 255, 255, 0.04)',
           },
         }}
       >
@@ -755,13 +767,6 @@ export default function ProcessDesigner() {
             <PropertyPanel modeler={bpmnModeler} />
           </Col>
         </Row>
-        <Button
-          onClick={() => {
-            document.body.style.setProperty('--primary-color', '#aa8922');
-          }}
-        >
-          change
-        </Button>
       </ConfigProvider>
     </>
   );
