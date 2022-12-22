@@ -147,7 +147,7 @@ export default function PropertyPanel(props: IProps) {
           </Typography>
         }
         key={1}
-        style={{ backgroundColor: '#FFF' }}
+        // // style={{ backgroundColor: '#FFF' }}
         showArrow={true}
         forceRender={false}
       >
@@ -175,7 +175,7 @@ export default function PropertyPanel(props: IProps) {
             </Typography>
           }
           key={12}
-          style={{ backgroundColor: '#FFF' }}
+          // style={{ backgroundColor: '#FFF' }}
           showArrow={true}
           forceRender={false}
         >
@@ -200,7 +200,7 @@ export default function PropertyPanel(props: IProps) {
             </Typography>
           }
           key={3}
-          style={{ backgroundColor: '#FFF' }}
+          // style={{ backgroundColor: '#FFF' }}
           showArrow={true}
           forceRender={false}
         >
@@ -228,7 +228,7 @@ export default function PropertyPanel(props: IProps) {
             </Typography>
           }
           key={4}
-          style={{ backgroundColor: '#FFF' }}
+          // style={{ backgroundColor: '#FFF' }}
           showArrow={true}
           forceRender={false}
         >
@@ -253,7 +253,7 @@ export default function PropertyPanel(props: IProps) {
             </Typography>
           }
           key={5}
-          style={{ backgroundColor: '#FFF' }}
+          // style={{ backgroundColor: '#FFF' }}
           showArrow={true}
           forceRender={false}
         >
@@ -278,7 +278,7 @@ export default function PropertyPanel(props: IProps) {
             </Typography>
           }
           key={6}
-          style={{ backgroundColor: '#FFF' }}
+          // style={{ backgroundColor: '#FFF' }}
           showArrow={true}
           forceRender={false}
         >
@@ -302,7 +302,7 @@ export default function PropertyPanel(props: IProps) {
           </Typography>
         }
         key={7}
-        style={{ backgroundColor: '#FFF' }}
+        // style={{ backgroundColor: '#FFF' }}
         showArrow={true}
         forceRender={false}
       >
@@ -326,7 +326,7 @@ export default function PropertyPanel(props: IProps) {
             </Typography>
           }
           key={8}
-          style={{ backgroundColor: '#FFF' }}
+          // style={{ backgroundColor: '#FFF' }}
           showArrow={true}
           forceRender={false}
         >
@@ -350,7 +350,7 @@ export default function PropertyPanel(props: IProps) {
           </Typography>
         }
         key={10}
-        style={{ backgroundColor: '#FFF' }}
+        // style={{ backgroundColor: '#FFF' }}
         showArrow={true}
         forceRender={false}
       >
@@ -373,7 +373,7 @@ export default function PropertyPanel(props: IProps) {
           </Typography>
         }
         key={11}
-        style={{ backgroundColor: '#FFF' }}
+        // style={{ backgroundColor: '#FFF' }}
         showArrow={true}
         forceRender={false}
       >

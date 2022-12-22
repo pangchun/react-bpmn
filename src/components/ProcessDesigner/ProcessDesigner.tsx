@@ -79,6 +79,7 @@ import {
 } from '@/bpmn/constant/constants';
 import ButtonGroup from 'antd/es/button/button-group';
 import { handleProcessId, handleProcessName } from '@/redux/slice/bpmnSlice';
+import { darkThemeData, defaultThemeData } from '@/pages/globalTheme';
 
 export default function ProcessDesigner() {
   // state
@@ -87,12 +88,14 @@ export default function ProcessDesigner() {
   const [zoomSize, setZoomSize] = useState<number>(1);
   const [revocable, setRevocable] = useState<boolean>(false);
   const [recoverable, setRecoverable] = useState<boolean>(false);
+  // const [darkTheme, setDarkTheme] = useState<any>();
   // redux
   const bpmnPrefix = useAppSelector((state) => state.bpmn.prefix);
   const processId = useAppSelector((state) => state.bpmn.processId);
   const processName = useAppSelector((state) => state.bpmn.processName);
   const colorPrimary = useAppSelector((state) => state.theme.colorPrimary);
   const borderRadius = useAppSelector((state) => state.theme.borderRadius);
+  const darkMode = useAppSelector((state) => state.theme.darkMode);
   const dispatch = useAppDispatch();
   // ref
   const refFile = React.useRef<any>();
@@ -725,22 +728,19 @@ export default function ProcessDesigner() {
           token: {
             colorPrimary: colorPrimary,
             borderRadius: borderRadius,
-            // 背景色
-            // colorBgElevated: '#000000',
-            // // 文本色
-            // colorText: 'rgba(255, 255, 255, 0.85)',
-            // colorTextSecondary: 'rgba(255, 255, 255, 0.65)',
-            // colorTextTertiary: 'rgba(255, 255, 255, 0.45)',
-            // colorTextQuaternary: 'rgba(255, 255, 255, 0.25)',
-            // // 填充色
-            // colorFill: 'rgba(255, 255, 255, 0.18)',
-            // colorFillSecondary: 'rgba(255, 255, 255, 0.12)',
-            // colorFillTertiary: 'rgba(255, 255, 255, 0.08)',
-            // colorFillQuaternary: 'rgba(255, 255, 255, 0.04)',
+            // 暗夜主题
+            ...(darkMode && darkThemeData),
           },
         }}
       >
-        <Row gutter={0}>
+        <Row
+          gutter={0}
+          style={{
+            backgroundColor: darkMode
+              ? defaultThemeData.darkBgColor
+              : defaultThemeData.lightBgColor,
+          }}
+        >
           <Col span={1}>
             {/*todo 2022/10/31 快捷工具栏，暂时留空，后面补充功能和界面*/}
           </Col>
@@ -749,10 +749,12 @@ export default function ProcessDesigner() {
             <div
               id="canvas"
               style={{
-                backgroundColor: 'transparent',
-                backgroundImage:
-                  'linear-gradient(#cccccc 1px, transparent 0), linear-gradient(90deg,#cccccc 1px, transparent 0)',
-                backgroundSize: '20px 20px',
+                backgroundColor: darkMode
+                  ? defaultThemeData.darkCanvasBgColor
+                  : defaultThemeData.lightCanvasBgColor,
+                // backgroundImage:
+                //   'linear-gradient(#8E8E8E 1px, transparent 0), linear-gradient(90deg,#8E8E8E 1px, transparent 0)',
+                // backgroundSize: '20px 20px',
               }}
             />
           </Col>
@@ -761,7 +763,10 @@ export default function ProcessDesigner() {
             style={{
               height: '100vh',
               overflowY: 'auto',
-              borderLeft: '1px solid #eee ',
+              backgroundColor: darkMode
+                ? defaultThemeData.darkBgColor
+                : defaultThemeData.lightBgColor,
+              // borderLeft: '1px solid #eee ',
             }}
           >
             <PropertyPanel modeler={bpmnModeler} />

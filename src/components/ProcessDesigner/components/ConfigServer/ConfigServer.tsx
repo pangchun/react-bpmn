@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Button, Drawer, FloatButton, Form, message, Radio, Space } from 'antd';
 import { SketchPicker } from 'react-color';
 import {
+  BulbFilled,
+  BulbOutlined,
   EditOutlined,
   QuestionOutlined,
   SettingOutlined,
@@ -14,8 +16,9 @@ import {
 } from '@/bpmn/constant/constants';
 import { useAppDispatch, useAppSelector } from '@/redux/hook/hooks';
 import { handlePrefix } from '@/redux/slice/bpmnSlice';
-import { handleColorPrimary } from '@/redux/slice/themeSlice';
+import { handleColorPrimary, handleDarkMode } from '@/redux/slice/themeSlice';
 import { useWatch } from 'antd/es/form/Form';
+import { defaultThemeData, ThemeData } from '@/pages/globalTheme';
 
 interface IProps {}
 
@@ -31,6 +34,7 @@ export default function ConfigServer(props: IProps) {
   const bpmnPrefix = useAppSelector((state) => state.bpmn.prefix);
   const colorPrimary = useAppSelector((state) => state.theme.colorPrimary);
   const borderRadius = useAppSelector((state) => state.theme.borderRadius);
+  const darkMode = useAppSelector((state) => state.theme.darkMode);
   const dispatch = useAppDispatch();
   // form
   const [form] = Form.useForm<{
@@ -57,6 +61,33 @@ export default function ConfigServer(props: IProps) {
     setOpen(false);
   }
 
+  function handleDark() {
+    console.log(darkMode);
+    if (darkMode) {
+      // 设置白天模式
+      dispatch(handleDarkMode(false));
+      document.body.style.setProperty(
+        '--djs-palette-bg-color',
+        defaultThemeData.lightPaletteBgColor,
+      );
+      document.body.style.setProperty(
+        '--canvas-bg-color',
+        defaultThemeData.lightCanvasBgColor,
+      );
+    } else {
+      dispatch(handleDarkMode(true));
+      document.body.style.setProperty(
+        '--djs-palette-bg-color',
+        defaultThemeData.darkPaletteBgColor,
+      );
+      document.body.style.setProperty(
+        '--canvas-bg-color',
+        defaultThemeData.darkCanvasBgColor,
+      );
+      message.info('已开启暗夜模式，呵护眼睛，更关心你');
+    }
+  }
+
   function changeEngineType(value: string) {
     dispatch(handlePrefix(value));
     message.info('流程引擎已切换为 ' + value).then(() => {});
@@ -66,6 +97,14 @@ export default function ConfigServer(props: IProps) {
     <>
       <FloatButton.Group icon={<ToolOutlined />} type="primary" trigger="hover">
         <FloatButton icon={<SettingOutlined />} onClick={showDrawer} />
+        <FloatButton
+          icon={
+            <BulbFilled
+              style={{ color: `${darkMode ? '#ffe700' : '#484848'}` }}
+            />
+          }
+          onClick={handleDark}
+        />
         <FloatButton
           icon={<QuestionOutlined />}
           onClick={() => message.info('暂未开发')}

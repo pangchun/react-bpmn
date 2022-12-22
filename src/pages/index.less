@@ -1,6 +1,8 @@
 body {
   // CSS 变量定义
   --primary-color: #ff33cc;
+  --djs-palette-bg-color: #ffffff;
+  --canvas-bg-color: #dbdbdb;
 }
 
 body {
@@ -20,9 +22,11 @@ body {
     div[class*='bpmn-icon-']:before {
       line-height: unset;
     }
+
     div.entry {
       position: relative;
     }
+
     div.entry:hover {
       &::after {
         width: max-content;
@@ -49,6 +53,19 @@ body {
       }
     }
   }
+}
+
+// palette框: 背景和边框样式
+.djs-palette {
+  // todo 这里的背景色需要跟随明暗主题而变化
+  background: var(--djs-palette-bg-color);
+  border: solid 1px var(--primary-color);
+  border-radius: 2px;
+}
+
+// palette框内的分割线: 颜色
+.djs-palette .separator {
+  border-bottom: solid 1px var(--primary-color);
 }
 
 // palette内的元素: hover效果
@@ -90,4 +107,9 @@ svg.new-parent {
   stroke-linecap: round;
   stroke-width: 2px;
   pointer-events: none;
+}
+
+// 选取palette元素时：准备放置时的背景
+svg.new-parent {
+  background: var(--canvas-bg-color) !important;
 }
