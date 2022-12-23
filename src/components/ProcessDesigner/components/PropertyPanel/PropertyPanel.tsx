@@ -15,10 +15,17 @@ import {
   BellOutlined,
   BulbTwoTone,
   DatabaseTwoTone,
+  DeploymentUnitOutlined,
+  FileOutlined,
+  FileTextOutlined,
   FileTwoTone,
+  FireOutlined,
+  InfoCircleOutlined,
+  NodeIndexOutlined,
   NotificationOutlined,
   OrderedListOutlined,
   RetweetOutlined,
+  SoundOutlined,
 } from '@ant-design/icons';
 import { initBpmnInstance } from '@/bpmn/util/windowUtil';
 import { useAppSelector } from '@/redux/hook/hooks';
@@ -142,7 +149,7 @@ export default function PropertyPanel(props: IProps) {
       <Collapse.Panel
         header={
           <Typography style={{ color: colorPrimary, fontWeight: 'bold' }}>
-            <BulbTwoTone twoToneColor={colorPrimary} />
+            <InfoCircleOutlined twoToneColor={colorPrimary} />
             &nbsp;常规信息
           </Typography>
         }
@@ -195,7 +202,7 @@ export default function PropertyPanel(props: IProps) {
         <Collapse.Panel
           header={
             <Typography style={{ color: colorPrimary, fontWeight: 'bold' }}>
-              <NotificationOutlined twoToneColor={colorPrimary} />
+              <SoundOutlined twoToneColor={colorPrimary} />
               &nbsp;消息与信号
             </Typography>
           }
@@ -223,7 +230,7 @@ export default function PropertyPanel(props: IProps) {
         <Collapse.Panel
           header={
             <Typography style={{ color: colorPrimary, fontWeight: 'bold' }}>
-              <AuditOutlined twoToneColor={colorPrimary} />
+              <FileTextOutlined twoToneColor={colorPrimary} />
               &nbsp;表单
             </Typography>
           }
@@ -248,7 +255,7 @@ export default function PropertyPanel(props: IProps) {
         <Collapse.Panel
           header={
             <Typography style={{ color: colorPrimary, fontWeight: 'bold' }}>
-              <OrderedListOutlined twoToneColor={colorPrimary} />
+              <FireOutlined twoToneColor={colorPrimary} />
               &nbsp;{'任务'}
             </Typography>
           }
@@ -273,7 +280,7 @@ export default function PropertyPanel(props: IProps) {
         <Collapse.Panel
           header={
             <Typography style={{ color: colorPrimary, fontWeight: 'bold' }}>
-              <AppstoreOutlined twoToneColor={colorPrimary} />
+              <DeploymentUnitOutlined twoToneColor={colorPrimary} />
               &nbsp;多实例
             </Typography>
           }
@@ -345,7 +352,7 @@ export default function PropertyPanel(props: IProps) {
       <Collapse.Panel
         header={
           <Typography style={{ color: colorPrimary, fontWeight: 'bold' }}>
-            <DatabaseTwoTone twoToneColor={colorPrimary} />
+            <NodeIndexOutlined twoToneColor={colorPrimary} />
             &nbsp;扩展属性
           </Typography>
         }
@@ -368,7 +375,7 @@ export default function PropertyPanel(props: IProps) {
       <Collapse.Panel
         header={
           <Typography style={{ color: colorPrimary, fontWeight: 'bold' }}>
-            <FileTwoTone twoToneColor={colorPrimary} />
+            <FileOutlined twoToneColor={colorPrimary} />
             &nbsp;元素文档
           </Typography>
         }
