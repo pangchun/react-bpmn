@@ -752,9 +752,9 @@ export default function ProcessDesigner() {
                 backgroundColor: darkMode
                   ? defaultThemeData.darkCanvasBgColor
                   : defaultThemeData.lightCanvasBgColor,
-                // backgroundImage:
-                //   'linear-gradient(#8E8E8E 1px, transparent 0), linear-gradient(90deg,#8E8E8E 1px, transparent 0)',
-                // backgroundSize: '20px 20px',
+                backgroundImage:
+                  'linear-gradient(#8E8E8E 1px, transparent 0), linear-gradient(90deg,#8E8E8E 1px, transparent 0)',
+                backgroundSize: '20px 20px',
               }}
             />
           </Col>
