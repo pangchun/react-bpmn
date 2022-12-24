@@ -742,7 +742,7 @@ export default function ProcessDesigner() {
           }}
         >
           <Col span={1}>
-            {/*todo 2022/10/31 快捷工具栏，暂时留空，后面补充功能和界面*/}
+            {/*todo 2022/10/31 快捷工具栏，暂时留空，后面补充一个简易palette栏*/}
           </Col>
           <Col span={17}>
             {renderToolBar()}

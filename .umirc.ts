@@ -6,8 +6,7 @@ export default defineConfig({
   },
   routes: [{ path: '/', component: '@/pages/index' }],
   fastRefresh: {},
+  favicon: '/favicon.ico',
+  title: 'Bpmn Process Designer',
   // mfsu: {},
-  // theme: {
-  //   '@primary-color': '#1DA57A',
-  // },
 });
