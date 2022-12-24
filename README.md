@@ -1,46 +1,61 @@
-# react-bpmn
+
+
+<p align="center">
+  <a href="https://github.com/pangchun/react-bpmn">
+   <svg t="1671892836347" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="7201" width="128" height="128"><path d="M480.853333 511.146667c0-163.413333-100.437333-274.346667-291.84-274.346667H0v550.4h193.024c185.770667 0 287.872-111.957333 287.872-275.797333v-0.213334zM343.722667 512c0 118.016-60.586667 169.088-157.866667 169.088h-49.493333V342.912h49.493333c93.226667 0 157.866667 53.418667 157.866667 169.088zM1024 787.2V236.8h-126.72v307.754667L694.613333 236.8h-132.48v550.4h126.848v-329.514667l216.917334 329.301334H1024v0.170666z" fill="#FF33CC" p-id="7202"></path></svg>
+  </a>
+</p>
+
+<h1 align="center">React Bpmn</h1>
 
 
 
-## :blush:项目概览
+<p align="center">
+<img alt="GitHub stars" src="https://img.shields.io/github/stars/pangchun/react-bpmn?style=flat&logo=github" />
+<img alt="GitHub stars" src="https://img.shields.io/github/forks/pangchun/react-bpmn?style=flat&logo=github" />
+<img src='https://gitee.com/zhangqianchun/react-bpmn/badge/star.svg?theme=dark' alt='star' />
+<img src='https://gitee.com/zhangqianchun/react-bpmn/badge/fork.svg?theme=dark' alt='fork' />
+</p>
+<p align="center">
+<img src="https://img.shields.io/badge/react-^18.0.12-blueviolet" alt="" />
+<img src="https://img.shields.io/badge/umi-^3.5.23-blueviolet" alt="" />
+<img src="https://img.shields.io/badge/antd-5.x-magenta" alt="" />
+<img src="https://img.shields.io/badge/Bpmn.js-^9.0.3-magenta" alt="" />
+</p>
 
 
 
-### 1、首页
-
-![image-20221219171730123](assets/image-20221219171730123.png)
+----
 
 
 
-### 2、控制台
 
-![image-20221219171849237](assets/image-20221219171849237.png)
+## 简介
 
+项目基于bpmnJs集成了bpmn流程设计器，自定义属性面板panel，对palette和canvas样式做了适应主题的处理；
 
+顶部添加了一些常用功能，如下载流程图、模拟流转、放大缩小、恢复撤销等；
 
-### 3、右侧panel页
+支持activiti、flowable、camunda3种模式的流程设计，可在配置中心中进行切换；
 
-![image-20221219172018217](assets/image-20221219172018217.png)
+此外添加了一键换肤、明亮暗夜模式切换等辅助性功能。
 
-
-
-### 4、其它页面在开发后补全
-
-
-
-## :calendar:更新日志
+在线demo请访问：http://designer.inadios.cn/
 
 
 
-| 1、完成主页的基本集成，以及右侧自定义Panel :tada::tada::tada: | 2022-12-19 |
-| ------------------------------------------------------------ | ---------- |
-|                                                              |            |
+### 参考与致谢
+
+本项目很大程度参考了 [miyuesc](https://github.com/miyuesc/bpmn-process-designer) 的项目，在此对所参考项目提供的帮助表示衷心感谢。
+
+1. 参考项目：https://github.com/miyuesc/bpmn-process-designer
+2. 参考文章：https://juejin.cn/post/6844904017584193544
 
 
 
-## :rocket:快速启动 
+## 快速启动 
 
-
+本项目基于[UmiJS](https://umijs.org/)构建。
 
 ```bash
 $ yarn // 安装依赖
@@ -49,13 +64,13 @@ $ yarn start // 启动
 
 
 
-## :book:项目说明
+## 其它说明
 
 
 
-### 1、版本
+### bpmnJs版本
 
-由于1.0后的和1.0之前的属性面板有较大的改变，且相关的api名称或位置可能也有改变，因此，在这里说明一下当前项目集成的版本。（我使用的是目前最新版本）
+由于1.0后的和1.0之前的属性面板有较大的改变，且相关的api名称或位置可能也有改变，因此，在这里说明一下当前项目集成的版本。
 
 ```json
 "bpmn-js": "^9.0.3",
@@ -63,15 +78,9 @@ $ yarn start // 启动
 "camunda-bpmn-moddle": "^6.1.2",
 ```
 
-版本变化说明：
-
-> 参考：https://github.com/bpmn-io/bpmn-js-examples/tree/master/properties-panel-extension
->
-> Extending the properties panel changed significantly with `bpmn-js-properties-panel>=1`. For the `0.x` version of the library, check out [the old version of this example](https://github.com/bpmn-io/bpmn-js-examples/tree/b20919ac2231abf3df45b9dc9a2561010009b4a2/properties-panel-extension). （ps ：1. 以后版本的属性面板与之前的有显著变化）
 
 
-
-## :pencil:待解决问题
+## 遗留问题
 
 
 
@@ -84,5 +93,4 @@ ts不能直接引入js，所以在项目中进行了如下处理，但是这样�
 ```javascript
 declare module '*';
 ```
-
 
