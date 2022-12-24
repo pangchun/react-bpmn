@@ -1,7 +1,7 @@
 import ProcessDesigner from '@/components/ProcessDesigner/ProcessDesigner';
 import { Provider } from 'react-redux';
 import { store } from '@/redux/store/store';
-import { message, Skeleton } from 'antd';
+import { message } from 'antd';
 
 // 引入样式
 import './index.less';
@@ -20,8 +20,10 @@ export default function IndexPage() {
   function watchClientWidth() {
     let clientWidth = document.documentElement.clientWidth;
     if (clientWidth < 1080) {
-      setVisible(false);
-      message.warning('请保证您的窗口宽带大于1080').then(() => {});
+      if (visible) {
+        setVisible(false);
+        message.warning('请保证您的窗口宽带大于1080').then(() => {});
+      }
     } else {
       setVisible(true);
     }
@@ -29,10 +31,8 @@ export default function IndexPage() {
 
   return (
     <Provider store={store}>
-      <div>
-        <Skeleton loading={!visible} active>
-          <ProcessDesigner />
-        </Skeleton>
+      <div style={{ display: visible ? 'unset' : 'none' }}>
+        <ProcessDesigner />
       </div>
     </Provider>
   );

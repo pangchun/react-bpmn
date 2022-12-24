@@ -1,10 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Drawer, FloatButton, Form, message, Radio, Space } from 'antd';
+import {
+  Button,
+  Drawer,
+  FloatButton,
+  Form,
+  message,
+  Radio,
+  Space,
+  Switch,
+} from 'antd';
 import { SketchPicker } from 'react-color';
 import {
   BulbFilled,
   BulbOutlined,
-  EditOutlined,
   QuestionOutlined,
   SettingOutlined,
   ToolOutlined,
@@ -17,32 +25,26 @@ import {
 import { useAppDispatch, useAppSelector } from '@/redux/hook/hooks';
 import { handlePrefix } from '@/redux/slice/bpmnSlice';
 import { handleColorPrimary, handleDarkMode } from '@/redux/slice/themeSlice';
-import { useWatch } from 'antd/es/form/Form';
-import { defaultThemeData, ThemeData } from '@/pages/globalTheme';
-
-interface IProps {}
+import { defaultThemeData } from '@/pages/globalTheme';
 
 /**
  * 配置中心
- * @param props
+ *
  * @constructor
  */
-export default function ConfigServer(props: IProps) {
+export default function ConfigServer() {
   // state
   const [open, setOpen] = useState(false);
   // redux
-  const bpmnPrefix = useAppSelector((state) => state.bpmn.prefix);
   const colorPrimary = useAppSelector((state) => state.theme.colorPrimary);
-  const borderRadius = useAppSelector((state) => state.theme.borderRadius);
   const darkMode = useAppSelector((state) => state.theme.darkMode);
   const dispatch = useAppDispatch();
   // form
   const [form] = Form.useForm<{
     engineType: string;
     primaryColorObj: any;
+    isDarkMode: boolean;
   }>();
-  // watch
-  const primaryColorObj: any = useWatch('primaryColorObj', form);
 
   useEffect(() => {
     form.setFieldsValue({
@@ -50,6 +52,7 @@ export default function ConfigServer(props: IProps) {
       primaryColorObj: {
         hex: colorPrimary,
       },
+      isDarkMode: darkMode,
     });
   }, []);
 
@@ -62,10 +65,10 @@ export default function ConfigServer(props: IProps) {
   }
 
   function handleDark() {
-    console.log(darkMode);
     if (darkMode) {
       // 设置白天模式
       dispatch(handleDarkMode(false));
+      form.setFieldValue('isDarkMode', false);
       document.body.style.setProperty(
         '--djs-palette-bg-color',
         defaultThemeData.lightPaletteBgColor,
@@ -74,8 +77,10 @@ export default function ConfigServer(props: IProps) {
         '--canvas-bg-color',
         defaultThemeData.lightCanvasBgColor,
       );
+      message.info('已开启明亮模式').then(() => {});
     } else {
       dispatch(handleDarkMode(true));
+      form.setFieldValue('isDarkMode', true);
       document.body.style.setProperty(
         '--djs-palette-bg-color',
         defaultThemeData.darkPaletteBgColor,
@@ -84,7 +89,7 @@ export default function ConfigServer(props: IProps) {
         '--canvas-bg-color',
         defaultThemeData.darkCanvasBgColor,
       );
-      message.info('已开启暗夜模式，呵护眼睛，更关心你');
+      message.info('已开启黑夜模式').then(() => {});
     }
   }
 
@@ -99,9 +104,11 @@ export default function ConfigServer(props: IProps) {
         <FloatButton icon={<SettingOutlined />} onClick={showDrawer} />
         <FloatButton
           icon={
-            <BulbFilled
-              style={{ color: `${darkMode ? '#ffe700' : '#484848'}` }}
-            />
+            darkMode ? (
+              <BulbFilled style={{ color: '#ffe700' }} />
+            ) : (
+              <BulbOutlined />
+            )
           }
           onClick={handleDark}
         />
@@ -150,6 +157,15 @@ export default function ConfigServer(props: IProps) {
                 let newColor: string = color?.hex;
                 dispatch(handleColorPrimary(newColor));
                 document.body.style.setProperty('--primary-color', newColor);
+              }}
+            />
+          </Form.Item>
+          <Form.Item label="黑夜模式" name="isDarkMode" valuePropName="checked">
+            <Switch
+              checkedChildren="开"
+              unCheckedChildren="关"
+              onChange={() => {
+                handleDark();
               }}
             />
           </Form.Item>
