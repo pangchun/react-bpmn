@@ -41,7 +41,7 @@
 
 此外添加了一键换肤、明亮暗夜模式切换等辅助性功能。
 
-在线demo请访问：http://designer.inadios.cn/
+在线demo请访问：http://designer.v2star.top/
 
 
 
